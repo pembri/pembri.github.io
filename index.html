@@ -3,178 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Nada - Berita Musik Terkini</title>
-    <meta name="description" content="Portal Nada adalah sumber informasi terpercaya untuk perkembangan dunia musik, review album, dan jadwal konser.">
+    <title>Portal Nada - Eksplorasi Dunia Musik Tanpa Batas</title>
     
-    <meta property="og:title" content="Portal Nada">
-    <meta property="og:description" content="Eksplorasi dunia musik tanpa batas di Portal Nada.">
-    <meta property="og:image" content="https://pembri.github.io/favicon.png">
+    <meta name="description" content="Portal Nada adalah media musik independen yang menyajikan berita, review, dan jadwal konser paling akurat.">
+    <meta property="og:title" content="Portal Nada - Berita Musik Terkini">
+    <meta property="og:site_name" content="Portal Nada">
     <meta property="og:url" content="https://pembri.github.io">
-    <link rel="icon" href="favicon.png" type="image/png">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "NewsMediaOrganization",
-      "name": "Portal Nada",
-      "url": "https://pembri.github.io",
-      "logo": "https://pembri.github.io/favicon.png"
-    }
-    </script>
+    <meta property="og:type" content="website">
+    <link rel="icon" href="/favicon.png" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        :root { --brand-red: #E11D48; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
-        .hero-gradient { background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%); }
-        [x-cloak] { display: none !important; }
+        .hero-overlay { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 100%); }
+        .line-clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .search-bar:focus { width: 300px; }
+        .article-card:hover img { transform: scale(1.05); }
     </style>
 </head>
-<body class="antialiased">
+<body class="text-zinc-900">
 
-    <nav class="border-b sticky top-0 bg-white/90 backdrop-blur-md z-50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="/" class="text-2xl font-extrabold tracking-tighter uppercase">Portal<span class="text-red-600">Nada</span></a>
-            
-            <div class="hidden md:flex gap-8 font-bold text-xs uppercase tracking-widest text-gray-500">
-                <a href="#" class="hover:text-black">Berita</a>
-                <a href="#" class="hover:text-black">Review</a>
-                <a href="#" class="hover:text-black">Jadwal Konser</a>
-                <a href="#" class="hover:text-black">Eksklusif</a>
-            </div>
-
-            <div class="relative">
-                <input type="text" id="searchInput" onkeyup="searchContent()" placeholder="Cari artikel..." class="bg-gray-100 border-none rounded-full px-5 py-2 text-sm focus:ring-2 focus:ring-red-500 outline-none w-48 lg:w-64">
+    <nav class="sticky top-0 bg-white/95 backdrop-blur-md z-[100] border-b border-zinc-100">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between py-4 gap-4">
+                <div class="flex items-center justify-between">
+                    <a href="/" class="text-3xl font-extrabold tracking-tighter text-black uppercase">
+                        PORTAL<span class="text-red-600">NADA</span>
+                    </a>
+                </div>
+                
+                <div class="flex flex-1 items-center justify-end gap-6">
+                    <div class="relative w-full md:w-auto">
+                        <input type="text" id="mainSearch" onkeyup="searchEngine()" placeholder="Cari artis, band, atau berita..." 
+                               class="w-full md:w-64 bg-zinc-100 border-none rounded-full py-2.5 px-6 text-sm outline-none focus:ring-2 focus:ring-red-500 transition-all">
+                    </div>
+                    <div class="hidden lg:flex gap-6 font-bold text-[11px] uppercase tracking-[0.2em] text-zinc-500">
+                        <a href="#" class="hover:text-red-600">News</a>
+                        <a href="#" class="hover:text-red-600">Review</a>
+                        <a href="#" class="hover:text-red-600">Jadwal</a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 py-10">
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-8">
         
-        <div id="highlight-container" class="mb-16">
+        <div id="hero-section" class="mb-20 hidden">
             </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-16">
-            <div class="lg:col-span-2">
-                <h2 class="text-xl font-black uppercase mb-8 flex items-center">
-                    Artikel Terbaru 
-                    <span class="h-[2px] bg-black flex-1 ml-4"></span>
-                </h2>
-                <div id="main-articles" class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div class="lg:col-span-8">
+                <div class="flex items-center gap-4 mb-10">
+                    <h2 class="text-2xl font-black uppercase italic">Artikel Terbaru</h2>
+                    <div class="h-1 flex-1 bg-zinc-100"></div>
+                </div>
+                
+                <div id="article-feed" class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     </div>
+                <div id="empty-state" class="py-20 text-center text-zinc-400 font-bold uppercase tracking-widest">
+                    Belum ada artikel yang diterbitkan.
+                </div>
             </div>
 
-            <aside>
-                <div class="bg-black p-8 rounded-3xl text-white">
-                    <h3 class="text-sm font-black uppercase tracking-[0.2em] mb-8 text-red-500">Trending Sekarang</h3>
-                    <div id="trending-list" class="space-y-6">
+            <aside class="lg:col-span-4 space-y-12">
+                <div class="bg-zinc-950 rounded-[2.5rem] p-8 text-white">
+                    <h3 class="text-red-600 font-black uppercase text-xs tracking-widest mb-8 italic">Paling Populer</h3>
+                    <div id="trending-feed" class="space-y-8">
                         </div>
                 </div>
             </aside>
         </div>
-
-        <section class="mt-24">
-            <h2 class="text-xl font-black uppercase mb-8">Rekomendasi Lainnya</h2>
-            <div id="recommendations" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                </div>
-        </section>
     </main>
 
-    <footer class="bg-zinc-950 text-white mt-32 py-20">
-        <div class="max-w-7xl mx-auto px-6 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
-            <div>
-                <h2 class="text-2xl font-black uppercase mb-2">Portal<span class="text-red-600">Nada</span></h2>
-                <p class="text-zinc-500 text-sm italic">Musik adalah denyut nadi kehidupan.</p>
+    <footer class="bg-white border-t border-zinc-100 mt-40 py-20">
+        <div class="max-w-7xl mx-auto px-8 text-center md:text-left">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-10">
+                <div>
+                    <h2 class="text-3xl font-black uppercase tracking-tighter mb-2">PORTAL<span class="text-red-600">NADA</span></h2>
+                    <p class="text-zinc-400 text-sm">Media Informasi Musik Terbesar di Indonesia.</p>
+                </div>
+                <div class="text-xs font-bold text-zinc-400 uppercase tracking-[0.3em]">
+                    &copy; 2026 Portal Nada Media Group - pembri.github.io
+                </div>
             </div>
-            <p class="text-zinc-600 text-xs mt-10 md:mt-0 uppercase tracking-widest">&copy; 2026 Portal Nada Media - pembri.github.io</p>
         </div>
     </footer>
 
     <script>
-        async function loadContent() {
-            const mainContainer = document.getElementById('main-articles');
-            const highlightContainer = document.getElementById('highlight-container');
-            const trendingList = document.getElementById('trending-list');
-            const recommendationList = document.getElementById('recommendations');
+        const repoPath = "https://api.github.com/repos/pembri/pembri.github.io/contents/artikel";
 
+        async function initPortal() {
             try {
-                // Fetch daftar file dari folder /artikel di repo
-                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
-                const files = await res.json();
-                
-                if (!files || files.message === "Not Found" || files.length === 0) {
-                    mainContainer.innerHTML = '<p class="text-gray-400 italic">Belum ada konten tersedia.</p>';
-                    return;
-                }
+                const response = await fetch(repoPath);
+                const files = await response.json();
+                if (!files || files.length === 0) return;
 
-                // Filter hanya file .html
+                document.getElementById('empty-state').classList.add('hidden');
                 const articles = files.filter(f => f.name.endsWith('.html')).reverse();
+                
+                renderContent(articles);
+            } catch (e) { console.error("Error loading articles"); }
+        }
 
-                // 1. Highlight (Artikel Paling Baru)
-                const latest = articles[0];
-                const latestTitle = latest.name.replace(/-/g, ' ').replace('.html', '');
-                highlightContainer.innerHTML = `
-                    <a href="artikel/${latest.name}" class="group relative block h-[500px] rounded-[2rem] overflow-hidden bg-zinc-900">
-                        <div class="absolute inset-0 hero-gradient z-10"></div>
-                        <div class="absolute bottom-0 p-10 z-20 w-full lg:w-2/3">
-                            <span class="bg-red-600 text-white px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest mb-4 inline-block">Sorotan Utama</span>
-                            <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight uppercase group-hover:text-red-500 transition">${latestTitle}</h1>
-                        </div>
-                    </a>
-                `;
+        async function renderContent(articles) {
+            const feed = document.getElementById('article-feed');
+            const hero = document.getElementById('hero-section');
+            const trending = document.getElementById('trending-feed');
 
-                // 2. Main List & Trending & Recommendation
-                articles.slice(1).forEach((art, index) => {
-                    const title = art.name.replace(/-/g, ' ').replace('.html', '');
-                    
-                    // Masuk Main List (4 artikel)
-                    if(index < 4) {
-                        mainContainer.innerHTML += `
-                            <article class="group">
-                                <a href="artikel/${art.name}">
-                                    <div class="aspect-[4/3] bg-zinc-100 rounded-3xl mb-4 overflow-hidden">
-                                        <div class="w-full h-full bg-zinc-200 animate-pulse"></div>
-                                    </div>
-                                    <h3 class="text-xl font-bold uppercase group-hover:text-red-600 transition leading-tight">${title}</h3>
-                                </a>
-                            </article>
-                        `;
+            for (let i = 0; i < articles.length; i++) {
+                const file = articles[i];
+                const rawUrl = `https://pembri.github.io/artikel/${file.name}`;
+                
+                // Fetch content untuk ambil judul & gambar pertama
+                const res = await fetch(rawUrl);
+                const htmlText = await res.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+                
+                const title = doc.querySelector('h1')?.innerText || file.name.replace('.html', '');
+                const firstImg = doc.querySelector('img')?.src || 'https://via.placeholder.com/800x600/111/fff?text=Portal+Nada';
+
+                // Render Hero (Artikel ke-1)
+                if (i === 0) {
+                    hero.classList.remove('hidden');
+                    hero.innerHTML = `
+                        <a href="${rawUrl}" class="group relative block w-full h-[600px] rounded-[3rem] overflow-hidden shadow-2xl">
+                            <img src="${firstImg}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                            <div class="absolute inset-0 hero-overlay"></div>
+                            <div class="absolute bottom-0 left-0 p-8 md:p-16 z-20">
+                                <span class="bg-red-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 inline-block">Sorotan Utama</span>
+                                <h2 class="text-4xl md:text-7xl font-extrabold text-white leading-[1.1] uppercase group-hover:text-red-500 transition">${title}</h2>
+                            </div>
+                        </a>
+                    `;
+                } else {
+                    // Render Grid Feed (Artikel ke 2-7)
+                    if(i < 7) {
+                        feed.innerHTML += `
+                        <article class="article-card group cursor-pointer" onclick="location.href='${rawUrl}'">
+                            <div class="relative aspect-[16/10] rounded-[2rem] overflow-hidden mb-6 bg-zinc-100">
+                                <img src="${firstImg}" class="w-full h-full object-cover transition duration-500">
+                            </div>
+                            <h3 class="text-xl font-bold uppercase leading-tight group-hover:text-red-600 transition mb-3">${title}</h3>
+                            <div class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Postingan Terbaru</div>
+                        </article>`;
+                    } else {
+                        // Render Trending (Sisanya)
+                        trending.innerHTML += `
+                        <div class="flex gap-4 cursor-pointer group" onclick="location.href='${rawUrl}'">
+                            <span class="text-3xl font-black text-zinc-800">0${i}</span>
+                            <p class="font-bold text-sm uppercase leading-snug group-hover:text-red-600 transition">${title}</p>
+                        </div>`;
                     }
-
-                    // Masuk Trending Sidebar (3 artikel)
-                    if(index >= 4 && index < 7) {
-                        trendingList.innerHTML += `
-                            <a href="artikel/${art.name}" class="block group">
-                                <p class="text-sm font-bold uppercase group-hover:text-red-500 transition">${title}</p>
-                            </a>
-                        `;
-                    }
-
-                    // Masuk Rekomendasi Bawah (4 artikel)
-                    if(index >= 7 && index < 11) {
-                        recommendationList.innerHTML += `
-                            <a href="artikel/${art.name}" class="block group bg-gray-50 p-6 rounded-2xl border border-transparent hover:border-red-600 transition">
-                                <p class="text-xs font-bold uppercase group-hover:text-red-600 transition">${title}</p>
-                            </a>
-                        `;
-                    }
-                });
-
-            } catch (err) {
-                mainContainer.innerHTML = '<p class="text-gray-400">Gagal memuat konten.</p>';
+                }
             }
         }
 
-        function searchContent() {
-            let filter = document.getElementById('searchInput').value.toUpperCase();
-            let items = document.querySelectorAll('article, #trending-list a');
-            items.forEach(item => {
-                let text = item.innerText || item.textContent;
-                item.style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+        function searchEngine() {
+            let val = document.getElementById('mainSearch').value.toUpperCase();
+            document.querySelectorAll('article, #trending-feed div').forEach(el => {
+                el.style.display = el.innerText.toUpperCase().includes(val) ? "" : "none";
             });
         }
 
-        window.onload = loadContent;
+        window.onload = initPortal;
     </script>
 </body>
 </html>
