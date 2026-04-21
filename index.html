@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Nada - Berita Musik Terkini & Terlengkap</title>
+    
+    <meta name="description" content="Portal Nada adalah sumber informasi utama dunia musik, rilis single terbaru, jadwal konser, dan review album terlengkap.">
+    <meta name="keywords" content="musik, berita musik, konser, rilis lagu, album baru, portal nada">
+    <link rel="canonical" href="https://portalnada.github.io/">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://portalnada.github.io/">
+    <meta property="og:title" content="Portal Nada - Berita Musik Terkini">
+    <meta property="og:description" content="Update harian dunia musik nasional dan internasional.">
+    <meta property="og:image" content="https://portalnada.github.io/favicon.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "Portal Nada",
+      "url": "https://portalnada.github.io/",
+      "logo": "https://portalnada.github.io/favicon.png"
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700;800&display=swap');
+        body { font-family: 'Lexend', sans-serif; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="text-2xl font-extrabold tracking-tighter text-black">PORTAL<span class="text-red-600">NADA</span></a>
+            
+            <div class="hidden md:flex space-x-6 font-semibold text-sm uppercase">
+                <a href="#" class="hover:text-red-600 transition">News</a>
+                <a href="#" class="hover:text-red-600 transition">Reviews</a>
+                <a href="#" class="hover:text-red-600 transition">Concerts</a>
+                <a href="#" class="hover:text-red-600 transition">Indie</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Cari musik..." class="border rounded-full py-1 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition w-32 md:w-64">
+                </div>
+                <button class="md:hidden text-2xl"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-8" id="mainContent">
+                <h2 class="text-xl font-bold border-l-4 border-red-600 pl-3 mb-6">ARTIKEL TERBARU</h2>
+                
+                <div id="articleGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    </div>
+            </div>
+
+            <aside class="space-y-8">
+                <div>
+                    <h2 class="text-lg font-bold border-l-4 border-black pl-3 mb-4">REKOMENDASI</h2>
+                    <div id="recommendationBox" class="bg-white p-4 rounded-lg shadow-sm space-y-4">
+                        </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t mt-12 py-8 text-center text-sm text-gray-500">
+        <div class="mb-4">
+            <a href="#" class="mx-2 hover:text-red-600">About</a>
+            <a href="#" class="mx-2 hover:text-red-600">Privacy Policy</a>
+            <a href="#" class="mx-2 hover:text-red-600">Contact</a>
+        </div>
+        <p>&copy; 2024 Portal Nada. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Simulasi database artikel (Nanti bisa dihubungkan ke data.json)
+        const articles = [
+            { title: "Review Album Baru Coldplay: Moon Music", slug: "review-coldplay", date: "2024-10-01", image: "https://images.unsplash.com/photo-1514525253361-bee8718a74a2?w=500", category: "Review" },
+            { title: "Daftar Konser Internasional di Jakarta 2025", slug: "konser-jakarta-2025", date: "2024-09-28", image: "https://images.unsplash.com/photo-1459749411177-042180ce673c?w=500", category: "News" }
+        ];
+
+        function renderArticles(filter = "") {
+            const container = document.getElementById('articleGrid');
+            const recBox = document.getElementById('recommendationBox');
+            container.innerHTML = "";
+            
+            const filtered = articles.filter(a => a.title.toLowerCase().includes(filter.toLowerCase()));
+
+            filtered.forEach(item => {
+                container.innerHTML += `
+                    <article class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
+                        <img src="${item.image}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <span class="text-xs font-bold text-red-600 uppercase">${item.category}</span>
+                            <h3 class="font-bold text-lg mt-1 mb-2 line-clamp-2"><a href="/artikel/${item.slug}.html" class="hover:text-red-600">${item.title}</a></h3>
+                            <p class="text-gray-400 text-xs">${item.date}</p>
+                        </div>
+                    </article>
+                `;
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => renderArticles(e.target.value));
+        window.onload = () => renderArticles();
+    </script>
+</body>
+</html>
