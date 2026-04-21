@@ -3,189 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Nada - Berita Musik Terbaru & Terlengkap</title>
+    <title>Portal Nada - Berita Musik Terkini</title>
+    <meta name="description" content="Portal Nada adalah sumber informasi terpercaya untuk perkembangan dunia musik, review album, dan jadwal konser.">
     
-    <meta name="description" content="Portal Nada adalah sumber informasi musik terlengkap, rilis lagu terbaru, jadwal konser, dan review album.">
-    <meta name="keywords" content="musik, berita musik, konser, lagu baru, portal nada, review album">
-    <link rel="canonical" href="https://portalnada.github.io/">
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://portalnada.github.io/">
-    <meta property="og:title" content="Portal Nada - Dunia Musik dalam Satu Genggaman">
-    <meta property="og:description" content="Update harian seputar musisi favorit, rilis single, dan event musik terbesar.">
-    <meta property="og:image" content="https://portalnada.github.io/assets/og-image.jpg">
+    <meta property="og:title" content="Portal Nada">
+    <meta property="og:description" content="Eksplorasi dunia musik tanpa batas di Portal Nada.">
+    <meta property="og:image" content="https://pembri.github.io/favicon.png">
+    <meta property="og:url" content="https://pembri.github.io">
+    <link rel="icon" href="favicon.png" type="image/png">
 
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "NewsMediaOrganization",
       "name": "Portal Nada",
-      "url": "https://portalnada.github.io/",
-      "logo": "https://portalnada.github.io/favicon.png"
+      "url": "https://pembri.github.io",
+      "logo": "https://pembri.github.io/logo.png",
+      "sameAs": ["#facebook", "#instagram"]
     }
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .article-content img { border-radius: 0.75rem; margin: 1.5rem 0; width: 100%; }
-        .article-content p { margin-bottom: 1.25rem; line-height: 1.8; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .gradient-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); }
     </style>
 </head>
-<body class="bg-white text-gray-900">
+<body x-data="{ search: '', menuOpen: false }">
 
-    <nav class="border-b sticky top-0 bg-white/90 backdrop-blur-md z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="/" class="text-2xl font-extrabold tracking-tighter text-black">PORTAL<span class="text-red-600">NADA</span></a>
-            
-            <div class="hidden md:flex space-x-8 font-bold text-sm uppercase tracking-widest">
-                <a href="#" class="hover:text-red-600 transition">News</a>
-                <a href="#" class="hover:text-red-600 transition">Chart</a>
-                <a href="#" class="hover:text-red-600 transition">Event</a>
-            </div>
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-4">
+                    <button @click="menuOpen = !menuOpen" class="text-2xl md:hidden"><i class="fa-solid fa-bars"></i></button>
+                    <a href="/" class="text-2xl font-extrabold tracking-tighter text-red-600">PORTAL NADA</a>
+                </div>
+                
+                <div class="hidden md:flex gap-6 font-semibold text-gray-700">
+                    <a href="#" class="hover:text-red-600">News</a>
+                    <a href="#" class="hover:text-red-600">Review</a>
+                    <a href="#" class="hover:text-red-600">Event</a>
+                    <a href="#" class="hover:text-red-600">Culture</a>
+                </div>
 
-            <div class="relative group">
-                <input type="text" id="searchInput" placeholder="Cari musik..." class="bg-gray-100 border-none rounded-full py-2 px-5 text-sm focus:ring-2 focus:ring-red-500 transition w-40 md:w-64">
-                <div id="searchResults" class="absolute right-0 mt-2 w-72 bg-white shadow-xl rounded-lg hidden border overflow-hidden"></div>
+                <div class="relative">
+                    <input type="text" x-model="search" placeholder="Cari artikel..." class="bg-gray-100 border-none rounded-full px-4 py-1.5 text-sm focus:ring-2 focus:ring-red-500 outline-none w-40 md:w-64">
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8 max-w-6xl">
-        <div id="view-home">
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                <div class="relative group overflow-hidden rounded-2xl h-[400px] bg-black">
-                    <img src="https://images.unsplash.com/photo-1514525253361-bee8a48700df?auto=format&fit=crop&w=800&q=80" class="object-cover w-full h-full opacity-70 group-hover:scale-105 transition duration-500">
-                    <div class="absolute bottom-0 p-6">
-                        <span class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">TRENDING</span>
-                        <h2 class="text-white text-3xl font-bold">Inilah Daftar Festival Musik Paling Dinanti Tahun 2026</h2>
-                    </div>
+    <main class="max-w-6xl mx-auto px-4 py-6">
+        
+        <section class="mb-10">
+            <div class="relative rounded-2xl overflow-hidden h-[400px] bg-gray-900 group">
+                <div class="absolute inset-0 bg-zinc-800 animate-pulse"></div> 
+                <div class="absolute inset-0 gradient-overlay"></div>
+                <div class="absolute bottom-0 p-8">
+                    <span class="bg-red-600 text-white px-3 py-1 text-xs font-bold rounded mb-3 inline-block">HOT NEWS</span>
+                    <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">Selamat Datang di Portal Nada</h1>
+                    <p class="text-gray-300">Berita utama akan muncul secara otomatis melalui sistem posting.</p>
                 </div>
-                <div class="grid grid-rows-2 gap-6">
-                    <div class="bg-gray-100 p-6 rounded-2xl flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-xl">Review: Album Terbaru 'X' Membawa Vibe Retro</h3>
-                            <p class="text-sm text-gray-500 mt-2">5 Menit yang lalu</p>
-                        </div>
-                    </div>
-                    <div class="bg-red-50 p-6 rounded-2xl flex items-center justify-between border-l-4 border-red-600">
-                        <div>
-                            <h3 class="font-bold text-xl text-red-900">Live Report: Konser Tunggal di Jakarta Berakhir Meriah</h3>
-                            <p class="text-sm text-red-700 mt-2">Hot Topic</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <h2 class="text-2xl font-black mb-6 uppercase italic">Terbaru Dari Portal Nada</h2>
-            <div id="post-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                </div>
-        </div>
-
-        <div id="view-article" class="hidden max-w-3xl mx-auto">
-            <button onclick="window.location.reload()" class="mb-6 text-red-600 font-bold flex items-center">
-                <i class="fas fa-arrow-left mr-2"></i> KEMBALI
-            </button>
-            <h1 id="art-title" class="text-4xl md:text-5xl font-extrabold leading-tight mb-4"></h1>
-            <div id="art-meta" class="text-gray-500 text-sm mb-8 border-b pb-4"></div>
-            <div id="art-content" class="article-content text-lg text-gray-800"></div>
-
-            <div class="mt-20 border-t pt-10">
-                <h3 class="text-xl font-bold mb-6">Mungkin Anda Suka</h3>
-                <div id="recommendation-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-2">
+                <h2 class="text-xl font-bold mb-6 border-l-4 border-red-600 pl-3">Artikel Terbaru</h2>
+                <div id="article-list" class="space-y-8">
+                    <p class="text-gray-500 italic">Belum ada artikel yang dipublikasikan.</p>
+                </div>
+            </div>
+
+            <aside>
+                <div class="bg-black text-white p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-4 uppercase tracking-widest">Trending</h3>
+                    <ul class="space-y-4">
+                        <li class="flex gap-4">
+                            <span class="text-3xl font-black text-gray-700">01</span>
+                            <p class="text-sm font-semibold hover:text-red-500 cursor-pointer">Konser Taylor Swift pecahkan rekor dunia.</p>
+                        </li>
+                        <li class="flex gap-4 border-t border-gray-800 pt-4">
+                            <span class="text-3xl font-black text-gray-700">02</span>
+                            <p class="text-sm font-semibold hover:text-red-500 cursor-pointer">Genre 'City Pop' kembali merajai tangga lagu.</p>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
         </div>
+
+        <hr class="my-12">
+
+        <section>
+            <h2 class="text-xl font-bold mb-6">Mungkin Anda Suka</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="aspect-video bg-gray-200 rounded-lg"></div>
+                <div class="aspect-video bg-gray-200 rounded-lg"></div>
+                <div class="aspect-video bg-gray-200 rounded-lg"></div>
+                <div class="aspect-video bg-gray-200 rounded-lg"></div>
+            </div>
+        </section>
     </main>
 
-    <footer class="bg-black text-white py-12 mt-20">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-2xl font-bold mb-4">PORTAL NADA</h2>
-            <p class="text-gray-500 text-sm">Menyajikan berita musik tanpa batas. Dari lirik hingga industri.</p>
-            <div class="mt-6 flex justify-center space-x-6 text-gray-400">
-                <i class="fab fa-instagram cursor-pointer hover:text-white"></i>
-                <i class="fab fa-twitter cursor-pointer hover:text-white"></i>
-                <i class="fab fa-youtube cursor-pointer hover:text-white"></i>
-            </div>
+    <footer class="bg-white border-t mt-20 py-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="font-bold text-red-600 mb-2">PORTAL NADA</p>
+            <p class="text-sm text-gray-500">© 2026 Portal Nada Media - All Rights Reserved</p>
         </div>
     </footer>
 
-    <script>
-        // Logika sederhana untuk routing dan pencarian
-        async function init() {
-            try {
-                const response = await fetch('posts.json');
-                const posts = await response.json();
-                
-                // Cek URL untuk baca artikel
-                const urlParams = new URLSearchParams(window.location.search);
-                const slug = urlParams.get('read');
-
-                if(slug) {
-                    showArticle(slug, posts);
-                } else {
-                    renderHome(posts);
-                }
-
-                // Search Logic
-                document.getElementById('searchInput').addEventListener('input', (e) => {
-                    const val = e.target.value.toLowerCase();
-                    const results = posts.filter(p => p.title.toLowerCase().includes(val));
-                    const resDiv = document.getElementById('searchResults');
-                    
-                    if(val.length > 1) {
-                        resDiv.classList.remove('hidden');
-                        resDiv.innerHTML = results.map(p => `
-                            <a href="?read=${p.slug}" class="block p-3 hover:bg-gray-50 border-b text-sm font-semibold">${p.title}</a>
-                        `).join('');
-                    } else {
-                        resDiv.classList.add('hidden');
-                    }
-                });
-            } catch (e) { console.log("Belum ada postingan."); }
-        }
-
-        function renderHome(posts) {
-            const container = document.getElementById('post-container');
-            container.innerHTML = posts.map(p => `
-                <div class="group cursor-pointer" onclick="window.location.search = '?read=${p.slug}'">
-                    <div class="h-48 bg-gray-200 rounded-xl mb-4 overflow-hidden">
-                        <img src="${p.image || 'https://via.placeholder.com/400x250'}" class="w-full h-full object-cover group-hover:scale-110 transition">
-                    </div>
-                    <h3 class="font-bold text-lg leading-snug group-hover:text-red-600">${p.title}</h3>
-                    <p class="text-gray-500 text-xs mt-2">${p.date}</p>
-                </div>
-            `).join('');
-        }
-
-        async function showArticle(slug, posts) {
-            const post = posts.find(p => p.slug === slug);
-            if(!post) return;
-
-            document.getElementById('view-home').classList.add('hidden');
-            document.getElementById('view-article').classList.remove('hidden');
-            
-            document.getElementById('art-title').innerText = post.title;
-            document.getElementById('art-meta').innerText = `Diterbitkan pada ${post.date} • Oleh Redaksi Portal Nada`;
-            
-            const res = await fetch(`artikel/${slug}.html`);
-            const html = await res.text();
-            document.getElementById('art-content').innerHTML = html;
-
-            // Render Rekomendasi (Post lain selain ini)
-            const recs = posts.filter(p => p.slug !== slug).slice(0, 4);
-            document.getElementById('recommendation-list').innerHTML = recs.map(r => `
-                <a href="?read=${r.slug}" class="p-4 bg-gray-50 rounded-lg flex items-center space-x-4 hover:bg-red-50 transition border">
-                    <div class="w-16 h-16 bg-gray-300 rounded shrink-0 overflow-hidden">
-                        <img src="${r.image}" class="w-full h-full object-cover">
-                    </div>
-                    <span class="font-bold text-sm line-clamp-2">${r.title}</span>
-                </a>
-            `).join('');
-        }
-
-        init();
-    </script>
 </body>
 </html>
