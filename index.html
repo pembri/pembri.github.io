@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Nada - Berita Musik Terkini & Terlengkap</title>
+    <title>Portal Nada - Berita Musik Terbaru & Terlengkap</title>
     
-    <meta name="description" content="Portal Nada adalah sumber informasi utama dunia musik, rilis single terbaru, jadwal konser, dan review album terlengkap.">
-    <meta name="keywords" content="musik, berita musik, konser, rilis lagu, album baru, portal nada">
+    <meta name="description" content="Portal Nada adalah sumber informasi musik terlengkap, rilis lagu terbaru, jadwal konser, dan review album.">
+    <meta name="keywords" content="musik, berita musik, konser, lagu baru, portal nada, review album">
     <link rel="canonical" href="https://portalnada.github.io/">
     
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://portalnada.github.io/">
-    <meta property="og:title" content="Portal Nada - Berita Musik Terkini">
-    <meta property="og:description" content="Update harian dunia musik nasional dan internasional.">
-    <meta property="og:image" content="https://portalnada.github.io/favicon.png">
+    <meta property="og:title" content="Portal Nada - Dunia Musik dalam Satu Genggaman">
+    <meta property="og:description" content="Update harian seputar musisi favorit, rilis single, dan event musik terbesar.">
+    <meta property="og:image" content="https://portalnada.github.io/assets/og-image.jpg">
 
     <script type="application/ld+json">
     {
@@ -28,92 +28,164 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700;800&display=swap');
-        body { font-family: 'Lexend', sans-serif; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .article-content img { border-radius: 0.75rem; margin: 1.5rem 0; width: 100%; }
+        .article-content p { margin-bottom: 1.25rem; line-height: 1.8; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-white text-gray-900">
 
-    <nav class="bg-white border-b sticky top-0 z-50">
+    <nav class="border-b sticky top-0 bg-white/90 backdrop-blur-md z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <a href="/" class="text-2xl font-extrabold tracking-tighter text-black">PORTAL<span class="text-red-600">NADA</span></a>
             
-            <div class="hidden md:flex space-x-6 font-semibold text-sm uppercase">
+            <div class="hidden md:flex space-x-8 font-bold text-sm uppercase tracking-widest">
                 <a href="#" class="hover:text-red-600 transition">News</a>
-                <a href="#" class="hover:text-red-600 transition">Reviews</a>
-                <a href="#" class="hover:text-red-600 transition">Concerts</a>
-                <a href="#" class="hover:text-red-600 transition">Indie</a>
+                <a href="#" class="hover:text-red-600 transition">Chart</a>
+                <a href="#" class="hover:text-red-600 transition">Event</a>
             </div>
 
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <input type="text" id="searchInput" placeholder="Cari musik..." class="border rounded-full py-1 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition w-32 md:w-64">
-                </div>
-                <button class="md:hidden text-2xl"><i class="fa-solid fa-bars"></i></button>
+            <div class="relative group">
+                <input type="text" id="searchInput" placeholder="Cari musik..." class="bg-gray-100 border-none rounded-full py-2 px-5 text-sm focus:ring-2 focus:ring-red-500 transition w-40 md:w-64">
+                <div id="searchResults" class="absolute right-0 mt-2 w-72 bg-white shadow-xl rounded-lg hidden border overflow-hidden"></div>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <div class="lg:col-span-2 space-y-8" id="mainContent">
-                <h2 class="text-xl font-bold border-l-4 border-red-600 pl-3 mb-6">ARTIKEL TERBARU</h2>
-                
-                <div id="articleGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <div id="view-home">
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div class="relative group overflow-hidden rounded-2xl h-[400px] bg-black">
+                    <img src="https://images.unsplash.com/photo-1514525253361-bee8a48700df?auto=format&fit=crop&w=800&q=80" class="object-cover w-full h-full opacity-70 group-hover:scale-105 transition duration-500">
+                    <div class="absolute bottom-0 p-6">
+                        <span class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">TRENDING</span>
+                        <h2 class="text-white text-3xl font-bold">Inilah Daftar Festival Musik Paling Dinanti Tahun 2026</h2>
                     </div>
-            </div>
-
-            <aside class="space-y-8">
-                <div>
-                    <h2 class="text-lg font-bold border-l-4 border-black pl-3 mb-4">REKOMENDASI</h2>
-                    <div id="recommendationBox" class="bg-white p-4 rounded-lg shadow-sm space-y-4">
-                        </div>
                 </div>
-            </aside>
+                <div class="grid grid-rows-2 gap-6">
+                    <div class="bg-gray-100 p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-xl">Review: Album Terbaru 'X' Membawa Vibe Retro</h3>
+                            <p class="text-sm text-gray-500 mt-2">5 Menit yang lalu</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-50 p-6 rounded-2xl flex items-center justify-between border-l-4 border-red-600">
+                        <div>
+                            <h3 class="font-bold text-xl text-red-900">Live Report: Konser Tunggal di Jakarta Berakhir Meriah</h3>
+                            <p class="text-sm text-red-700 mt-2">Hot Topic</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <h2 class="text-2xl font-black mb-6 uppercase italic">Terbaru Dari Portal Nada</h2>
+            <div id="post-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                </div>
+        </div>
+
+        <div id="view-article" class="hidden max-w-3xl mx-auto">
+            <button onclick="window.location.reload()" class="mb-6 text-red-600 font-bold flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> KEMBALI
+            </button>
+            <h1 id="art-title" class="text-4xl md:text-5xl font-extrabold leading-tight mb-4"></h1>
+            <div id="art-meta" class="text-gray-500 text-sm mb-8 border-b pb-4"></div>
+            <div id="art-content" class="article-content text-lg text-gray-800"></div>
+
+            <div class="mt-20 border-t pt-10">
+                <h3 class="text-xl font-bold mb-6">Mungkin Anda Suka</h3>
+                <div id="recommendation-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
         </div>
     </main>
 
-    <footer class="bg-white border-t mt-12 py-8 text-center text-sm text-gray-500">
-        <div class="mb-4">
-            <a href="#" class="mx-2 hover:text-red-600">About</a>
-            <a href="#" class="mx-2 hover:text-red-600">Privacy Policy</a>
-            <a href="#" class="mx-2 hover:text-red-600">Contact</a>
+    <footer class="bg-black text-white py-12 mt-20">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold mb-4">PORTAL NADA</h2>
+            <p class="text-gray-500 text-sm">Menyajikan berita musik tanpa batas. Dari lirik hingga industri.</p>
+            <div class="mt-6 flex justify-center space-x-6 text-gray-400">
+                <i class="fab fa-instagram cursor-pointer hover:text-white"></i>
+                <i class="fab fa-twitter cursor-pointer hover:text-white"></i>
+                <i class="fab fa-youtube cursor-pointer hover:text-white"></i>
+            </div>
         </div>
-        <p>&copy; 2024 Portal Nada. All Rights Reserved.</p>
     </footer>
 
     <script>
-        // Simulasi database artikel (Nanti bisa dihubungkan ke data.json)
-        const articles = [
-            { title: "Review Album Baru Coldplay: Moon Music", slug: "review-coldplay", date: "2024-10-01", image: "https://images.unsplash.com/photo-1514525253361-bee8718a74a2?w=500", category: "Review" },
-            { title: "Daftar Konser Internasional di Jakarta 2025", slug: "konser-jakarta-2025", date: "2024-09-28", image: "https://images.unsplash.com/photo-1459749411177-042180ce673c?w=500", category: "News" }
-        ];
+        // Logika sederhana untuk routing dan pencarian
+        async function init() {
+            try {
+                const response = await fetch('posts.json');
+                const posts = await response.json();
+                
+                // Cek URL untuk baca artikel
+                const urlParams = new URLSearchParams(window.location.search);
+                const slug = urlParams.get('read');
 
-        function renderArticles(filter = "") {
-            const container = document.getElementById('articleGrid');
-            const recBox = document.getElementById('recommendationBox');
-            container.innerHTML = "";
-            
-            const filtered = articles.filter(a => a.title.toLowerCase().includes(filter.toLowerCase()));
+                if(slug) {
+                    showArticle(slug, posts);
+                } else {
+                    renderHome(posts);
+                }
 
-            filtered.forEach(item => {
-                container.innerHTML += `
-                    <article class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
-                        <img src="${item.image}" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <span class="text-xs font-bold text-red-600 uppercase">${item.category}</span>
-                            <h3 class="font-bold text-lg mt-1 mb-2 line-clamp-2"><a href="/artikel/${item.slug}.html" class="hover:text-red-600">${item.title}</a></h3>
-                            <p class="text-gray-400 text-xs">${item.date}</p>
-                        </div>
-                    </article>
-                `;
-            });
+                // Search Logic
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    const val = e.target.value.toLowerCase();
+                    const results = posts.filter(p => p.title.toLowerCase().includes(val));
+                    const resDiv = document.getElementById('searchResults');
+                    
+                    if(val.length > 1) {
+                        resDiv.classList.remove('hidden');
+                        resDiv.innerHTML = results.map(p => `
+                            <a href="?read=${p.slug}" class="block p-3 hover:bg-gray-50 border-b text-sm font-semibold">${p.title}</a>
+                        `).join('');
+                    } else {
+                        resDiv.classList.add('hidden');
+                    }
+                });
+            } catch (e) { console.log("Belum ada postingan."); }
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => renderArticles(e.target.value));
-        window.onload = () => renderArticles();
+        function renderHome(posts) {
+            const container = document.getElementById('post-container');
+            container.innerHTML = posts.map(p => `
+                <div class="group cursor-pointer" onclick="window.location.search = '?read=${p.slug}'">
+                    <div class="h-48 bg-gray-200 rounded-xl mb-4 overflow-hidden">
+                        <img src="${p.image || 'https://via.placeholder.com/400x250'}" class="w-full h-full object-cover group-hover:scale-110 transition">
+                    </div>
+                    <h3 class="font-bold text-lg leading-snug group-hover:text-red-600">${p.title}</h3>
+                    <p class="text-gray-500 text-xs mt-2">${p.date}</p>
+                </div>
+            `).join('');
+        }
+
+        async function showArticle(slug, posts) {
+            const post = posts.find(p => p.slug === slug);
+            if(!post) return;
+
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-article').classList.remove('hidden');
+            
+            document.getElementById('art-title').innerText = post.title;
+            document.getElementById('art-meta').innerText = `Diterbitkan pada ${post.date} • Oleh Redaksi Portal Nada`;
+            
+            const res = await fetch(`artikel/${slug}.html`);
+            const html = await res.text();
+            document.getElementById('art-content').innerHTML = html;
+
+            // Render Rekomendasi (Post lain selain ini)
+            const recs = posts.filter(p => p.slug !== slug).slice(0, 4);
+            document.getElementById('recommendation-list').innerHTML = recs.map(r => `
+                <a href="?read=${r.slug}" class="p-4 bg-gray-50 rounded-lg flex items-center space-x-4 hover:bg-red-50 transition border">
+                    <div class="w-16 h-16 bg-gray-300 rounded shrink-0 overflow-hidden">
+                        <img src="${r.image}" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-bold text-sm line-clamp-2">${r.title}</span>
+                </a>
+            `).join('');
+        }
+
+        init();
     </script>
 </body>
 </html>
