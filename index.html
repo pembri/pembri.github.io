@@ -113,24 +113,34 @@
         </section>
     </main>
 
-    <footer class="bg-zinc-950 text-white mt-32 py-20">
-        <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-800 pb-16">
-            <div>
-                <h2 class="text-xl font-black uppercase mb-6">Portal<span class="text-red-600">Nada</span></h2>
-                <p class="text-zinc-400 text-sm leading-relaxed">Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia.</p>
+    <footer class="bg-white border-t border-zinc-100 mt-32 py-16">
+        <div class="max-w-7xl mx-auto px-8 text-center">
+            <div class="mb-8">
+                <h2 class="text-2xl font-black tracking-tighter uppercase">
+                    PORTAL<span class="text-red-600">NADA</span>
+                </h2>
+                <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.3em] mt-2">© 2026 PORTAL NADA MEDIA</p>
             </div>
-            <div class="flex flex-col gap-4 text-sm font-bold uppercase tracking-widest">
-                <a href="/about" class="hover:text-red-600 transition">About</a>
-                <a href="/contact" class="hover:text-red-600 transition">Contact</a>
-            </div>
-            <div class="text-sm text-zinc-500">
-                &copy; 2026 Portal Nada Media - pembri.github.io
+            
+            <div class="flex justify-center gap-8 text-[11px] font-black uppercase tracking-[0.2em]">
+                <a href="/about" class="text-zinc-900 hover:text-red-600 transition">About</a>
+                <a href="/contact" class="text-zinc-900 hover:text-red-600 transition">Contact</a>
             </div>
         </div>
     </footer>
 
     <script>
-        // Penghilang akhiran .html pada URL browser
+        // FUNGSI PENGHAPUS .HTML DARI LINK (PROFESIONAL)
+        function cleanLinks() {
+            document.querySelectorAll('a').forEach(link => {
+                let href = link.getAttribute('href');
+                if (href && href.endsWith('.html')) {
+                    link.setAttribute('href', href.replace('.html', ''));
+                }
+            });
+        }
+
+        // Jalankan penghapusan .html di URL Bar juga
         if (window.location.pathname.endsWith(".html")) {
             const cleanUrl = window.location.pathname.replace(".html", "");
             window.history.replaceState(null, "", cleanUrl);
@@ -155,6 +165,9 @@
 
                 document.getElementById('hero-loader').style.display = 'none';
                 document.getElementById('hero-content').classList.remove('hidden');
+                
+                // Bersihkan link setelah data render
+                setTimeout(cleanLinks, 500);
             } catch (err) { console.error("Gagal load data Github", err); }
         }
 
