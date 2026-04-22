@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Arahkan Google ke sitemap lo biar cepat di-monetisasi
+Sitemap: https://pembri.github.io/sitemap.xml
