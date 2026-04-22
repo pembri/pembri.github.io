@@ -44,9 +44,13 @@
             backdrop-filter: blur(8px); 
             z-index: 999; 
         }
+
+        /* SEARCH STYLE JANGAN DIHAPUS */
+        #searchSuggestions { display: none; }
+        #searchSuggestions.active { display: block; }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased" onclick="closeSearch()">
 
     <div id="overlay" class="overlay" onclick="closePop()"></div>
     <div id="success-pop" class="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl text-center border-[6px] border-red-600">
@@ -59,12 +63,20 @@
     </div>
 
     <header class="nav-glass sticky top-0 z-[100]">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-4">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-2 md:gap-4 shrink-0">
                 <a href="/" class="text-zinc-400 hover:text-black transition">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                 </a>
-                <a href="/" class="text-2xl font-black tracking-tighter uppercase">PORTAL<span class="text-red-600">NADA</span></a>
+                <a href="/" class="text-lg md:text-2xl font-black tracking-tighter uppercase shrink-0">PORTAL<span class="text-red-600">NADA</span></a>
+            </div>
+
+            <div class="flex-1 max-w-sm relative" onclick="event.stopPropagation()">
+                <input type="text" id="innerSearch" oninput="handleSearch()" placeholder="Cari musik..." autocomplete="off" class="w-full bg-zinc-100 border-none rounded-xl py-2 px-4 text-xs md:text-sm outline-none focus:ring-2 focus:ring-red-600 transition-all">
+                
+                <div id="searchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-zinc-100 overflow-hidden z-[110]">
+                    <div id="suggestionsList" class="max-h-[60vh] overflow-y-auto"></div>
+                </div>
             </div>
         </div>
     </header>
@@ -101,31 +113,32 @@
         </div>
     </main>
 
-     <footer class="bg-zinc-950 text-white mt-32 pt-20 pb-10">
-    <div class="max-w-7xl mx-auto px-8">
-        <div class="flex flex-col items-center text-center border-b border-zinc-800 pb-12 mb-8">
-            <div>
-                <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">Portal<span class="text-red-600">Nada</span></h2>
-                <p class="text-zinc-500 text-sm max-w-sm leading-relaxed mx-auto">
-                    Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia.
+    <footer class="bg-zinc-950 text-white mt-32 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col items-center text-center border-b border-zinc-800 pb-12 mb-8">
+                <div>
+                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">Portal<span class="text-red-600">Nada</span></h2>
+                    <p class="text-zinc-500 text-sm max-w-sm leading-relaxed mx-auto">
+                        Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia.
+                    </p>
+                </div>
+                
+                <div class="flex gap-8 text-[11px] font-black uppercase tracking-[0.2em] mt-8">
+                    <a href="/about.html" class="hover:text-red-600 transition">About</a>
+                    <a href="/contact.html" class="hover:text-red-600 transition">Contact</a>
+                </div>
+            </div>
+
+            <div class="flex justify-center items-center">
+                <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center">
+                    © 2026 Portal Nada Media
                 </p>
             </div>
-            
-            <div class="flex gap-8 text-[11px] font-black uppercase tracking-[0.2em] mt-8">
-                <a href="/about" class="hover:text-red-600 transition">About</a>
-                <a href="/contact" class="hover:text-red-600 transition">Contact</a>
-            </div>
         </div>
-
-        <div class="flex justify-center items-center">
-            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center">
-                © 2026 Portal Nada Media
-            </p>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <script>
+        let allArticles = [];
         const form = document.getElementById("contact-form");
         const btn = document.getElementById("submit-btn");
         const pop = document.getElementById("success-pop");
@@ -150,7 +163,7 @@
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 } else {
-                    alert("Gagal nengirim.");
+                    alert("Gagal mengirim.");
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 }
@@ -167,6 +180,44 @@
         }
 
         form.addEventListener("submit", handleSubmit);
+
+        // SEARCH LOGIC
+        async function handleSearch() {
+            const input = document.getElementById('innerSearch');
+            const suggestions = document.getElementById('searchSuggestions');
+            const list = document.getElementById('suggestionsList');
+            const query = input.value.toLowerCase();
+            if (query.length < 1) { suggestions.classList.remove('active'); return; }
+            
+            const filtered = allArticles.filter(art => {
+                const titleText = art.name.replace(/-/g, ' ').toLowerCase();
+                return titleText.includes(query);
+            }).slice(0, 8);
+
+            if (filtered.length > 0) {
+                list.innerHTML = filtered.map(art => {
+                    const title = art.name.replace(/-/g, ' ').replace('.html', '');
+                    return `<a href="/artikel/${art.name}" class="block px-5 py-4 hover:bg-zinc-50 border-b border-zinc-50 transition flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
+                        <span class="text-[11px] font-black text-zinc-800 uppercase truncate tracking-tight">${title}</span>
+                    </a>`;
+                }).join('');
+                suggestions.classList.add('active');
+            } else {
+                list.innerHTML = `<div class="px-5 py-4 text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Tidak ditemukan</div>`;
+                suggestions.classList.add('active');
+            }
+        }
+
+        function closeSearch() { document.getElementById('searchSuggestions').classList.remove('active'); }
+
+        async function initSearch() {
+            try {
+                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
+                allArticles = await res.json();
+            } catch (e) { console.log("Search error:", e); }
+        }
+        window.addEventListener('load', initSearch);
     </script>
 </body>
 </html>
