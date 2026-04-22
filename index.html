@@ -51,10 +51,10 @@
         .hero-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); }
         .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         
-        /* Fixed Slider Styling */
-        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 260px; } /* Ukuran diperkecil sesuai request */
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; background: #18181b; }
-        .slide.active { opacity: 1; position: relative; }
+        /* Slider Styling */
+        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 400px; background: #18181b; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease-in-out; visibility: hidden; }
+        .slide.active { opacity: 1; visibility: visible; position: relative; }
         .pagination-btn { transition: all 0.3s; }
         .pagination-btn.active { background-color: #ef4444; color: white; border-color: #ef4444; }
     </style>
@@ -93,14 +93,12 @@
 
             <aside class="lg:col-span-4">
                 <div class="sticky top-28">
-                    <h2 class="text-lg font-black uppercase tracking-tight flex items-center gap-3 mb-6">
-                        <span class="w-1.5 h-6 bg-red-600"></span>
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-red-600 mb-6 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
                         Terpopuler
-                    </h2>
-                    <div id="trending-slider" class="slider-container shadow-xl">
-                        <div id="slider-inner" class="h-full">
-                            <div class="w-full h-full bg-zinc-200 animate-pulse flex items-center justify-center text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Memuat Populer...</div>
-                        </div>
+                    </h3>
+                    <div id="trending-slider" class="slider-container shadow-2xl">
+                        <div id="slider-inner" class="h-full"></div>
                     </div>
                 </div>
             </aside>
@@ -135,7 +133,7 @@
                 const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
                 const data = await res.json();
                 
-                if(!data || data.length === 0 || data.message === "Not Found") {
+                if(!data || data.message === "Not Found" || data.length === 0) {
                     document.getElementById('hero-loader').style.display = 'none';
                     document.getElementById('empty-state').classList.remove('hidden');
                     return;
@@ -145,14 +143,10 @@
                 
                 if(allArticles.length > 0) {
                     renderHero(allArticles[0]);
-                    
-                    // Artikel ke-2 sampai ke-6 untuk slider terpopuler
-                    const popularItems = allArticles.slice(1, 6);
-                    renderTrendingSlider(popularItems);
-
-                    // Semua artikel (kecuali hero) masuk ke sistem pagination artikel terbaru
-                    const gridItems = allArticles.slice(1);
-                    renderPagination(gridItems);
+                    // Tampilkan di grid utama ( pagination tetap 5 per halaman )
+                    renderPagination(allArticles);
+                    // Ambil 5 artikel untuk slider terpopuler (bisa artikel yang sama atau acak)
+                    renderTrendingSlider(allArticles.slice(0, 5)); 
                 }
 
                 document.getElementById('hero-loader').style.display = 'none';
@@ -166,10 +160,12 @@
                 const html = await res.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
-                // Cari img di dalam article atau body
-                const img = doc.querySelector('article img, img');
-                return img ? img.src : 'https://images.unsplash.com/photo-1514525253344-8846bbd97d6c?q=80&w=800';
-            } catch (e) { return 'https://images.unsplash.com/photo-1514525253344-8846bbd97d6c?q=80&w=800'; }
+                // Cari di artikel tag img, atau gambar apapun. Jika tidak ada pakai fallback Unsplash
+                const img = doc.querySelector('article img') || doc.querySelector('img');
+                return img ? img.src : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800';
+            } catch (e) { 
+                return 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800'; 
+            }
         }
 
         async function renderHero(art) {
@@ -177,7 +173,7 @@
             const title = art.name.replace(/-/g, ' ').replace('.html', '');
             document.getElementById('hero-content').innerHTML = `
                 <a href="artikel/${art.name}" class="group relative block h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
-                    <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition duration-1000">
+                    <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition duration-1000" onerror="this.src='https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800'">
                     <div class="absolute inset-0 hero-overlay"></div>
                     <div class="absolute bottom-0 p-8 md:p-12 w-full">
                         <span class="bg-red-600 text-white px-3 py-1 rounded text-[9px] font-black uppercase tracking-widest mb-4 inline-block shadow-xl">Sorotan Utama</span>
@@ -194,11 +190,11 @@
             displayPosts(items, currentPage);
             container.innerHTML = '';
             
-            if (totalPages <= 1) return;
+            if(totalPages <= 1) return;
 
             const prevBtn = document.createElement('button');
             prevBtn.innerText = 'PREV';
-            prevBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === 1 ? 'hidden' : ''}`;
+            prevBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === 1 ? 'opacity-30 pointer-events-none' : ''}`;
             prevBtn.onclick = () => { currentPage--; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); };
             container.appendChild(prevBtn);
 
@@ -212,14 +208,14 @@
 
             const nextBtn = document.createElement('button');
             nextBtn.innerText = 'NEXT';
-            nextBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === totalPages ? 'hidden' : ''}`;
+            nextBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === totalPages ? 'opacity-30 pointer-events-none' : ''}`;
             nextBtn.onclick = () => { currentPage++; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); };
             container.appendChild(nextBtn);
         }
 
         async function displayPosts(items, page) {
             const grid = document.getElementById('post-grid');
-            grid.innerHTML = '<div class="col-span-full py-10 text-center animate-pulse text-xs font-bold uppercase tracking-widest text-zinc-400">Menyusun Nada...</div>';
+            grid.innerHTML = '<div class="col-span-full py-10 text-center animate-pulse text-xs font-bold uppercase tracking-widest text-zinc-400">Memuat Artikel...</div>';
             
             const start = (page - 1) * postsPerPage;
             const paginatedItems = items.slice(start, start + postsPerPage);
@@ -231,8 +227,8 @@
                 html += `
                     <article class="group">
                         <a href="artikel/${item.name}">
-                            <div class="aspect-[16/10] bg-zinc-100 rounded-[2rem] mb-6 overflow-hidden">
-                                <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            <div class="aspect-[16/10] bg-zinc-200 rounded-[2rem] mb-6 overflow-hidden">
+                                <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" onerror="this.src='https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800'">
                             </div>
                             <h3 class="text-lg font-black uppercase leading-tight group-hover:text-red-600 transition">${title}</h3>
                             <div class="w-10 h-1 bg-red-600 mt-4 group-hover:w-20 transition-all"></div>
@@ -245,54 +241,13 @@
 
         async function renderTrendingSlider(items) {
             const sliderInner = document.getElementById('slider-inner');
-            if(items.length === 0) {
-                sliderInner.innerHTML = '<div class="h-full flex items-center justify-center text-zinc-500 italic text-xs">Belum ada data populer.</div>';
-                return;
-            }
-
-            let html = '';
+            sliderInner.innerHTML = '';
+            
             for(let [index, item] of items.entries()) {
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
-                html += `
-                    <div class="slide ${index === 0 ? 'active' : ''}">
-                        <a href="artikel/${item.name}" class="relative block h-full">
-                            <img src="${img}" class="absolute inset-0 w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent"></div>
-                            <div class="absolute bottom-0 p-6">
-                                <span class="text-red-500 font-black text-2xl mb-1 block">#${index + 1}</span>
-                                <h4 class="text-white font-black uppercase text-sm leading-tight group-hover:text-red-500 transition">${title}</h4>
-                            </div>
-                        </a>
-                    </div>
-                `;
-            }
-            sliderInner.innerHTML = html;
-            startSlider();
-        }
-
-        function startSlider() {
-            let currentSlide = 0;
-            const slides = document.querySelectorAll('.slide');
-            if(slides.length <= 1) return;
-
-            setInterval(() => {
-                slides[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slides[currentSlide].classList.add('active');
-            }, 5000);
-        }
-
-        function searchGlobal() {
-            let filter = document.getElementById('searchInput').value.toUpperCase();
-            let items = document.querySelectorAll('#post-grid article');
-            items.forEach(item => {
-                let text = item.innerText || item.textContent;
-                item.style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-            });
-        }
-
-        window.onload = initPortal;
-    </script>
-</body>
-</html>
+                const slide = document.createElement('div');
+                slide.className = `slide h-full w-full ${index === 0 ? 'active' : ''}`;
+                slide.innerHTML = `
+                    <a href="artikel/${item.name}" class="relative block h-full w-full">
+                        <img src="${img}" class="absolute inset-0 w
