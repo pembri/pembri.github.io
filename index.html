@@ -52,7 +52,7 @@
         .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         
         /* Slider Styling */
-        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 400px; background: #000; }
+        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 400px; background: #18181b; }
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease-in-out; display: none; }
         .slide.active { opacity: 1; display: block; position: relative; }
         .pagination-btn { transition: all 0.3s; }
@@ -128,23 +128,31 @@
         let currentPage = 1;
         const postsPerPage = 5;
 
-        async function fetchImage(path) {
+        // FUNGSI KRUSIAL: Ambil gambar dari isi file HTML
+        async function fetchImage(fileName) {
             try {
-                const res = await fetch(`artikel/${path}`);
-                const html = await res.text();
+                const response = await fetch(`artikel/${fileName}`);
+                const text = await response.text();
                 const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const img = doc.querySelector('img');
-                // Perbaikan: Pastikan path gambar benar
-                if (img) {
-                    let src = img.getAttribute('src');
-                    if (!src.startsWith('http')) {
+                const htmlDoc = parser.parseFromString(text, 'text/html');
+                
+                // Cari img pertama di dalam file artikel
+                const imgTag = htmlDoc.querySelector('img');
+                
+                if (imgTag) {
+                    let src = imgTag.getAttribute('src');
+                    // Jika src gambar relatif (misal: "gambar.jpg"), arahkan ke folder artikel/
+                    if (src && !src.startsWith('http') && !src.startsWith('/')) {
                         return `artikel/${src}`;
                     }
                     return src;
                 }
-                return 'https://images.unsplash.com/photo-1514525253344-8846bbd97d6c?q=80&w=800';
-            } catch (e) { return 'https://images.unsplash.com/photo-1514525253344-8846bbd97d6c?q=80&w=800'; }
+                // Fallback jika tidak ada gambar sama sekali
+                return 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
+            } catch (error) {
+                console.error("Gagal load gambar artikel:", fileName);
+                return 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
+            }
         }
 
         async function initPortal() {
@@ -162,13 +170,13 @@
                 
                 if(allArticles.length > 0) {
                     renderHero(allArticles[0]);
-                    renderTrendingSlider(allArticles.slice(0, 5)); // 5 terbaru jadi populer
+                    renderTrendingSlider(allArticles.slice(0, 5));
                     updatePage();
                 }
 
                 document.getElementById('hero-loader').style.display = 'none';
                 document.getElementById('hero-content').classList.remove('hidden');
-            } catch (err) { console.error("Gagal load data", err); }
+            } catch (err) { console.error("Gagal load API Github", err); }
         }
 
         async function renderHero(art) {
@@ -176,7 +184,7 @@
             const title = art.name.replace(/-/g, ' ').replace('.html', '');
             document.getElementById('hero-content').innerHTML = `
                 <a href="artikel/${art.name}" class="group relative block h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
-                    <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition duration-1000">
+                    <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition duration-1000">
                     <div class="absolute inset-0 hero-overlay"></div>
                     <div class="absolute bottom-0 p-8 md:p-12 w-full">
                         <span class="bg-red-600 text-white px-3 py-1 rounded text-[9px] font-black uppercase tracking-widest mb-4 inline-block shadow-xl">Sorotan Utama</span>
@@ -188,7 +196,7 @@
 
         async function updatePage() {
             const grid = document.getElementById('post-grid');
-            grid.innerHTML = '<div class="col-span-full text-center py-10 animate-pulse text-zinc-400">Memuat Artikel...</div>';
+            grid.innerHTML = '<div class="col-span-full text-center py-20 text-zinc-400 font-bold uppercase tracking-widest animate-pulse">Menyelaraskan Nada...</div>';
             
             const start = (currentPage - 1) * postsPerPage;
             const end = start + postsPerPage;
@@ -201,7 +209,7 @@
                 html += `
                     <article class="group">
                         <a href="artikel/${item.name}">
-                            <div class="aspect-[16/10] bg-zinc-100 rounded-[2rem] mb-6 overflow-hidden">
+                            <div class="aspect-[16/10] bg-zinc-200 rounded-[2rem] mb-6 overflow-hidden">
                                 <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                             </div>
                             <h3 class="text-lg font-black uppercase leading-tight group-hover:text-red-600 transition">${title}</h3>
@@ -221,27 +229,24 @@
 
             if (totalPages <= 1) return;
 
-            // Prev Button
             const prev = document.createElement('button');
             prev.innerText = 'PREV';
             prev.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : ''}`;
-            prev.onclick = () => { if(currentPage > 1) { currentPage--; updatePage(); window.scrollTo({top: 500, behavior: 'smooth'}); } };
+            prev.onclick = () => { if(currentPage > 1) { currentPage--; updatePage(); window.scrollTo({top: 400, behavior: 'smooth'}); } };
             container.appendChild(prev);
 
-            // Numbers
             for(let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement('button');
                 btn.innerText = i;
                 btn.className = `pagination-btn w-10 h-10 text-[10px] font-black border border-zinc-200 rounded-lg ${i === currentPage ? 'active' : 'hover:bg-zinc-100'}`;
-                btn.onclick = () => { currentPage = i; updatePage(); window.scrollTo({top: 500, behavior: 'smooth'}); };
+                btn.onclick = () => { currentPage = i; updatePage(); window.scrollTo({top: 400, behavior: 'smooth'}); };
                 container.appendChild(btn);
             }
 
-            // Next Button
             const next = document.createElement('button');
             next.innerText = 'NEXT';
             next.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : ''}`;
-            next.onclick = () => { if(currentPage < totalPages) { currentPage++; updatePage(); window.scrollTo({top: 500, behavior: 'smooth'}); } };
+            next.onclick = () => { if(currentPage < totalPages) { currentPage++; updatePage(); window.scrollTo({top: 400, behavior: 'smooth'}); } };
             container.appendChild(next);
         }
 
@@ -257,7 +262,7 @@
                 slide.innerHTML = `
                     <a href="artikel/${item.name}" class="relative block h-full">
                         <img src="${img}" class="absolute inset-0 w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                         <div class="absolute bottom-0 p-8">
                             <span class="text-red-500 font-black text-4xl mb-2 block">#${index + 1}</span>
                             <h4 class="text-white font-black uppercase text-xl leading-tight">${title}</h4>
