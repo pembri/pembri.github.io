@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#ffffff"/>
+            
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Kami - Portal Nada</title>
+    
+    <meta name="description" content="Portal Nada adalah media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia.">
+    <meta property="og:site_name" content="Portal Nada">
+    <meta property="og:title" content="Tentang Kami - Portal Nada">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://pembri.github.io/about.html">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1a1a1a; }
+        .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .prose img { border-radius: 1.5rem; margin: 2rem 0; width: 100%; height: auto; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .prose a { color: #ef4444; text-decoration: underline; font-weight: bold; }
+        .prose h2 { font-weight: 800; text-transform: uppercase; margin-top: 2rem; font-size: 1.5rem; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="nav-glass sticky top-0 z-[100]">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/" class="text-zinc-400 hover:text-black transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </a>
+                <a href="/" class="text-2xl font-black tracking-tighter uppercase">PORTAL<span class="text-red-600">NADA</span></a>
+            </div>
+            <div class="flex-1 max-w-sm ml-10 hidden md:block">
+                <div class="relative">
+                    <input type="text" id="innerSearch" placeholder="Cari artikel lain..." class="w-full bg-zinc-100 border-none rounded-xl py-2 px-5 text-sm outline-none focus:ring-2 focus:ring-red-600 transition-all">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="max-w-3xl mx-auto px-6 py-16 md:py-24 text-center">
+            <div class="mb-10">
+                <span class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 inline-block">Our Profile</span>
+                <h1 class="text-4xl md:text-6xl font-black uppercase leading-tight tracking-tighter mb-6">Suara <span class="text-red-600">Musik</span> Masa Kini</h1>
+                <div class="flex items-center justify-center gap-4 text-zinc-400 text-xs font-bold uppercase tracking-widest border-b pb-8">
+                    <span>Mengenal Portal Nada</span>
+                </div>
+            </div>
+            
+            <div class="prose prose-zinc prose-lg max-w-none leading-relaxed text-left mx-auto">
+                <p><strong>Portal Nada</strong> hadir sebagai wadah independen yang didedikasikan untuk eksplorasi dunia musik tanpa batas. Berawal dari kecintaan terhadap harmoni dan lirik, kami bertransformasi menjadi sumber informasi utama bagi para penikmat musik di seluruh Indonesia.</p>
+                
+                <h2>Visi Kami</h2>
+                <p>Menjadi jembatan antara musisi dan pendengar, memberikan apresiasi yang layak untuk setiap karya, serta menyajikan ulasan yang jujur, tajam, dan edukatif.</p>
+
+                <h2>Apa yang Kami Berikan?</h2>
+                <ul>
+                    <li><strong>Berita Terkini:</strong> Kabar terbaru dari skena lokal hingga internasional.</li>
+                    <li><strong>Review Album:</strong> Bedah tuntas setiap nada dan pesan di balik karya musisi.</li>
+                    <li><strong>Liputan Konser:</strong> Membawa energi panggung langsung ke hadapan Anda.</li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <footer class="bg-zinc-950 text-white mt-32 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col items-center text-center border-b border-zinc-800 pb-12 mb-8">
+                <div>
+                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">Portal<span class="text-red-600">Nada</span></h2>
+                    <p class="text-zinc-500 text-sm max-w-sm leading-relaxed mx-auto">
+                        Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia.
+                    </p>
+                </div>
+                <div class="flex gap-8 text-[11px] font-black uppercase tracking-[0.2em] mt-8">
+                    <a href="/about.html" class="hover:text-red-600 transition">About</a>
+                    <a href="/contact.html" class="hover:text-red-600 transition">Contact</a>
+                </div>
+            </div>
+            <div class="flex justify-center items-center">
+                <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center">
+                    © 2026 Portal Nada Media
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('innerSearch')?.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                window.location.href = '/?s=' + e.target.value;
+            }
+        });
+    </script>
+</body>
+</html>
