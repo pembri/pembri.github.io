@@ -47,11 +47,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; scroll-behavior: smooth; }
         .hero-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); }
         .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .trending-number { -webkit-text-stroke: 1px #3f3f46; color: transparent; }
+        .trending-number { -webkit-text-stroke: 1px #3f3f46; color: transparent; min-width: 50px; }
         .group:hover .trending-number { -webkit-text-stroke: 1px #ef4444; }
+        
+        /* Slider Styling */
+        .pop-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+        .pop-slider::-webkit-scrollbar { display: none; }
+        .slide-item { flex: 0 0 100%; scroll-snap-align: start; }
     </style>
 </head>
 <body class="text-zinc-900">
@@ -69,7 +74,7 @@
 
     <main class="max-w-7xl mx-auto px-4 md:px-8 py-8">
         <section id="hero-section" class="mb-16">
-            <div id="hero-loader" class="h-[500px] bg-zinc-200 animate-pulse rounded-[2.5rem]"></div>
+            <div id="hero-loader" class="h-[400px] md:h-[500px] bg-zinc-200 animate-pulse rounded-[2.5rem]"></div>
             <div id="hero-content" class="hidden"></div>
         </section>
 
@@ -84,10 +89,18 @@
             </div>
 
             <aside class="lg:col-span-4">
-                <div class="bg-zinc-950 p-8 rounded-[2.5rem] text-white shadow-2xl">
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-red-600 mb-8 border-b border-zinc-800 pb-4">Terpopuler</h3>
-                    <div id="sidebar-trending" class="space-y-8">
+                <div class="bg-zinc-950 p-8 rounded-[2.5rem] text-white shadow-2xl sticky top-28">
+                    <div class="flex justify-between items-center mb-8 border-b border-zinc-800 pb-4">
+                        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-red-600">Terpopuler</h3>
+                        <div class="flex gap-2">
+                            <button onclick="prevSlide()" class="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-xs hover:bg-red-600 transition">←</button>
+                            <button onclick="nextSlide()" class="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-xs hover:bg-red-600 transition">→</button>
                         </div>
+                    </div>
+                    
+                    <div id="sidebar-trending" class="pop-slider">
+                        <p class="text-zinc-600 text-xs italic">Memuat berita populer...</p>
+                    </div>
                 </div>
             </aside>
         </div>
@@ -102,44 +115,25 @@
     </main>
 
     <footer class="bg-zinc-950 text-white mt-32 pt-20 pb-10">
-    <div class="max-w-7xl mx-auto px-8">
-        <div class="flex flex-col items-center text-center border-b border-zinc-800 pb-12 mb-8">
-            <div>
-                <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">Portal<span class="text-red-600">Nada</span></h2>
-                <p class="text-zinc-500 text-sm max-w-sm leading-relaxed mx-auto">
-                    Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia.
-                </p>
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col items-center text-center border-b border-zinc-800 pb-12 mb-8">
+                <div>
+                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">Portal<span class="text-red-600">Nada</span></h2>
+                    <p class="text-zinc-500 text-sm max-w-sm leading-relaxed mx-auto"> Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia. </p>
+                </div>
+                <div class="flex gap-8 text-[11px] font-black uppercase tracking-[0.2em] mt-8">
+                    <a href="/about" class="hover:text-red-600 transition">About</a>
+                    <a href="/contact" class="hover:text-red-600 transition">Contact</a>
+                </div>
             </div>
-            
-            <div class="flex gap-8 text-[11px] font-black uppercase tracking-[0.2em] mt-8">
-                <a href="/about" class="hover:text-red-600 transition">About</a>
-                <a href="/contact" class="hover:text-red-600 transition">Contact</a>
+            <div class="flex justify-center items-center">
+                <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center"> © 2026 Portal Nada Media </p>
             </div>
         </div>
-
-        <div class="flex justify-center items-center">
-            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center">
-                © 2026 Portal Nada Media
-            </p>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <script>
-        // LOGIK HANDLING URL TANPA .HTML
-        function cleanLink(path) {
-            return path.replace(".html", "");
-        }
-
-        // Handle klik link agar URL tetap bersih
-        document.addEventListener('click', e => {
-            const origin = e.target.closest('a');
-            if (origin && origin.href.includes('/artikel/')) {
-                e.preventDefault();
-                const cleanUrl = origin.href.replace(".html", "");
-                window.location.href = cleanUrl;
-            }
-        });
+        let slideIndex = 0;
 
         async function initPortal() {
             try {
@@ -154,11 +148,19 @@
 
                 const articles = data.filter(f => f.name.endsWith('.html')).reverse();
                 
-                // Distribusi Konten Otomatis
+                // 1. Render Hero (Artikel Paling Baru)
                 if(articles.length > 0) renderHero(articles[0]);
-                if(articles.length > 1) renderGrid(articles.slice(1, 5)); // 4 Artikel terbaru
-                if(articles.length > 5) renderTrending(articles.slice(5, 8)); // 3 Artikel populer berikutnya
-                if(articles.length > 8) renderBottom(articles.slice(8, 12)); // 4 Pilihan redaksi
+
+                // 2. Artikel Terbaru (Urutan 2-7)
+                if(articles.length > 1) renderGrid(articles.slice(1, 7));
+
+                // 3. Terpopuler (Slider - Urutan Acak dari semua artikel)
+                const popular = [...articles].sort(() => 0.5 - Math.random()).slice(0, 5);
+                renderTrending(popular);
+
+                // 4. Pilihan Redaksi (Acak 4 artikel)
+                const editorChoice = [...articles].sort(() => 0.5 - Math.random()).slice(0, 4);
+                renderBottom(editorChoice);
 
                 document.getElementById('hero-loader').style.display = 'none';
                 document.getElementById('hero-content').classList.remove('hidden');
@@ -180,7 +182,7 @@
             const img = await fetchImage(art.name);
             const title = art.name.replace(/-/g, ' ').replace('.html', '');
             document.getElementById('hero-content').innerHTML = `
-                <a href="artikel/${art.name}" class="group relative block h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
+                <a href="artikel/${art.name}" class="group relative block h-[400px] md:h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
                     <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition duration-1000">
                     <div class="absolute inset-0 hero-overlay"></div>
                     <div class="absolute bottom-0 p-8 md:p-12 w-full">
@@ -197,7 +199,7 @@
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
                 grid.innerHTML += `
-                    <article class="group">
+                    <article class="group animate-fade-in">
                         <a href="artikel/${item.name}">
                             <div class="aspect-[16/10] bg-zinc-100 rounded-[2rem] mb-6 overflow-hidden">
                                 <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
@@ -210,15 +212,19 @@
             }
         }
 
-        async function renderTrending(items) {
+        function renderTrending(items) {
             const list = document.getElementById('sidebar-trending');
+            list.innerHTML = '';
             items.forEach((item, i) => {
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
                 list.innerHTML += `
-                    <a href="artikel/${item.name}" class="flex gap-6 group items-center">
-                        <span class="text-4xl font-black trending-number transition">0${i+1}</span>
-                        <p class="text-[13px] font-extrabold uppercase leading-snug group-hover:text-red-500 transition">${title}</p>
-                    </a>
+                    <div class="slide-item">
+                        <a href="artikel/${item.name}" class="flex flex-col gap-4 group">
+                            <span class="text-6xl font-black trending-number block">0${i+1}</span>
+                            <p class="text-xl font-black uppercase leading-tight group-hover:text-red-500 transition">${title}</p>
+                            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-2 italic">Trending di Portal Nada</p>
+                        </a>
+                    </div>
                 `;
             });
         }
@@ -239,9 +245,25 @@
             }
         }
 
+        // SLIDER FUNCTIONS
+        function nextSlide() {
+            const slider = document.getElementById('sidebar-trending');
+            const slides = slider.querySelectorAll('.slide-item');
+            slideIndex = (slideIndex + 1) % slides.length;
+            slider.scrollTo({ left: slider.clientWidth * slideIndex, behavior: 'smooth' });
+        }
+
+        function prevSlide() {
+            const slider = document.getElementById('sidebar-trending');
+            const slides = slider.querySelectorAll('.slide-item');
+            slideIndex = (slideIndex - 1 + slides.length) % slides.length;
+            slider.scrollTo({ left: slider.clientWidth * slideIndex, behavior: 'smooth' });
+        }
+
+        // Search Functionality
         function searchGlobal() {
             let filter = document.getElementById('searchInput').value.toUpperCase();
-            let items = document.querySelectorAll('#post-grid article, #sidebar-trending a, #bottom-recs a');
+            let items = document.querySelectorAll('#post-grid article, #bottom-recs a');
             items.forEach(item => {
                 let text = item.innerText || item.textContent;
                 item.style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
