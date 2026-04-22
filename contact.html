@@ -23,7 +23,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1a1a1a; }
         .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         .chat-input { background: #f4f4f5; border: 2px solid transparent; transition: all 0.2s ease; }
-        .chat-input:focus { background: white; border-color: #ef4444; outline: none; }
+        .chat-input:focus { background: white; border-color: #ef4444; outline: none; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.1); }
     </style>
 </head>
 <body class="antialiased">
@@ -39,28 +39,41 @@
         </div>
     </header>
 
-    <main class="py-16 md:py-24">
-        <div class="max-w-2xl mx-auto px-6">
-            <div class="mb-12 text-center">
-                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 inline-block">Direct Chat</span>
-                <h1 class="text-4xl font-black uppercase tracking-tighter leading-none mb-4">Punya Saran <br>Atau <span class="text-red-600">Masukan?</span></h1>
-                <p class="text-zinc-500 font-bold text-xs uppercase tracking-widest">Pesan Anda akan langsung masuk ke email Admin.</p>
+    <main class="py-12 md:py-20">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="mb-16 text-center">
+                <span class="bg-red-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 inline-block shadow-lg shadow-red-600/20">Direct Chat</span>
+                <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6">Punya Saran <br>Atau <span class="text-red-600">Masukan?</span></h1>
+                <p class="text-zinc-500 font-bold text-sm uppercase tracking-[0.2em]">Kirim pesan Anda sekarang, admin akan merespon via email.</p>
             </div>
 
-            <form action="https://formspree.io/f/xvgzlowq" method="POST" enctype="multipart/form-data" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="Nama" placeholder="Nama Anda" required class="chat-input p-5 rounded-2xl font-bold text-sm w-full">
-                    <input type="email" name="Email" placeholder="Email Anda" required class="chat-input p-5 rounded-2xl font-bold text-sm w-full">
-                </div>
-                <textarea name="Pesan" placeholder="Tulis pesan atau masukan di sini..." rows="6" required class="chat-input p-5 rounded-2xl font-bold text-sm w-full resize-none"></textarea>
-                
-                <div class="bg-zinc-100 p-4 rounded-2xl border-2 border-dashed border-zinc-300">
-                    <p class="text-[10px] font-black uppercase mb-2 text-zinc-400 tracking-widest">Lampirkan File (Opsional)</p>
-                    <input type="file" name="upload" class="text-xs font-bold text-zinc-500 w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-black file:text-white hover:file:bg-red-600 cursor-pointer">
+            <form action="https://formspree.io/f/xvgzlowq" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Nama Pengirim</label>
+                        <input type="text" name="Nama" placeholder="Siapa nama Anda?" required class="chat-input p-6 rounded-[2rem] font-bold text-base w-full">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Email Aktif</label>
+                        <input type="email" name="Email" placeholder="emailanda@gmail.com" required class="chat-input p-6 rounded-[2rem] font-bold text-base w-full">
+                    </div>
                 </div>
 
-                <button type="submit" class="w-full bg-black text-white p-6 rounded-3xl font-black uppercase tracking-[0.2em] text-xs hover:bg-red-600 transition-all shadow-xl active:scale-95">
-                    Kirim Pesan
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-2">Isi Pesan / Masukan</label>
+                    <textarea name="Pesan" placeholder="Tuliskan keluhan, saran, atau masukan Anda dengan lengkap di sini..." rows="10" required class="chat-input p-8 rounded-[2.5rem] font-bold text-base w-full resize-none"></textarea>
+                </div>
+                
+                <div class="bg-zinc-50 p-8 rounded-[2.5rem] border-2 border-dashed border-zinc-200 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <p class="text-xs font-black uppercase mb-1 text-black tracking-widest">Lampirkan File / Gambar</p>
+                        <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Maksimal 10MB (PDF, JPG, PNG, dll)</p>
+                    </div>
+                    <input type="file" name="upload" class="text-xs font-bold text-zinc-500 cursor-pointer file:mr-6 file:py-3 file:px-8 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-black file:text-white hover:file:bg-red-600 file:transition-all">
+                </div>
+
+                <button type="submit" class="w-full bg-black text-white p-8 rounded-[2.5rem] font-black uppercase tracking-[0.3em] text-sm hover:bg-red-600 transition-all shadow-2xl shadow-red-600/10 active:scale-[0.98]">
+                    Kirim Pesan Sekarang
                 </button>
             </form>
         </div>
