@@ -51,23 +51,31 @@
         .hero-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); }
         .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         
-        /* Slider Styling */
         .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 400px; background: #18181b; }
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease-in-out; display: none; }
         .slide.active { opacity: 1; display: block; position: relative; }
         .pagination-btn { transition: all 0.3s; }
         .pagination-btn.active { background-color: #ef4444; color: white; border-color: #ef4444; }
+
+        /* Style Baru buat Live Search */
+        #searchSuggestions { display: none; }
+        #searchSuggestions.active { display: block; }
+        .suggestion-item:last-child { border-bottom: none; }
     </style>
 </head>
-<body class="text-zinc-900">
+<body class="text-zinc-900" onclick="closeSearch()">
 
     <header class="nav-glass sticky top-0 z-[100]">
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
             <a href="/" class="text-2xl font-black tracking-tighter uppercase flex items-center">
                 PORTAL<span class="text-red-600">NADA</span>
             </a>
-            <div class="flex-1 max-w-sm ml-4 md:ml-10 relative group">
-                <input type="text" id="searchInput" onkeyup="searchGlobal()" placeholder="Cari musik..." class="w-full bg-zinc-100 border-none rounded-xl py-2.5 px-5 text-sm focus:ring-2 focus:ring-red-600 transition-all outline-none">
+            <div class="flex-1 max-w-sm ml-4 md:ml-10 relative group" onclick="event.stopPropagation()">
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Cari musik..." autocomplete="off" class="w-full bg-zinc-100 border-none rounded-xl py-2.5 px-5 text-sm focus:ring-2 focus:ring-red-600 transition-all outline-none">
+                
+                <div id="searchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-zinc-100 overflow-hidden z-[110]">
+                    <div id="suggestionsList" class="max-height-[300px] overflow-y-auto"></div>
+                </div>
             </div>
         </div>
     </header>
@@ -85,9 +93,7 @@
                     Artikel Terbaru
                 </h2>
                 <div id="post-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12"></div>
-                
                 <div id="pagination-container" class="mt-16 flex justify-center items-center gap-2"></div>
-                
                 <div id="empty-state" class="hidden py-20 text-center text-zinc-400 italic">Belum ada konten publikasi.</div>
             </div>
 
@@ -128,55 +134,79 @@
         let currentPage = 1;
         const postsPerPage = 5;
 
-        // FUNGSI INI GUE UPGRADE SUPAYA TAHAN BANTING SAMA FILE 2MB (BASE64)
         async function fetchImage(fileName) {
             const fallback = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
             try {
                 const response = await fetch(`artikel/${fileName}`);
                 if (!response.ok) return fallback;
-                
                 const text = await response.text();
-                
-                // Pake Regex buat "curi" src gambar pertama biar super kenceng
                 const imgRegex = /<img[^>]+src="([^">]+)"/;
                 const match = text.match(imgRegex);
-                
                 if (match && match[1]) {
                     let src = match[1];
-                    // Kalau src-nya Base64 (data:image...)
                     if (src.startsWith('data:image')) return src;
-                    // Kalau src-nya relatif
                     if (!src.startsWith('http') && !src.startsWith('/')) return `artikel/${src}`;
                     return src;
                 }
                 return fallback;
-            } catch (error) {
-                return fallback;
-            }
+            } catch (error) { return fallback; }
         }
 
         async function initPortal() {
             try {
                 const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
                 const data = await res.json();
-                
                 if(!data || data.length === 0 || data.message === "Not Found") {
                     document.getElementById('hero-loader').style.display = 'none';
                     document.getElementById('empty-state').classList.remove('hidden');
                     return;
                 }
-
                 allArticles = data.filter(f => f.name.endsWith('.html')).reverse();
-                
                 if(allArticles.length > 0) {
                     renderHero(allArticles[0]);
                     renderTrendingSlider(allArticles.slice(0, 5));
                     updatePage();
                 }
-
                 document.getElementById('hero-loader').style.display = 'none';
                 document.getElementById('hero-content').classList.remove('hidden');
             } catch (err) { console.error("Gagal load API Github", err); }
+        }
+
+        // FITUR BARU: AUTOCOMPLETE SEARCH
+        function handleSearch() {
+            const input = document.getElementById('searchInput');
+            const suggestions = document.getElementById('searchSuggestions');
+            const list = document.getElementById('suggestionsList');
+            const query = input.value.toLowerCase();
+
+            if (query.length < 1) {
+                suggestions.classList.remove('active');
+                return;
+            }
+
+            const filtered = allArticles.filter(art => 
+                art.name.replace(/-/g, ' ').toLowerCase().includes(query)
+            ).slice(0, 6); // Ambil 6 hasil teratas
+
+            if (filtered.length > 0) {
+                list.innerHTML = filtered.map(art => {
+                    const title = art.name.replace(/-/g, ' ').replace('.html', '');
+                    return `
+                        <a href="artikel/${art.name}" class="suggestion-item block px-5 py-3 hover:bg-zinc-50 border-b border-zinc-100 transition flex items-center gap-3">
+                            <div class="w-2 h-2 bg-red-600 rounded-full"></div>
+                            <span class="text-sm font-bold text-zinc-800 uppercase truncate">${title}</span>
+                        </a>
+                    `;
+                }).join('');
+                suggestions.classList.add('active');
+            } else {
+                list.innerHTML = `<div class="px-5 py-4 text-xs text-zinc-400 italic">Musik tidak ditemukan...</div>`;
+                suggestions.classList.add('active');
+            }
+        }
+
+        function closeSearch() {
+            document.getElementById('searchSuggestions').classList.remove('active');
         }
 
         async function renderHero(art) {
@@ -197,11 +227,9 @@
         async function updatePage() {
             const grid = document.getElementById('post-grid');
             grid.innerHTML = '<div class="col-span-full text-center py-20 text-zinc-400 font-bold uppercase tracking-widest animate-pulse">Menyelaraskan Nada...</div>';
-            
             const start = (currentPage - 1) * postsPerPage;
             const end = start + postsPerPage;
             const paginatedItems = allArticles.slice(start, end);
-
             let html = '';
             for(let item of paginatedItems) {
                 const img = await fetchImage(item.name);
@@ -278,15 +306,6 @@
                 currentSlide = (currentSlide + 1) % slides.length;
                 slides[currentSlide].classList.add('active');
             }, 5000);
-        }
-
-        function searchGlobal() {
-            let filter = document.getElementById('searchInput').value.toUpperCase();
-            let items = document.querySelectorAll('#post-grid article');
-            items.forEach(item => {
-                let text = item.innerText || item.textContent;
-                item.style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-            });
         }
 
         window.onload = initPortal;
