@@ -57,7 +57,6 @@
         .pagination-btn { transition: all 0.3s; }
         .pagination-btn.active { background-color: #ef4444; color: white; border-color: #ef4444; }
 
-        /* Style Baru buat Live Search */
         #searchSuggestions { display: none; }
         #searchSuggestions.active { display: block; }
         .suggestion-item:last-child { border-bottom: none; }
@@ -119,8 +118,9 @@
                     <p class="text-zinc-500 text-sm max-w-sm leading-relaxed mx-auto"> Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia. </p>
                 </div>
                 <div class="flex gap-8 text-[11px] font-black uppercase tracking-[0.2em] mt-8">
-                    <a href="/about" class="hover:text-red-600 transition">About</a>
-                    <a href="/contact" class="hover:text-red-600 transition">Contact</a>
+                    <a href="/about.html" class="hover:text-red-600 transition">About</a>
+                    <a href="/contact.html" class="hover:text-red-600 transition">Contact</a>
+                    <a href="/privacy.html" class="hover:text-red-600 transition">Privacy</a>
                 </div>
             </div>
             <div class="flex justify-center items-center">
@@ -134,9 +134,15 @@
         let currentPage = 1;
         const postsPerPage = 5;
 
+        // Fungsi Helper untuk membersihkan ekstensi .html di URL link
+        function getCleanUrl(name) {
+            return `artikel/${name.replace('.html', '')}`;
+        }
+
         async function fetchImage(fileName) {
             const fallback = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
             try {
+                // Tetap fetch ke file .html aslinya untuk ambil gambar
                 const response = await fetch(`artikel/${fileName}`);
                 if (!response.ok) return fallback;
                 const text = await response.text();
@@ -161,7 +167,9 @@
                     document.getElementById('empty-state').classList.remove('hidden');
                     return;
                 }
+                // Filter file .html saja
                 allArticles = data.filter(f => f.name.endsWith('.html')).reverse();
+                
                 if(allArticles.length > 0) {
                     renderHero(allArticles[0]);
                     renderTrendingSlider(allArticles.slice(0, 5));
@@ -172,7 +180,6 @@
             } catch (err) { console.error("Gagal load API Github", err); }
         }
 
-        // FITUR BARU: AUTOCOMPLETE SEARCH
         function handleSearch() {
             const input = document.getElementById('searchInput');
             const suggestions = document.getElementById('searchSuggestions');
@@ -186,13 +193,14 @@
 
             const filtered = allArticles.filter(art => 
                 art.name.replace(/-/g, ' ').toLowerCase().includes(query)
-            ).slice(0, 6); // Ambil 6 hasil teratas
+            ).slice(0, 6);
 
             if (filtered.length > 0) {
                 list.innerHTML = filtered.map(art => {
                     const title = art.name.replace(/-/g, ' ').replace('.html', '');
+                    const cleanUrl = getCleanUrl(art.name);
                     return `
-                        <a href="artikel/${art.name}" class="suggestion-item block px-5 py-3 hover:bg-zinc-50 border-b border-zinc-100 transition flex items-center gap-3">
+                        <a href="${cleanUrl}" class="suggestion-item block px-5 py-3 hover:bg-zinc-50 border-b border-zinc-100 transition flex items-center gap-3">
                             <div class="w-2 h-2 bg-red-600 rounded-full"></div>
                             <span class="text-sm font-bold text-zinc-800 uppercase truncate">${title}</span>
                         </a>
@@ -212,8 +220,9 @@
         async function renderHero(art) {
             const img = await fetchImage(art.name);
             const title = art.name.replace(/-/g, ' ').replace('.html', '');
+            const cleanUrl = getCleanUrl(art.name);
             document.getElementById('hero-content').innerHTML = `
-                <a href="artikel/${art.name}" class="group relative block h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
+                <a href="${cleanUrl}" class="group relative block h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
                     <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition duration-1000">
                     <div class="absolute inset-0 hero-overlay"></div>
                     <div class="absolute bottom-0 p-8 md:p-12 w-full">
@@ -234,9 +243,10 @@
             for(let item of paginatedItems) {
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
+                const cleanUrl = getCleanUrl(item.name);
                 html += `
                     <article class="group">
-                        <a href="artikel/${item.name}">
+                        <a href="${cleanUrl}">
                             <div class="aspect-[16/10] bg-zinc-200 rounded-[2rem] mb-6 overflow-hidden">
                                 <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                             </div>
@@ -280,10 +290,11 @@
             for(let [index, item] of items.entries()) {
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
+                const cleanUrl = getCleanUrl(item.name);
                 const slide = document.createElement('div');
                 slide.className = `slide h-full ${index === 0 ? 'active' : ''}`;
                 slide.innerHTML = `
-                    <a href="artikel/${item.name}" class="relative block h-full">
+                    <a href="${cleanUrl}" class="relative block h-full">
                         <img src="${img}" class="absolute inset-0 w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                         <div class="absolute bottom-0 p-8">
