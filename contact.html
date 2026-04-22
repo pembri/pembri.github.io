@@ -1,1 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#ffffff"/>
+            
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak Kami - Portal Nada</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1a1a1a; }
+        .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .chat-input { background: #f4f4f5; border: 2px solid transparent; transition: all 0.2s ease; }
+        .chat-input:focus { background: white; border-color: #ef4444; outline: none; }
+    </style>
+</head>
+<body class="antialiased">
 
+    <header class="nav-glass sticky top-0 z-[100]">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/" class="text-zinc-400 hover:text-black transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </a>
+                <a href="/" class="text-2xl font-black tracking-tighter uppercase">PORTAL<span class="text-red-600">NADA</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="py-16 md:py-24">
+        <div class="max-w-2xl mx-auto px-6">
+            <div class="mb-12 text-center">
+                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 inline-block">Direct Chat</span>
+                <h1 class="text-4xl font-black uppercase tracking-tighter leading-none mb-4">Punya Saran <br>Atau <span class="text-red-600">Masukan?</span></h1>
+                <p class="text-zinc-500 font-bold text-xs uppercase tracking-widest">Pesan Anda akan langsung masuk ke email Admin.</p>
+            </div>
+
+            <form action="https://formspree.io/f/xvgzlowq" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" name="Nama" placeholder="Nama Anda" required class="chat-input p-5 rounded-2xl font-bold text-sm w-full">
+                    <input type="email" name="Email" placeholder="Email Anda" required class="chat-input p-5 rounded-2xl font-bold text-sm w-full">
+                </div>
+                <textarea name="Pesan" placeholder="Tulis pesan atau masukan di sini..." rows="6" required class="chat-input p-5 rounded-2xl font-bold text-sm w-full resize-none"></textarea>
+                
+                <div class="bg-zinc-100 p-4 rounded-2xl border-2 border-dashed border-zinc-300">
+                    <p class="text-[10px] font-black uppercase mb-2 text-zinc-400 tracking-widest">Lampirkan File (Opsional)</p>
+                    <input type="file" name="upload" class="text-xs font-bold text-zinc-500 w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-black file:text-white hover:file:bg-red-600 cursor-pointer">
+                </div>
+
+                <button type="submit" class="w-full bg-black text-white p-6 rounded-3xl font-black uppercase tracking-[0.2em] text-xs hover:bg-red-600 transition-all shadow-xl active:scale-95">
+                    Kirim Pesan
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="bg-zinc-950 text-white pt-20 pb-10 text-center">
+        <div class="max-w-7xl mx-auto px-8">
+            <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">Portal<span class="text-red-600">Nada</span></h2>
+            <div class="flex justify-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] mb-12">
+                <a href="/about.html" class="hover:text-red-600 transition">About</a>
+                <a href="/contact.html" class="hover:text-red-600 transition">Contact</a>
+            </div>
+            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest">© 2026 Portal Nada Media</p>
+        </div>
+    </footer>
+
+</body>
+</html>
