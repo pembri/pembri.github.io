@@ -128,30 +128,30 @@
         let currentPage = 1;
         const postsPerPage = 5;
 
-        // FUNGSI KRUSIAL: Ambil gambar dari isi file HTML
+        // FUNGSI INI GUE UPGRADE SUPAYA TAHAN BANTING SAMA FILE 2MB (BASE64)
         async function fetchImage(fileName) {
+            const fallback = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
             try {
                 const response = await fetch(`artikel/${fileName}`);
+                if (!response.ok) return fallback;
+                
                 const text = await response.text();
-                const parser = new DOMParser();
-                const htmlDoc = parser.parseFromString(text, 'text/html');
                 
-                // Cari img pertama di dalam file artikel
-                const imgTag = htmlDoc.querySelector('img');
+                // Pake Regex buat "curi" src gambar pertama biar super kenceng
+                const imgRegex = /<img[^>]+src="([^">]+)"/;
+                const match = text.match(imgRegex);
                 
-                if (imgTag) {
-                    let src = imgTag.getAttribute('src');
-                    // Jika src gambar relatif (misal: "gambar.jpg"), arahkan ke folder artikel/
-                    if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                        return `artikel/${src}`;
-                    }
+                if (match && match[1]) {
+                    let src = match[1];
+                    // Kalau src-nya Base64 (data:image...)
+                    if (src.startsWith('data:image')) return src;
+                    // Kalau src-nya relatif
+                    if (!src.startsWith('http') && !src.startsWith('/')) return `artikel/${src}`;
                     return src;
                 }
-                // Fallback jika tidak ada gambar sama sekali
-                return 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
+                return fallback;
             } catch (error) {
-                console.error("Gagal load gambar artikel:", fileName);
-                return 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
+                return fallback;
             }
         }
 
@@ -226,15 +226,12 @@
             const container = document.getElementById('pagination-container');
             const totalPages = Math.ceil(allArticles.length / postsPerPage);
             container.innerHTML = '';
-
             if (totalPages <= 1) return;
-
             const prev = document.createElement('button');
             prev.innerText = 'PREV';
             prev.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : ''}`;
             prev.onclick = () => { if(currentPage > 1) { currentPage--; updatePage(); window.scrollTo({top: 400, behavior: 'smooth'}); } };
             container.appendChild(prev);
-
             for(let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement('button');
                 btn.innerText = i;
@@ -242,7 +239,6 @@
                 btn.onclick = () => { currentPage = i; updatePage(); window.scrollTo({top: 400, behavior: 'smooth'}); };
                 container.appendChild(btn);
             }
-
             const next = document.createElement('button');
             next.innerText = 'NEXT';
             next.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : ''}`;
@@ -253,7 +249,6 @@
         async function renderTrendingSlider(items) {
             const sliderInner = document.getElementById('slider-inner');
             sliderInner.innerHTML = '';
-            
             for(let [index, item] of items.entries()) {
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
@@ -278,7 +273,6 @@
             let currentSlide = 0;
             const slides = document.querySelectorAll('.slide');
             if(slides.length <= 1) return;
-
             setInterval(() => {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
