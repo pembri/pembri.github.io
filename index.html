@@ -47,16 +47,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; }
         .hero-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); }
         .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .trending-number { -webkit-text-stroke: 1px #3f3f46; color: transparent; min-width: 50px; }
-        .group:hover .trending-number { -webkit-text-stroke: 1px #ef4444; }
         
         /* Slider Styling */
-        .pop-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-        .pop-slider::-webkit-scrollbar { display: none; }
-        .slide-item { flex: 0 0 100%; scroll-snap-align: start; }
+        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 400px; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease-in-out; }
+        .slide.active { opacity: 1; position: relative; }
+        .pagination-btn { transition: all 0.3s; }
+        .pagination-btn.active { background-color: #ef4444; color: white; border-color: #ef4444; }
     </style>
 </head>
 <body class="text-zinc-900">
@@ -74,7 +74,7 @@
 
     <main class="max-w-7xl mx-auto px-4 md:px-8 py-8">
         <section id="hero-section" class="mb-16">
-            <div id="hero-loader" class="h-[400px] md:h-[500px] bg-zinc-200 animate-pulse rounded-[2.5rem]"></div>
+            <div id="hero-loader" class="h-[500px] bg-zinc-200 animate-pulse rounded-[2.5rem]"></div>
             <div id="hero-content" class="hidden"></div>
         </section>
 
@@ -85,33 +85,24 @@
                     Artikel Terbaru
                 </h2>
                 <div id="post-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12"></div>
+                
+                <div id="pagination-container" class="mt-16 flex justify-center items-center gap-2"></div>
+                
                 <div id="empty-state" class="hidden py-20 text-center text-zinc-400 italic">Belum ada konten publikasi.</div>
             </div>
 
             <aside class="lg:col-span-4">
-                <div class="bg-zinc-950 p-8 rounded-[2.5rem] text-white shadow-2xl sticky top-28">
-                    <div class="flex justify-between items-center mb-8 border-b border-zinc-800 pb-4">
-                        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-red-600">Terpopuler</h3>
-                        <div class="flex gap-2">
-                            <button onclick="prevSlide()" class="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-xs hover:bg-red-600 transition">←</button>
-                            <button onclick="nextSlide()" class="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-xs hover:bg-red-600 transition">→</button>
-                        </div>
-                    </div>
-                    
-                    <div id="sidebar-trending" class="pop-slider">
-                        <p class="text-zinc-600 text-xs italic">Memuat berita populer...</p>
+                <div class="sticky top-28">
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-red-600 mb-6 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
+                        Terpopuler
+                    </h3>
+                    <div id="trending-slider" class="slider-container bg-zinc-900 shadow-2xl">
+                        <div id="slider-inner"></div>
                     </div>
                 </div>
             </aside>
         </div>
-
-        <section class="mt-24 border-t border-zinc-100 pt-16">
-            <h2 class="text-xl font-black uppercase mb-10 tracking-widest flex items-center gap-3">
-                 <span class="w-1.5 h-6 bg-zinc-900"></span>
-                 Pilihan Redaksi
-            </h2>
-            <div id="bottom-recs" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
-        </section>
     </main>
 
     <footer class="bg-zinc-950 text-white mt-32 pt-20 pb-10">
@@ -133,7 +124,9 @@
     </footer>
 
     <script>
-        let slideIndex = 0;
+        let allArticles = [];
+        let currentPage = 1;
+        const postsPerPage = 5;
 
         async function initPortal() {
             try {
@@ -146,21 +139,15 @@
                     return;
                 }
 
-                const articles = data.filter(f => f.name.endsWith('.html')).reverse();
+                allArticles = data.filter(f => f.name.endsWith('.html')).reverse();
                 
-                // 1. Render Hero (Artikel Paling Baru)
-                if(articles.length > 0) renderHero(articles[0]);
-
-                // 2. Artikel Terbaru (Urutan 2-7)
-                if(articles.length > 1) renderGrid(articles.slice(1, 7));
-
-                // 3. Terpopuler (Slider - Urutan Acak dari semua artikel)
-                const popular = [...articles].sort(() => 0.5 - Math.random()).slice(0, 5);
-                renderTrending(popular);
-
-                // 4. Pilihan Redaksi (Acak 4 artikel)
-                const editorChoice = [...articles].sort(() => 0.5 - Math.random()).slice(0, 4);
-                renderBottom(editorChoice);
+                if(allArticles.length > 0) {
+                    renderHero(allArticles[0]);
+                    // Ambil sisanya untuk grid dan trending
+                    const rest = allArticles.slice(1);
+                    renderPagination(rest);
+                    renderTrendingSlider(rest.slice(0, 5)); // 5 Teratas untuk slider
+                }
 
                 document.getElementById('hero-loader').style.display = 'none';
                 document.getElementById('hero-content').classList.remove('hidden');
@@ -182,7 +169,7 @@
             const img = await fetchImage(art.name);
             const title = art.name.replace(/-/g, ' ').replace('.html', '');
             document.getElementById('hero-content').innerHTML = `
-                <a href="artikel/${art.name}" class="group relative block h-[400px] md:h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
+                <a href="artikel/${art.name}" class="group relative block h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
                     <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition duration-1000">
                     <div class="absolute inset-0 hero-overlay"></div>
                     <div class="absolute bottom-0 p-8 md:p-12 w-full">
@@ -193,13 +180,53 @@
             `;
         }
 
-        async function renderGrid(items) {
+        // --- SISTEM PAGINATION ARTIKEL TERBARU ---
+        function renderPagination(items) {
+            const container = document.getElementById('pagination-container');
+            const totalPages = Math.ceil(items.length / postsPerPage);
+            
+            displayPosts(items, currentPage);
+
+            container.innerHTML = '';
+            
+            // Tombol Previous
+            const prevBtn = document.createElement('button');
+            prevBtn.innerText = 'PREV';
+            prevBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === 1 ? 'hidden' : ''}`;
+            prevBtn.onclick = () => { currentPage--; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); };
+            container.appendChild(prevBtn);
+
+            // Angka Halaman
+            for(let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i;
+                btn.className = `pagination-btn w-10 h-10 text-[10px] font-black border border-zinc-200 rounded-lg ${i === currentPage ? 'active' : 'hover:bg-zinc-100'}`;
+                btn.onclick = () => { currentPage = i; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); };
+                container.appendChild(btn);
+            }
+
+            // Tombol Next
+            const nextBtn = document.createElement('button');
+            nextBtn.innerText = 'NEXT';
+            nextBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === totalPages ? 'hidden' : ''}`;
+            nextBtn.onclick = () => { currentPage++; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); };
+            container.appendChild(nextBtn);
+        }
+
+        async function displayPosts(items, page) {
             const grid = document.getElementById('post-grid');
-            for(let item of items) {
+            grid.innerHTML = '<div class="col-span-full py-10 text-center animate-pulse text-xs font-bold uppercase tracking-widest text-zinc-400">Menyusun Nada...</div>';
+            
+            const start = (page - 1) * postsPerPage;
+            const end = start + postsPerPage;
+            const paginatedItems = items.slice(start, end);
+
+            let html = '';
+            for(let item of paginatedItems) {
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
-                grid.innerHTML += `
-                    <article class="group animate-fade-in">
+                html += `
+                    <article class="group animate-fadeIn">
                         <a href="artikel/${item.name}">
                             <div class="aspect-[16/10] bg-zinc-100 rounded-[2rem] mb-6 overflow-hidden">
                                 <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
@@ -210,60 +237,49 @@
                     </article>
                 `;
             }
+            grid.innerHTML = html;
         }
 
-        function renderTrending(items) {
-            const list = document.getElementById('sidebar-trending');
-            list.innerHTML = '';
-            items.forEach((item, i) => {
+        // --- SISTEM AUTO-SLIDER TERPOPULER ---
+        async function renderTrendingSlider(items) {
+            const sliderInner = document.getElementById('slider-inner');
+            let html = '';
+            
+            for(let [index, item] of items.entries()) {
+                const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
-                list.innerHTML += `
-                    <div class="slide-item">
-                        <a href="artikel/${item.name}" class="flex flex-col gap-4 group">
-                            <span class="text-6xl font-black trending-number block">0${i+1}</span>
-                            <p class="text-xl font-black uppercase leading-tight group-hover:text-red-500 transition">${title}</p>
-                            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-2 italic">Trending di Portal Nada</p>
+                html += `
+                    <div class="slide ${index === 0 ? 'active' : ''}">
+                        <a href="artikel/${item.name}" class="relative block h-full">
+                            <img src="${img}" class="absolute inset-0 w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-0 p-8">
+                                <span class="text-red-500 font-black text-4xl mb-2 block">#${index + 1}</span>
+                                <h4 class="text-white font-black uppercase text-xl leading-tight">${title}</h4>
+                            </div>
                         </a>
                     </div>
                 `;
-            });
-        }
-
-        async function renderBottom(items) {
-            const container = document.getElementById('bottom-recs');
-            for(let item of items) {
-                const img = await fetchImage(item.name);
-                const title = item.name.replace(/-/g, ' ').replace('.html', '');
-                container.innerHTML += `
-                    <a href="artikel/${item.name}" class="group block">
-                        <div class="aspect-square rounded-[2rem] overflow-hidden mb-4 shadow-lg border border-zinc-100">
-                            <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                        </div>
-                        <h4 class="text-[11px] font-black uppercase leading-tight text-center px-2 group-hover:text-red-600 transition">${title}</h4>
-                    </a>
-                `;
             }
+            sliderInner.innerHTML = html;
+            startSlider();
         }
 
-        // SLIDER FUNCTIONS
-        function nextSlide() {
-            const slider = document.getElementById('sidebar-trending');
-            const slides = slider.querySelectorAll('.slide-item');
-            slideIndex = (slideIndex + 1) % slides.length;
-            slider.scrollTo({ left: slider.clientWidth * slideIndex, behavior: 'smooth' });
+        function startSlider() {
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide');
+            if(slides.length <= 1) return;
+
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 5000); // Ganti slide tiap 5 detik
         }
 
-        function prevSlide() {
-            const slider = document.getElementById('sidebar-trending');
-            const slides = slider.querySelectorAll('.slide-item');
-            slideIndex = (slideIndex - 1 + slides.length) % slides.length;
-            slider.scrollTo({ left: slider.clientWidth * slideIndex, behavior: 'smooth' });
-        }
-
-        // Search Functionality
         function searchGlobal() {
             let filter = document.getElementById('searchInput').value.toUpperCase();
-            let items = document.querySelectorAll('#post-grid article, #bottom-recs a');
+            let items = document.querySelectorAll('#post-grid article');
             items.forEach(item => {
                 let text = item.innerText || item.textContent;
                 item.style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
