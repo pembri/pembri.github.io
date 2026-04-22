@@ -51,9 +51,9 @@
         .hero-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); }
         .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         
-        /* Slider Styling */
-        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 400px; }
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease-in-out; background-color: #18181b; }
+        /* Fixed Slider Styling */
+        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 260px; } /* Ukuran diperkecil sesuai request */
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; background: #18181b; }
         .slide.active { opacity: 1; position: relative; }
         .pagination-btn { transition: all 0.3s; }
         .pagination-btn.active { background-color: #ef4444; color: white; border-color: #ef4444; }
@@ -93,12 +93,14 @@
 
             <aside class="lg:col-span-4">
                 <div class="sticky top-28">
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-red-600 mb-6 flex items-center gap-2">
-                        <span class="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
+                    <h2 class="text-lg font-black uppercase tracking-tight flex items-center gap-3 mb-6">
+                        <span class="w-1.5 h-6 bg-red-600"></span>
                         Terpopuler
-                    </h3>
-                    <div id="trending-slider" class="slider-container bg-zinc-900 shadow-2xl">
-                        <div id="slider-inner"></div>
+                    </h2>
+                    <div id="trending-slider" class="slider-container shadow-xl">
+                        <div id="slider-inner" class="h-full">
+                            <div class="w-full h-full bg-zinc-200 animate-pulse flex items-center justify-center text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Memuat Populer...</div>
+                        </div>
                     </div>
                 </div>
             </aside>
@@ -143,10 +145,14 @@
                 
                 if(allArticles.length > 0) {
                     renderHero(allArticles[0]);
-                    const rest = allArticles.slice(1);
-                    renderPagination(rest);
-                    // Gunakan artikel yang ada untuk slider, minimal 1 artikel
-                    renderTrendingSlider(allArticles.slice(0, 5)); 
+                    
+                    // Artikel ke-2 sampai ke-6 untuk slider terpopuler
+                    const popularItems = allArticles.slice(1, 6);
+                    renderTrendingSlider(popularItems);
+
+                    // Semua artikel (kecuali hero) masuk ke sistem pagination artikel terbaru
+                    const gridItems = allArticles.slice(1);
+                    renderPagination(gridItems);
                 }
 
                 document.getElementById('hero-loader').style.display = 'none';
@@ -160,21 +166,10 @@
                 const html = await res.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
-                // Cari gambar lebih agresif: di article, lalu di seluruh body, lalu cari meta og:image
-                const img = doc.querySelector('article img') || 
-                            doc.querySelector('main img') || 
-                            doc.querySelector('img') ||
-                            doc.querySelector('meta[property="og:image"]');
-                
-                if (img) {
-                    const src = img.src || img.getAttribute('content');
-                    if (src && !src.includes('undefined')) return src;
-                }
-                // Jika gagal, kembalikan gambar musik default (Unsplash)
-                return 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
-            } catch (e) { 
-                return 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800'; 
-            }
+                // Cari img di dalam article atau body
+                const img = doc.querySelector('article img, img');
+                return img ? img.src : 'https://images.unsplash.com/photo-1514525253344-8846bbd97d6c?q=80&w=800';
+            } catch (e) { return 'https://images.unsplash.com/photo-1514525253344-8846bbd97d6c?q=80&w=800'; }
         }
 
         async function renderHero(art) {
@@ -194,12 +189,13 @@
 
         function renderPagination(items) {
             const container = document.getElementById('pagination-container');
-            if (!items.length) return;
-            
             const totalPages = Math.ceil(items.length / postsPerPage);
+            
             displayPosts(items, currentPage);
-
             container.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+
             const prevBtn = document.createElement('button');
             prevBtn.innerText = 'PREV';
             prevBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === 1 ? 'hidden' : ''}`;
@@ -233,7 +229,7 @@
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
                 html += `
-                    <article class="group animate-fadeIn">
+                    <article class="group">
                         <a href="artikel/${item.name}">
                             <div class="aspect-[16/10] bg-zinc-100 rounded-[2rem] mb-6 overflow-hidden">
                                 <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
@@ -249,8 +245,12 @@
 
         async function renderTrendingSlider(items) {
             const sliderInner = document.getElementById('slider-inner');
+            if(items.length === 0) {
+                sliderInner.innerHTML = '<div class="h-full flex items-center justify-center text-zinc-500 italic text-xs">Belum ada data populer.</div>';
+                return;
+            }
+
             let html = '';
-            
             for(let [index, item] of items.entries()) {
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
@@ -258,22 +258,24 @@
                     <div class="slide ${index === 0 ? 'active' : ''}">
                         <a href="artikel/${item.name}" class="relative block h-full">
                             <img src="${img}" class="absolute inset-0 w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-                            <div class="absolute bottom-0 p-8">
-                                <span class="text-red-500 font-black text-4xl mb-2 block">#${index + 1}</span>
-                                <h4 class="text-white font-black uppercase text-xl leading-tight">${title}</h4>
+                            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent"></div>
+                            <div class="absolute bottom-0 p-6">
+                                <span class="text-red-500 font-black text-2xl mb-1 block">#${index + 1}</span>
+                                <h4 class="text-white font-black uppercase text-sm leading-tight group-hover:text-red-500 transition">${title}</h4>
                             </div>
                         </a>
                     </div>
                 `;
             }
             sliderInner.innerHTML = html;
-            if (items.length > 1) startSlider();
+            startSlider();
         }
 
         function startSlider() {
             let currentSlide = 0;
             const slides = document.querySelectorAll('.slide');
+            if(slides.length <= 1) return;
+
             setInterval(() => {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
