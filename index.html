@@ -48,15 +48,14 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; }
-        .hero-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); }
+        .hero-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 100%); }
         .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         
-        /* Slider Styling */
-        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 400px; }
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease-in-out; }
-        .slide.active { opacity: 1; position: relative; }
+        .slider-container { position: relative; overflow: hidden; border-radius: 2rem; height: 450px; background: #18181b; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: flex-end; }
+        .slide.active { opacity: 1; z-index: 10; }
         .pagination-btn { transition: all 0.3s; }
-        .pagination-btn.active { background-color: #ef4444; color: white; border-color: #ef4444; }
+        .pagination-btn.active { background-color: #ef4444; color: white; border-color: #ef4444; transform: scale(1.1); }
     </style>
 </head>
 <body class="text-zinc-900">
@@ -85,9 +84,7 @@
                     Artikel Terbaru
                 </h2>
                 <div id="post-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12"></div>
-                
                 <div id="pagination-container" class="mt-16 flex justify-center items-center gap-2"></div>
-                
                 <div id="empty-state" class="hidden py-20 text-center text-zinc-400 italic">Belum ada konten publikasi.</div>
             </div>
 
@@ -97,8 +94,8 @@
                         <span class="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
                         Terpopuler
                     </h3>
-                    <div id="trending-slider" class="slider-container bg-zinc-900 shadow-2xl">
-                        <div id="slider-inner"></div>
+                    <div id="trending-slider" class="slider-container shadow-2xl">
+                        <div id="slider-inner" class="h-full w-full"></div>
                     </div>
                 </div>
             </aside>
@@ -143,10 +140,9 @@
                 
                 if(allArticles.length > 0) {
                     renderHero(allArticles[0]);
-                    // Ambil sisanya untuk grid dan trending
-                    const rest = allArticles.slice(1);
-                    renderPagination(rest);
-                    renderTrendingSlider(rest.slice(0, 5)); // 5 Teratas untuk slider
+                    renderPagination(allArticles);
+                    // Slider mengambil data dari semua artikel (limit 5)
+                    renderTrendingSlider(allArticles.slice(0, 5)); 
                 }
 
                 document.getElementById('hero-loader').style.display = 'none';
@@ -161,8 +157,11 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 const img = doc.querySelector('article img') || doc.querySelector('img');
-                return img ? img.src : 'https://images.unsplash.com/photo-1514525253344-8846bbd97d6c?q=80&w=800';
-            } catch (e) { return 'https://images.unsplash.com/photo-1514525253344-8846bbd97d6c?q=80&w=800'; }
+                // Gunakan placeholder berkualitas jika gambar tidak ditemukan
+                return img ? img.src : `https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80`;
+            } catch (e) { 
+                return `https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80`; 
+            }
         }
 
         async function renderHero(art) {
@@ -170,33 +169,30 @@
             const title = art.name.replace(/-/g, ' ').replace('.html', '');
             document.getElementById('hero-content').innerHTML = `
                 <a href="artikel/${art.name}" class="group relative block h-[500px] rounded-[2.5rem] overflow-hidden bg-zinc-900">
-                    <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition duration-1000">
+                    <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition duration-1000">
                     <div class="absolute inset-0 hero-overlay"></div>
                     <div class="absolute bottom-0 p-8 md:p-12 w-full">
-                        <span class="bg-red-600 text-white px-3 py-1 rounded text-[9px] font-black uppercase tracking-widest mb-4 inline-block shadow-xl">Sorotan Utama</span>
+                        <span class="bg-red-600 text-white px-3 py-1 rounded text-[9px] font-black uppercase tracking-widest mb-4 inline-block">Sorotan Utama</span>
                         <h1 class="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase group-hover:text-red-500 transition">${title}</h1>
                     </div>
                 </a>
             `;
         }
 
-        // --- SISTEM PAGINATION ARTIKEL TERBARU ---
         function renderPagination(items) {
             const container = document.getElementById('pagination-container');
             const totalPages = Math.ceil(items.length / postsPerPage);
             
             displayPosts(items, currentPage);
-
             container.innerHTML = '';
-            
-            // Tombol Previous
+            if (totalPages <= 1) return;
+
             const prevBtn = document.createElement('button');
-            prevBtn.innerText = 'PREV';
-            prevBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === 1 ? 'hidden' : ''}`;
-            prevBtn.onclick = () => { currentPage--; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); };
+            prevBtn.innerText = 'Sebelumnya';
+            prevBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : ''}`;
+            prevBtn.onclick = () => { if(currentPage > 1) { currentPage--; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); } };
             container.appendChild(prevBtn);
 
-            // Angka Halaman
             for(let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement('button');
                 btn.innerText = i;
@@ -205,30 +201,28 @@
                 container.appendChild(btn);
             }
 
-            // Tombol Next
             const nextBtn = document.createElement('button');
-            nextBtn.innerText = 'NEXT';
-            nextBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === totalPages ? 'hidden' : ''}`;
-            nextBtn.onclick = () => { currentPage++; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); };
+            nextBtn.innerText = 'Selanjutnya';
+            nextBtn.className = `px-4 py-2 text-[10px] font-black border border-zinc-200 rounded-lg hover:bg-zinc-100 ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : ''}`;
+            nextBtn.onclick = () => { if(currentPage < totalPages) { currentPage++; renderPagination(items); window.scrollTo({top: 500, behavior: 'smooth'}); } };
             container.appendChild(nextBtn);
         }
 
         async function displayPosts(items, page) {
             const grid = document.getElementById('post-grid');
-            grid.innerHTML = '<div class="col-span-full py-10 text-center animate-pulse text-xs font-bold uppercase tracking-widest text-zinc-400">Menyusun Nada...</div>';
+            grid.innerHTML = '<div class="col-span-full py-10 text-center animate-pulse text-xs font-bold uppercase text-zinc-400 tracking-widest">Loading...</div>';
             
             const start = (page - 1) * postsPerPage;
-            const end = start + postsPerPage;
-            const paginatedItems = items.slice(start, end);
+            const paginatedItems = items.slice(start, start + postsPerPage);
 
             let html = '';
             for(let item of paginatedItems) {
                 const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
                 html += `
-                    <article class="group animate-fadeIn">
+                    <article class="group">
                         <a href="artikel/${item.name}">
-                            <div class="aspect-[16/10] bg-zinc-100 rounded-[2rem] mb-6 overflow-hidden">
+                            <div class="aspect-[16/10] bg-zinc-200 rounded-[2rem] mb-6 overflow-hidden">
                                 <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                             </div>
                             <h3 class="text-lg font-black uppercase leading-tight group-hover:text-red-600 transition">${title}</h3>
@@ -240,7 +234,6 @@
             grid.innerHTML = html;
         }
 
-        // --- SISTEM AUTO-SLIDER TERPOPULER ---
         async function renderTrendingSlider(items) {
             const sliderInner = document.getElementById('slider-inner');
             let html = '';
@@ -250,31 +243,30 @@
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
                 html += `
                     <div class="slide ${index === 0 ? 'active' : ''}">
-                        <a href="artikel/${item.name}" class="relative block h-full">
+                        <a href="artikel/${item.name}" class="relative block w-full h-full">
                             <img src="${img}" class="absolute inset-0 w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                            <div class="absolute bottom-0 p-8">
-                                <span class="text-red-500 font-black text-4xl mb-2 block">#${index + 1}</span>
-                                <h4 class="text-white font-black uppercase text-xl leading-tight">${title}</h4>
+                            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent"></div>
+                            <div class="relative z-20 p-8 w-full">
+                                <span class="text-red-600 font-black text-5xl mb-2 block opacity-80">#${index + 1}</span>
+                                <h4 class="text-white font-black uppercase text-xl leading-tight drop-shadow-lg">${title}</h4>
                             </div>
                         </a>
                     </div>
                 `;
             }
             sliderInner.innerHTML = html;
-            startSlider();
+            if(items.length > 1) startSlider();
         }
 
         function startSlider() {
             let currentSlide = 0;
-            const slides = document.querySelectorAll('.slide');
-            if(slides.length <= 1) return;
-
             setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                if(slides.length === 0) return;
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
                 slides[currentSlide].classList.add('active');
-            }, 5000); // Ganti slide tiap 5 detik
+            }, 4000);
         }
 
         function searchGlobal() {
