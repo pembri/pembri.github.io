@@ -1,0 +1,34 @@
+name: Auto Generate Sitemap Clean URLs
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sitemap_job:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Bikin Sitemap Otomatis
+        uses: cicirello/generate-sitemap@v1
+        with:
+          base-url-path: https://musikanywhere.online/
+          drop-github-md: true
+          # Ini akan menghilangkan akhiran .html dari semua link di sitemap
+          include-html-extension: false
+
+      - name: Rapikan Index dan Simpan
+        run: |
+          # Perintah sakti untuk mengubah /index jadi cuma / saja
+          sed -i 's/\/index<\/loc>/<\/loc>/g' sitemap.xml
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          git diff --quiet && git diff --staged --quiet || (git commit -m "SEO: Update sitemap dengan Clean URLs" && git push)
