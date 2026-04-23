@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Musik Anywhere - SUPER CMS STUDIO</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: white; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: white; overflow-x: hidden; }
         .tab-btn.active { background: #dc2626; color: white; border-color: #dc2626; }
         .ql-container.ql-snow { border: none !important; }
         .ql-toolbar.ql-snow { background: #18181b; border-radius: 1rem 1rem 0 0; border: 1px solid #27272a; }
         .ql-toolbar button { filter: invert(1); }
-        .ql-editor { background: #0a0a0a; color: #e4e4e7; min-height: 400px; border-radius: 0 0 1rem 1rem; border: 1px solid #27272a; font-size: 1.1rem; }
+        .ql-editor { background: #0a0a0a; color: #e4e4e7; min-height: 450px; border-radius: 0 0 1rem 1rem; border: 1px solid #27272a; font-size: 1.1rem; }
         input, select, textarea { transition: all 0.3s; }
         input:focus, select:focus, textarea:focus { border-color: #dc2626 !important; outline: none; }
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        /* Scrollbar biar rapi */
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
@@ -28,13 +29,19 @@
 
     <div class="md:hidden flex justify-between items-center bg-[#0a0a0a] border-b border-zinc-800 p-5 sticky top-0 z-[100] shadow-lg">
         <h1 class="text-2xl font-black uppercase tracking-tighter">CMS<span class="text-red-600">STUDIO</span></h1>
-        <button onclick="toggleMobileMenu()" class="text-white p-2 bg-zinc-900 rounded-lg">
+        <button onclick="toggleMobileMenu()" class="text-white p-2 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
     </div>
 
-    <aside id="sidebar" class="hidden md:flex w-full md:w-72 bg-[#0a0a0a] border-r border-zinc-800 p-6 flex-col md:h-screen md:sticky md:top-0 z-50 shadow-2xl overflow-y-auto">
-        <div class="hidden md:block mb-8 text-left">
+    <div id="mobileOverlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/80 z-[110] hidden transition-opacity"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[120] w-72 bg-[#0a0a0a] border-r border-zinc-800 p-6 flex flex-col transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:h-screen md:sticky md:top-0 overflow-y-auto">
+        <button onclick="toggleMobileMenu()" class="md:hidden absolute top-5 right-5 text-zinc-500 hover:text-white bg-zinc-900 p-2 rounded-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="mb-8 text-left mt-2 md:mt-0">
             <h1 class="text-3xl font-black uppercase tracking-tighter">CMS<span class="text-red-600">STUDIO</span></h1>
             <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mt-1">pembri.github.io</p>
         </div>
@@ -42,95 +49,96 @@
         <div class="space-y-4 mb-8 bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800">
             <label class="text-[10px] font-black uppercase text-zinc-400">Token Akses GitHub</label>
             <input type="password" id="ghToken" placeholder="ghp_xxxx..." class="w-full bg-black border border-zinc-800 p-3 rounded-xl text-xs text-red-500 font-mono">
-            <button onclick="connectGitHub()" id="btnConnect" class="w-full bg-white text-black font-black uppercase text-[10px] tracking-widest py-3 rounded-xl hover:bg-red-600 hover:text-white transition shadow-lg">Hubungkan ke Server</button>
+            <button onclick="connectGitHub()" id="btnConnect" class="w-full bg-white text-black font-black uppercase text-[10px] tracking-widest py-3 rounded-xl hover:bg-red-600 hover:text-white transition shadow-lg">KONEKSIKAN</button>
         </div>
 
-        <nav class="flex flex-col space-y-2" id="navMenu">
+        <nav class="flex flex-col space-y-2 flex-1" id="navMenu">
             <button onclick="openTab('tab-dashboard', this)" class="tab-btn active w-full text-left px-5 py-4 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-400 border border-transparent hover:bg-zinc-900 transition">Dashboard</button>
             <button onclick="openTab('tab-settings', this)" class="tab-btn w-full text-left px-5 py-4 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-400 border border-transparent hover:bg-zinc-900 transition">Tema & Icon</button>
             <button onclick="openTab('tab-menus', this)" class="tab-btn w-full text-left px-5 py-4 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-400 border border-transparent hover:bg-zinc-900 transition">Navigasi Menu</button>
             <button onclick="openTab('tab-pages', this)" class="tab-btn w-full text-left px-5 py-4 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-400 border border-transparent hover:bg-zinc-900 transition">Halaman Statis</button>
             <button onclick="openTab('tab-articles', this)" class="tab-btn w-full text-left px-5 py-4 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-400 border border-transparent hover:bg-zinc-900 transition">Kelola Artikel</button>
+            
+            <button onclick="openTab('tab-patch', this)" class="tab-btn w-full text-left px-5 py-4 rounded-xl text-xs font-black uppercase tracking-widest text-blue-400 border border-blue-900/50 bg-blue-900/20 hover:bg-blue-600 hover:text-white transition mt-auto">Auto-Fix Website</button>
         </nav>
     </aside>
 
-    <main class="flex-1 p-4 md:p-10 w-full min-h-screen md:h-screen md:overflow-y-auto">
+    <main class="flex-1 p-4 md:p-10 w-full min-h-screen">
         
         <section id="tab-dashboard" class="tab-content active">
             <div class="bg-zinc-900/40 border border-zinc-800 p-6 md:p-10 rounded-[2rem]">
-                <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-4 text-white">Selamat Datang!</h2>
-                <p class="text-zinc-400 mb-8 text-sm md:text-base leading-relaxed">Masukkan Token GitHub Anda di panel samping, klik <b>Hubungkan ke Server</b>. Tampilan ini sudah 100% responsif di layar HP Anda.</p>
-                <div class="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-6">
+                <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-4 text-white">Selamat Datang, Pro User!</h2>
+                <p class="text-zinc-400 mb-8 text-sm md:text-base leading-relaxed">Masukkan Token GitHub Anda. Versi V-MAX ini dijamin 100% responsif di layar HP Anda tanpa ada menu yang saling tabrak.</p>
+                <div class="grid grid-cols-2 gap-4 md:gap-6">
                     <div class="bg-black p-6 rounded-2xl border border-zinc-800 text-center shadow-lg">
-                        <h3 class="text-4xl font-black text-white" id="stat-art">0</h3>
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest mt-2">Total Artikel</p>
+                        <h3 class="text-4xl md:text-5xl font-black text-white" id="stat-art">0</h3>
+                        <p class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-widest mt-2 md:mt-4">Total Artikel</p>
                     </div>
-                    <div class="bg-black p-6 rounded-2xl border border-zinc-800 text-center shadow-lg">
-                        <h3 class="text-xl font-black text-zinc-500 mt-3" id="stat-status">OFFLINE</h3>
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest mt-3">Status Server</p>
+                    <div class="bg-black p-6 rounded-2xl border border-zinc-800 text-center shadow-lg flex flex-col justify-center">
+                        <h3 class="text-xl md:text-2xl font-black text-zinc-500" id="stat-status">OFFLINE</h3>
+                        <p class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-widest mt-2 md:mt-4">Status Server</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="tab-settings" class="tab-content space-y-8">
-            <h2 class="text-2xl font-black uppercase tracking-tighter border-b border-zinc-800 pb-4">Tampilan, Icon & SEO</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter border-b border-zinc-800 pb-4">Tampilan, Icon & SEO</h2>
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 
                 <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800 space-y-5">
                     <h3 class="text-xs font-black uppercase tracking-widest text-red-500 mb-2">Warna & Icon Website</h3>
-                    
                     <div>
-                        <label class="text-[10px] font-bold text-zinc-400">Warna Utama Tema</label>
-                        <input type="color" id="cfg-primaryColor" class="w-full h-12 bg-black border border-zinc-800 rounded-xl mt-1 p-1 cursor-pointer">
+                        <label class="text-[10px] font-bold text-zinc-400 block mb-1">Warna Utama Tema</label>
+                        <input type="color" id="cfg-primaryColor" class="w-full h-14 bg-black border border-zinc-800 rounded-xl p-1 cursor-pointer">
                     </div>
-
                     <div>
                         <label class="text-[10px] font-bold text-zinc-400 block mb-1">Favicon / Icon Web</label>
-                        <div class="flex flex-col md:flex-row gap-2">
-                            <input type="text" id="cfg-favicon" class="w-full bg-black border border-zinc-800 p-3 rounded-xl text-zinc-500 text-xs" placeholder="URL atau Base64 Gambar" readonly>
-                            <button onclick="document.getElementById('upload-favicon').click()" class="bg-zinc-800 hover:bg-red-600 text-white px-4 py-3 rounded-xl text-xs font-bold transition whitespace-nowrap">Upload Icon</button>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" id="cfg-favicon" class="w-full bg-black border border-zinc-800 p-4 rounded-xl text-zinc-400 text-xs" placeholder="URL atau Base64" readonly>
+                            <button onclick="document.getElementById('upload-favicon').click()" class="bg-zinc-800 hover:bg-red-600 text-white px-6 py-4 rounded-xl text-xs font-bold transition whitespace-nowrap">Pilih Icon</button>
                             <input type="file" id="upload-favicon" accept="image/png, image/x-icon, image/jpeg" class="hidden" onchange="encodeImage(this, 'cfg-favicon')">
                         </div>
                     </div>
-
                     <div>
-                        <label class="text-[10px] font-bold text-zinc-400 block mb-1">Logo Gambar (Header/Footer)</label>
-                        <div class="flex flex-col md:flex-row gap-2">
-                            <input type="text" id="cfg-logo" class="w-full bg-black border border-zinc-800 p-3 rounded-xl text-zinc-500 text-xs" placeholder="URL atau Base64 Gambar" readonly>
-                            <button onclick="document.getElementById('upload-logo').click()" class="bg-zinc-800 hover:bg-red-600 text-white px-4 py-3 rounded-xl text-xs font-bold transition whitespace-nowrap">Upload Logo</button>
+                        <label class="text-[10px] font-bold text-zinc-400 block mb-1">Logo Gambar (Opsional)</label>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" id="cfg-logo" class="w-full bg-black border border-zinc-800 p-4 rounded-xl text-zinc-400 text-xs" placeholder="URL atau Base64" readonly>
+                            <button onclick="document.getElementById('upload-logo').click()" class="bg-zinc-800 hover:bg-red-600 text-white px-6 py-4 rounded-xl text-xs font-bold transition whitespace-nowrap">Pilih Logo</button>
                             <input type="file" id="upload-logo" accept="image/*" class="hidden" onchange="encodeImage(this, 'cfg-logo')">
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800 space-y-4">
-                    <h3 class="text-xs font-black uppercase tracking-widest text-red-500 mb-2">Identitas Web & SEO</h3>
-                    <div><label class="text-[10px] font-bold text-zinc-400">Nama Situs (Teks)</label><input type="text" id="cfg-siteName" class="w-full bg-black border border-zinc-800 p-3 rounded-xl mt-1 text-white"></div>
-                    <div><label class="text-[10px] font-bold text-zinc-400">Slogan / Judul Tab Browser</label><input type="text" id="cfg-slogan" class="w-full bg-black border border-zinc-800 p-3 rounded-xl mt-1 text-white"></div>
-                    <div><label class="text-[10px] font-bold text-zinc-400">Meta Deskripsi (SEO Google)</label><textarea id="cfg-metaDesc" rows="3" class="w-full bg-black border border-zinc-800 p-3 rounded-xl mt-1 text-white resize-none"></textarea></div>
-                    <div><label class="text-[10px] font-bold text-zinc-400">Teks Copyright Footer</label><input type="text" id="cfg-copy" class="w-full bg-black border border-zinc-800 p-3 rounded-xl mt-1 text-white"></div>
+                    <h3 class="text-xs font-black uppercase tracking-widest text-red-500 mb-2">Identitas & Footer</h3>
+                    <div><label class="text-[10px] font-bold text-zinc-400">Nama Situs (Kata terakhir otomatis diwarnai merah)</label><input type="text" id="cfg-siteName" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mt-1 text-white font-bold"></div>
+                    <div><label class="text-[10px] font-bold text-zinc-400">Slogan (Judul Browser)</label><input type="text" id="cfg-slogan" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mt-1 text-white"></div>
+                    <div><label class="text-[10px] font-bold text-zinc-400">Meta Deskripsi (SEO)</label><textarea id="cfg-metaDesc" rows="2" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mt-1 text-white resize-none"></textarea></div>
+                    
+                    <div><label class="text-[10px] font-bold text-zinc-400">Deskripsi Panjang Footer</label><textarea id="cfg-footDesc" rows="2" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mt-1 text-white resize-none" placeholder=\"Sumber berita musik...\"></textarea></div>
+                    <div><label class="text-[10px] font-bold text-zinc-400">Teks Copyright Footer</label><input type="text" id="cfg-copy" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mt-1 text-white"></div>
                 </div>
 
             </div>
-            <button onclick="saveGlobalConfig()" class="w-full bg-red-600 py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-red-700 transition shadow-[0_0_20px_rgba(220,38,38,0.3)]">Update Tampilan & Icon Website</button>
+            <button onclick="saveGlobalConfig()" class="w-full bg-red-600 py-6 rounded-2xl font-black text-sm md:text-base uppercase tracking-[0.2em] hover:bg-red-700 transition shadow-[0_0_20px_rgba(220,38,38,0.4)]">Update Tampilan & Icon Website</button>
         </section>
 
         <section id="tab-menus" class="tab-content space-y-8">
-            <h2 class="text-2xl font-black uppercase tracking-tighter border-b border-zinc-800 pb-4">Navigasi Menu</h2>
+            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter border-b border-zinc-800 pb-4">Navigasi Menu</h2>
             <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800">
                 <div class="flex flex-col md:flex-row gap-4 mb-6">
-                    <input type="text" id="menu-name" placeholder="Nama Menu (Cth: Lirik)" class="w-full md:w-1/3 bg-black border border-zinc-800 p-3 rounded-xl text-white">
-                    <input type="text" id="menu-url" placeholder="Link Menu (Cth: /index.html)" class="w-full md:w-1/2 bg-black border border-zinc-800 p-3 rounded-xl text-white">
-                    <button onclick="addMenu()" class="w-full md:w-auto bg-white text-black px-6 py-3 rounded-xl font-bold">Tambah</button>
+                    <input type="text" id="menu-name" placeholder="Nama Menu (Cth: Lirik)" class="w-full md:w-1/3 bg-black border border-zinc-800 p-4 rounded-xl text-white font-bold">
+                    <input type="text" id="menu-url" placeholder="Link Menu (Cth: /index.html)" class="w-full md:w-1/2 bg-black border border-zinc-800 p-4 rounded-xl text-white">
+                    <button onclick="addMenu()" class="w-full md:w-auto bg-white text-black px-8 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition">Tambah</button>
                 </div>
                 <div id="menu-list" class="space-y-3"></div>
-                <button onclick="saveGlobalConfig()" class="w-full mt-6 bg-red-600 py-4 rounded-xl font-black uppercase tracking-widest">Simpan Menu</button>
+                <button onclick="saveGlobalConfig()" class="w-full mt-6 bg-red-600 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-red-700 transition">Simpan Struktur Menu</button>
             </div>
         </section>
 
         <section id="tab-pages" class="tab-content space-y-8">
-            <h2 class="text-2xl font-black uppercase tracking-tighter border-b border-zinc-800 pb-4">Editor Halaman Statis</h2>
+            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter border-b border-zinc-800 pb-4">Halaman Statis</h2>
             <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800">
                 <div class="flex flex-col md:flex-row gap-4 mb-6">
                     <select id="pageSelect" class="w-full md:w-2/3 bg-black border border-zinc-800 p-4 rounded-xl text-white font-bold">
@@ -138,39 +146,47 @@
                         <option value="contact.html">Kontak (contact.html)</option>
                         <option value="privacy.html">Privacy Policy (privacy.html)</option>
                     </select>
-                    <button onclick="loadPageContent()" class="w-full md:w-1/3 bg-white text-black py-4 rounded-xl font-bold">Tarik Data Server</button>
+                    <button onclick="loadPageContent()" class="w-full md:w-1/3 bg-white text-black py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-zinc-300 transition">Tarik Data</button>
                 </div>
                 <div id="pageEditorContainer" class="hidden space-y-4">
-                    <div><label class="text-[10px] font-bold text-zinc-400">Judul Halaman (H1)</label><input type="text" id="pageTitle" class="w-full bg-black border border-zinc-800 p-3 rounded-xl mt-1 font-bold text-xl text-white"></div>
+                    <div><label class="text-[10px] font-bold text-zinc-400">Judul Halaman (H1)</label><input type="text" id="pageTitle" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mt-1 font-black text-2xl text-white"></div>
                     <div class="bg-black p-2 rounded-xl border border-zinc-800"><div id="quillPageEditor"></div></div>
-                    <button onclick="savePageContent()" class="w-full bg-red-600 py-4 rounded-xl font-black uppercase tracking-widest">Simpan Halaman</button>
+                    <button onclick="savePageContent()" class="w-full bg-red-600 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-red-700 transition">Simpan Halaman</button>
                 </div>
             </div>
         </section>
 
         <section id="tab-articles" class="tab-content space-y-8">
             <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
-                <h2 class="text-2xl font-black uppercase tracking-tighter">Kelola Artikel</h2>
-                <button onclick="toggleArticleView()" class="bg-zinc-800 text-[10px] md:text-xs font-bold px-4 py-2 rounded-lg text-white hover:bg-zinc-700 transition">Database</button>
+                <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter">Kelola Artikel</h2>
+                <button onclick="toggleArticleView()" class="bg-zinc-800 hover:bg-zinc-700 text-[10px] md:text-xs font-bold px-5 py-3 rounded-xl text-white transition whitespace-nowrap">Buka Database</button>
             </div>
             
-            <div id="articleForm" class="bg-zinc-900/40 p-4 md:p-6 rounded-[2rem] border border-zinc-800 space-y-4">
+            <div id="articleForm" class="bg-zinc-900/40 p-4 md:p-8 rounded-[2rem] border border-zinc-800 space-y-6">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="w-full md:w-1/3">
-                        <label class="text-[10px] font-bold text-zinc-400">Kategori</label>
-                        <select id="postCategory" class="w-full bg-black border border-zinc-800 p-4 rounded-xl mt-1 font-bold text-white"><option value="Artikel">Artikel</option><option value="News">News</option><option value="Lirik Lagu">Lirik Lagu</option></select>
+                        <label class="text-[10px] font-bold text-zinc-400 block mb-1">Kategori</label>
+                        <select id="postCategory" class="w-full bg-black border border-zinc-800 p-4 md:p-5 rounded-xl font-bold text-white"><option value="Artikel">Artikel</option><option value="News">News</option><option value="Lirik Lagu">Lirik Lagu</option></select>
                     </div>
                     <div class="w-full md:w-2/3">
-                        <label class="text-[10px] font-bold text-zinc-400">Judul Artikel</label>
-                        <input type="text" id="postTitle" placeholder="Ketik Judul..." class="w-full bg-black border border-zinc-800 p-4 rounded-xl mt-1 font-bold text-white md:text-lg">
+                        <label class="text-[10px] font-bold text-zinc-400 block mb-1">Judul Artikel</label>
+                        <input type="text" id="postTitle" placeholder="Ketik Judul..." class="w-full bg-black border border-zinc-800 p-4 md:p-5 rounded-xl font-black text-white text-lg md:text-xl">
                     </div>
                 </div>
-                <div class="bg-black p-1 md:p-2 rounded-xl border border-zinc-800"><div id="quillPostEditor"></div></div>
-                <button onclick="publishArticle()" id="btnPublish" class="w-full bg-red-600 py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-red-700 transition shadow-lg">Terbitkan Artikel</button>
+                <div class="bg-black p-2 rounded-xl border border-zinc-800"><div id="quillPostEditor"></div></div>
+                <button onclick="publishArticle()" id="btnPublish" class="w-full bg-red-600 py-6 rounded-2xl font-black text-lg md:text-xl uppercase tracking-widest hover:bg-red-700 transition shadow-lg">Terbitkan Artikel</button>
             </div>
 
-            <div id="articleDatabase" class="hidden bg-zinc-900/40 p-4 md:p-6 rounded-[2rem] border border-zinc-800">
-                <div id="articleList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <div id="articleDatabase" class="hidden bg-zinc-900/40 p-4 md:p-8 rounded-[2rem] border border-zinc-800">
+                <div id="articleList" class="grid grid-cols-1 xl:grid-cols-2 gap-4"></div>
+            </div>
+        </section>
+
+        <section id="tab-patch" class="tab-content space-y-8">
+            <div class="bg-blue-900/20 border border-blue-900/50 p-6 md:p-10 rounded-[2rem]">
+                <h2 class="text-3xl font-black uppercase tracking-tighter mb-4 text-blue-400">Auto-Fix Website</h2>
+                <p class="text-zinc-300 mb-8 text-sm md:text-base leading-relaxed">Malas ngedit <code>index.html</code> dan file lain secara manual? Klik tombol di bawah ini. Sistem akan otomatis menyuntikkan script terbaru ke file utama Anda untuk memperbaiki <b>Warna Teks Judul Putih</b> dan <b>Deskripsi Footer</b>.</p>
+                <button onclick="autoPatchWebsite()" id="btnPatch" class="w-full bg-blue-600 py-6 rounded-2xl font-black text-lg uppercase tracking-widest hover:bg-blue-700 transition shadow-[0_0_20px_rgba(37,99,235,0.4)] text-white">Suntik Perbaikan Sekarang</button>
             </div>
         </section>
 
@@ -179,51 +195,56 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
         const REPO = "pembri/pembri.github.io";
-        let siteConfig = {}; let configSha = null;
-        let qPage, qPost;
+        let siteConfig = {}; let configSha = null; let qPage, qPost;
 
-        // FUNGSI UPLOAD ICON & LOGO (Convert ke Base64)
+        // HAMBURGER MENU LOGIC UNTUK TOOL INI (SLIDING DRAWER)
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            if(sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // FUNGSI UPLOAD ICON & LOGO BASE64
         function encodeImage(input, targetId) {
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     document.getElementById(targetId).value = e.target.result;
-                    alert("Gambar berhasil di-load! Jangan lupa klik 'Update Tampilan' di paling bawah.");
+                    Swal.fire('Sukses', 'Gambar dimuat! Jangan lupa klik tombol Update Tampilan di bawah', 'success');
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        // FUNGSI MENU HP (HAMBURGER)
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebar');
-            if(sidebar.classList.contains('hidden')) { sidebar.classList.remove('hidden'); sidebar.classList.add('flex'); }
-            else { sidebar.classList.add('hidden'); sidebar.classList.remove('flex'); }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const opts = { theme: 'snow', modules: { toolbar: [['bold', 'italic', 'underline'], ['link', 'image', 'video'], [{'header': 1}, [{'header': 2}]], [{'list': 'ordered'}, {'list': 'bullet'}], ['clean']] } };
-            qPage = new Quill('#quillPageEditor', opts);
-            qPost = new Quill('#quillPostEditor', opts);
+            qPage = new Quill('#quillPageEditor', opts); qPost = new Quill('#quillPostEditor', opts);
             
-            // Image Uploader untuk Editor Artikel
             const imgHandler = (q) => {
                 const input = document.createElement('input'); input.setAttribute('type', 'file'); input.setAttribute('accept', 'image/*'); input.click();
                 input.onchange = () => { const file = input.files[0]; if (file) { const reader = new FileReader(); reader.onload = (e) => { const range = q.getSelection(true); q.insertEmbed(range.index, 'image', e.target.result); }; reader.readAsDataURL(file); } };
             };
-            qPage.getModule('toolbar').addHandler('image', () => imgHandler(qPage));
-            qPost.getModule('toolbar').addHandler('image', () => imgHandler(qPost));
+            qPage.getModule('toolbar').addHandler('image', () => imgHandler(qPage)); qPost.getModule('toolbar').addHandler('image', () => imgHandler(qPost));
         });
 
-        // Tabs & Sidebar Auto-Close di HP
         function openTab(id, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             if(btn) btn.classList.add('active');
             
-            if(window.innerWidth < 768) { document.getElementById('sidebar').classList.add('hidden'); document.getElementById('sidebar').classList.remove('flex'); }
+            // Tutup sidebar otomatis di HP setelah pindah tab
+            if(window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('mobileOverlay').classList.add('hidden');
+            }
         }
 
         function toggleArticleView() {
@@ -234,8 +255,8 @@
 
         async function connectGitHub() {
             const token = document.getElementById('ghToken').value;
-            if(!token) return alert("Harap masukkan Token GitHub!");
-            document.getElementById('btnConnect').innerText = "Mengecek Koneksi...";
+            if(!token) return Swal.fire('Oops', 'Masukkan Token GitHub!', 'error');
+            Swal.fire({title: 'Mengecek Koneksi...', didOpen: () => Swal.showLoading()});
             
             try {
                 const res = await fetch(`https://api.github.com/repos/${REPO}/contents/config.json`, { headers: { 'Authorization': `token ${token}` } });
@@ -246,45 +267,43 @@
                     document.getElementById('cfg-siteName').value = siteConfig.siteName || ''; document.getElementById('cfg-slogan').value = siteConfig.slogan || '';
                     document.getElementById('cfg-metaDesc').value = siteConfig.metaDesc || ''; document.getElementById('cfg-primaryColor').value = siteConfig.primaryColor || '#dc2626';
                     document.getElementById('cfg-favicon').value = siteConfig.favicon || ''; document.getElementById('cfg-logo').value = siteConfig.logo || '';
-                    document.getElementById('cfg-copy').value = siteConfig.copyright || '';
+                    document.getElementById('cfg-footDesc').value = siteConfig.footerDesc || ''; document.getElementById('cfg-copy').value = siteConfig.copyright || '';
                     
                     renderMenus(); loadArticlesList();
                     document.getElementById('stat-status').innerText = 'ONLINE'; document.getElementById('stat-status').classList.replace('text-zinc-500', 'text-green-500');
-                    document.getElementById('btnConnect').innerText = "Terhubung!"; document.getElementById('btnConnect').classList.replace('bg-white', 'bg-green-500');
-                    alert("Koneksi Server Berhasil!");
+                    Swal.fire('Terhubung', 'Koneksi Server Berhasil!', 'success');
                 } else if(res.status === 404) { await createConfig(token); } 
-                else { alert("Token Salah/Ditolak"); document.getElementById('btnConnect').innerText = "Hubungkan ke Server"; }
-            } catch(e) { alert("Error: " + e.message); document.getElementById('btnConnect').innerText = "Hubungkan ke Server"; }
+                else { throw new Error("Token Salah/Ditolak"); }
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
 
         async function createConfig(token) {
-            siteConfig = { siteName: "MUSIK ANYWHERE", slogan: "Portal Berita Musik", primaryColor: "#dc2626", copyright: "© 2026", menus: [] };
+            siteConfig = { siteName: "MUSIK ANYWHERE", slogan: "Portal Berita Musik", primaryColor: "#dc2626", footerDesc: "Sumber berita musik independen...", copyright: "© 2026", menus: [] };
             await fetch(`https://api.github.com/repos/${REPO}/contents/config.json`, { method: 'PUT', headers: { 'Authorization': `token ${token}` }, body: JSON.stringify({ message: "Init Config", content: btoa(unescape(encodeURIComponent(JSON.stringify(siteConfig)))) }) });
             connectGitHub();
         }
 
-        // SIMPAN CONFIG (TERMASUK ICON/LOGO BASE64)
         async function saveGlobalConfig() {
-            const token = document.getElementById('ghToken').value; if(!configSha) return alert("Koneksikan Token dulu!");
+            const token = document.getElementById('ghToken').value; if(!configSha) return Swal.fire('Oops', 'Koneksikan Token dulu!', 'warning');
             siteConfig.siteName = document.getElementById('cfg-siteName').value; siteConfig.slogan = document.getElementById('cfg-slogan').value;
             siteConfig.metaDesc = document.getElementById('cfg-metaDesc').value; siteConfig.primaryColor = document.getElementById('cfg-primaryColor').value;
             siteConfig.favicon = document.getElementById('cfg-favicon').value; siteConfig.logo = document.getElementById('cfg-logo').value;
-            siteConfig.copyright = document.getElementById('cfg-copy').value;
+            siteConfig.footerDesc = document.getElementById('cfg-footDesc').value; siteConfig.copyright = document.getElementById('cfg-copy').value;
 
+            Swal.fire({title: 'Menyimpan...', didOpen: () => Swal.showLoading()});
             try {
                 const res = await fetch(`https://api.github.com/repos/${REPO}/contents/config.json`, {
                     method: 'PUT', headers: { 'Authorization': `token ${token}` },
                     body: JSON.stringify({ message: "Update Tampilan & Icon", content: btoa(unescape(encodeURIComponent(JSON.stringify(siteConfig, null, 2)))), sha: configSha })
                 });
-                if(res.ok) { const data = await res.json(); configSha = data.content.sha; alert("BERHASIL! Tampilan, Tema & Icon Website telah diupdate."); }
-            } catch(e) { alert("Gagal Simpan: " + e.message); }
+                if(res.ok) { const data = await res.json(); configSha = data.content.sha; Swal.fire('Berhasil!', 'Tampilan, Tema & Icon Website telah diupdate.', 'success'); }
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
 
-        // Menus
         function renderMenus() {
             const list = document.getElementById('menu-list'); list.innerHTML = '';
             if(!siteConfig.menus) siteConfig.menus = [];
-            siteConfig.menus.forEach((m, i) => { list.innerHTML += `<div class="flex justify-between items-center bg-black border border-zinc-800 p-4 rounded-xl"><div><p class="font-bold text-white text-sm">${m.name}</p><p class="text-[10px] text-zinc-500">${m.url}</p></div><button onclick="deleteMenu(${i})" class="text-red-500 font-bold text-xs">HAPUS</button></div>`; });
+            siteConfig.menus.forEach((m, i) => { list.innerHTML += `<div class="flex justify-between items-center bg-black border border-zinc-800 p-4 rounded-xl"><div><p class="font-bold text-white md:text-sm text-xs">${m.name}</p><p class="text-[10px] text-zinc-500">${m.url}</p></div><button onclick="deleteMenu(${i})" class="bg-red-900/30 text-red-500 border border-red-900/50 px-4 py-2 rounded-lg font-bold text-[10px]">HAPUS</button></div>`; });
         }
         function addMenu() {
             const name = document.getElementById('menu-name').value; const url = document.getElementById('menu-url').value; if(!name || !url) return;
@@ -292,19 +311,19 @@
         }
         function deleteMenu(i) { siteConfig.menus.splice(i,1); renderMenus(); }
 
-        // Pages
         let pageSha = null; let pageName = null; let rawPage = "";
         async function loadPageContent() {
             const token = document.getElementById('ghToken').value; pageName = document.getElementById('pageSelect').value;
-            if(!token) return alert("Belum konek!");
+            if(!token) return Swal.fire('Oops', 'Belum konek!', 'warning');
+            Swal.fire({title: 'Menarik...', didOpen:()=>Swal.showLoading()});
             try {
                 const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${pageName}`, { headers: { 'Authorization': `token ${token}` } });
                 const data = await res.json(); pageSha = data.sha; rawPage = decodeURIComponent(escape(atob(data.content)));
                 const doc = new DOMParser().parseFromString(rawPage, 'text/html');
                 document.getElementById('pageTitle').value = doc.querySelector('h1')?.innerText || "";
                 qPage.root.innerHTML = doc.querySelector('.bg-zinc-900\\/50 p') ? doc.querySelector('.bg-zinc-900\\/50').innerHTML : (doc.querySelector('main p')?.parentElement.innerHTML || "");
-                document.getElementById('pageEditorContainer').classList.remove('hidden'); alert("Data Ditarik!");
-            } catch(e) { alert("Gagal narik halaman."); }
+                document.getElementById('pageEditorContainer').classList.remove('hidden'); Swal.close();
+            } catch(e) { Swal.fire('Error', 'Gagal narik halaman', 'error'); }
         }
         async function savePageContent() {
             const token = document.getElementById('ghToken').value; const doc = new DOMParser().parseFromString(rawPage, 'text/html');
@@ -312,13 +331,13 @@
             const tgt = doc.querySelector('.bg-zinc-900\\/50') || doc.querySelector('main');
             if(tgt) { Array.from(tgt.children).forEach(c => { if(c.tagName!=='H1' && c.tagName!=='SPAN') c.remove(); }); tgt.innerHTML += qPage.root.innerHTML; }
             const html = `<!DOCTYPE html>\n<html lang="id">\n` + doc.documentElement.innerHTML + `\n</html>`;
+            Swal.fire({title: 'Menyimpan...', didOpen:()=>Swal.showLoading()});
             try {
                 const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${pageName}`, { method: 'PUT', headers: { 'Authorization': `token ${token}` }, body: JSON.stringify({ message: `Update ${pageName}`, content: btoa(unescape(encodeURIComponent(html))), sha: pageSha }) });
-                if(res.ok) { const data = await res.json(); pageSha = data.content.sha; alert("Tersimpan!"); }
-            } catch(e) { alert("Gagal: " + e.message); }
+                if(res.ok) { const data = await res.json(); pageSha = data.content.sha; Swal.fire('Sukses', 'Halaman tersimpan!', 'success'); }
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
 
-        // Articles CMS
         let editSha = null; let editPath = null; let editTime = null;
         async function loadArticlesList() {
             const token = document.getElementById('ghToken').value;
@@ -326,25 +345,24 @@
             const files = await res.json(); const list = document.getElementById('articleList'); list.innerHTML = ''; let c = 0;
             files.filter(f => f.name.endsWith('.html')).reverse().forEach(file => {
                 c++; const t = file.name.replace(/-/g, ' ').replace('.html', '').toUpperCase();
-                list.innerHTML += `<div class="bg-black border border-zinc-800 p-4 rounded-xl flex justify-between items-center"><span class="text-[10px] md:text-xs font-bold text-white truncate max-w-[150px] md:max-w-xs">${t}</span><div class="flex gap-2"><button onclick="editArt('${file.path}', '${file.sha}')" class="text-[10px] bg-white text-black px-3 py-2 rounded-lg font-bold">EDIT</button><button onclick="delArt('${file.path}', '${file.sha}')" class="text-[10px] bg-zinc-900 text-red-500 px-3 py-2 rounded-lg font-bold">HAPUS</button></div></div>`;
+                list.innerHTML += `<div class="bg-black border border-zinc-800 p-4 rounded-xl flex flex-col md:flex-row justify-between md:items-center gap-3"><span class="text-xs md:text-sm font-bold text-white truncate max-w-[200px] md:max-w-xs">${t}</span><div class="flex gap-2"><button onclick="editArt('${file.path}', '${file.sha}')" class="flex-1 bg-white text-black px-4 py-2 rounded-lg font-bold text-[10px]">EDIT</button><button onclick="delArt('${file.path}', '${file.sha}')" class="bg-zinc-900 text-red-500 px-4 py-2 rounded-lg font-bold text-[10px]">HAPUS</button></div></div>`;
             });
             document.getElementById('stat-art').innerText = c;
         }
 
-        // FUNGSI PUBLISH ARTIKEL 100% KOMPLIT
         async function publishArticle() {
             const token = document.getElementById('ghToken').value; 
             const t = document.getElementById('postTitle').value;
             const cat = document.getElementById('postCategory').value;
             
-            if(!token || !t) return alert("Judul & Token wajib diisi!");
+            if(!token || !t) return Swal.fire('Oops', 'Judul & Token wajib diisi!', 'warning');
             const btn = document.getElementById('btnPublish'); btn.innerText = "Mengupload ke Server..."; btn.disabled = true;
 
             const slug = t.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
             const path = editPath || `artikel/${slug}.html`; 
             const time = editTime || Date.now();
             
-            // FULL TEMPLATE ARTIKEL (Share, Rekomendasi, Menu Dinamis)
+            // FULL TEMPLATE ARTIKEL (Share, Rekomendasi, Menu Dinamis, Fix Warna Teks)
             const fullTemplate = `<!DOCTYPE html>
 <html lang="id">
 <head>
@@ -379,15 +397,15 @@
 <body>
     <header class="nav-glass sticky top-0 z-[100]">
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-            <a href="/index.html" id="sys-logo" class="text-xl md:text-2xl font-black tracking-tighter uppercase text-white"></a>
+            <a href="/index.html" id="sys-logo" class="text-xl md:text-2xl font-black tracking-tighter uppercase text-white z-50"></a>
             <nav id="sys-desktop-menu" class="hidden lg:flex gap-8 items-center text-[11px] font-black uppercase tracking-[0.15em] text-zinc-400"></nav>
-            <button id="menuBtn" class="lg:hidden p-2 text-white" onclick="toggleMenu()">
+            <button id="menuBtn" class="lg:hidden p-2 text-white z-50 bg-zinc-900 rounded-lg" onclick="toggleMenu()">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </div>
     </header>
     
-    <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
+    <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-[90] hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
         <nav id="sys-mobile-menu" class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter mt-10"></nav>
     </div>
     
@@ -411,7 +429,7 @@
                     <a href="https://www.facebook.com/sharer/sharer.php?u=https://pembri.github.io/${path}" target="_blank" class="flex items-center justify-center bg-[#1877F2] text-white py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">Facebook</a>
                     <a href="https://twitter.com/intent/tweet?url=https://pembri.github.io/${path}" target="_blank" class="flex items-center justify-center bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">Twitter</a>
                     <a href="https://instagram.com" target="_blank" class="flex items-center justify-center bg-gradient-to-r from-purple-500 to-orange-500 text-white py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">Instagram</a>
-                    <button onclick="navigator.clipboard.writeText(window.location.href);alert('Link tersalin!')" class="bg-zinc-800 text-white py-3 rounded-xl font-bold text-[10px] uppercase border border-zinc-700">Salin Link</button>
+                    <button onclick="navigator.clipboard.writeText(window.location.href);alert('Salin Link Berhasil!')" class="bg-zinc-800 text-white py-3 rounded-xl font-bold text-[10px] uppercase border border-zinc-700">Salin Link</button>
                 </div>
             </div>
 
@@ -425,6 +443,7 @@
     <footer class="bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900 w-full">
         <div class="max-w-7xl mx-auto px-8 text-center">
             <h2 id="sys-foot-name" class="text-2xl font-black uppercase mb-4 tracking-tighter"></h2>
+            <p id="sys-foot-desc" class="text-zinc-500 text-sm leading-relaxed mb-6"></p>
             <p id="sys-copy" class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest"></p>
         </div>
     </footer>
@@ -436,8 +455,21 @@
             try {
                 const rConf = await fetch('/config.json'); const c = await rConf.json();
                 document.documentElement.style.setProperty('--c-main', c.primaryColor);
-                document.getElementById('sys-logo').innerHTML = c.logo ? \`<img src="\${c.logo}" class="h-8 md:h-10">\` : c.siteName;
+                
+                if(c.logo) {
+                    document.getElementById('sys-logo').innerHTML = \`<img src="\${c.logo}" class="h-8 md:h-10">\`;
+                } else {
+                    let nArr = c.siteName.split(' ');
+                    if(nArr.length > 1) {
+                        let last = nArr.pop();
+                        document.getElementById('sys-logo').innerHTML = nArr.join(' ') + \` <span class="c-text">\${last}</span>\`;
+                    } else {
+                        document.getElementById('sys-logo').innerText = c.siteName;
+                    }
+                }
+                
                 document.getElementById('sys-foot-name').innerText = c.siteName;
+                if(c.footerDesc) document.getElementById('sys-foot-desc').innerText = c.footerDesc;
                 document.getElementById('sys-copy').innerText = c.copyright;
                 document.title = \`${t} - \${c.siteName}\`;
                 
@@ -471,28 +503,125 @@
                     method: 'PUT', headers: { 'Authorization': `token ${token}` },
                     body: JSON.stringify({ message: `Publish: ${t}`, content: btoa(unescape(encodeURIComponent(fullTemplate))), sha: editSha || undefined })
                 });
-                if(res.ok) { alert("Artikel Berhasil Terbit!"); editSha=null; editPath=null; document.getElementById('postTitle').value=''; qPost.root.innerHTML=''; btn.innerText="Terbitkan Artikel"; loadArticlesList(); }
-            } catch(e) { alert("Gagal Terbit: " + e.message); btn.innerText="Terbitkan Artikel"; }
+                if(res.ok) { 
+                    Swal.fire('Sukses', 'Artikel Berhasil Terbit!', 'success'); 
+                    editSha=null; editPath=null; document.getElementById('postTitle').value=''; qPost.root.innerHTML=''; btn.innerText="Terbitkan Artikel"; loadArticlesList(); 
+                }
+            } catch(e) { Swal.fire('Error', "Gagal Terbit: " + e.message, 'error'); btn.innerText="Terbitkan Artikel"; }
             btn.disabled = false;
         }
 
         async function editArt(p, s) {
             const token = document.getElementById('ghToken').value;
-            const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${p}`, { headers: { 'Authorization': `token ${token}` } });
-            const data = await res.json(); const doc = new DOMParser().parseFromString(decodeURIComponent(escape(atob(data.content))), 'text/html');
-            document.getElementById('postTitle').value = doc.querySelector('h1')?.innerText || "";
-            qPost.root.innerHTML = doc.querySelector('.prose')?.innerHTML || "";
-            const cat = doc.querySelector('meta[name="category"]')?.getAttribute('content'); if(cat) document.getElementById('postCategory').value = cat;
-            const date = doc.querySelector('meta[name="publish-date"]')?.getAttribute('content'); if(date) editTime = parseInt(date);
-            editSha = s; editPath = p; document.getElementById('btnPublish').innerText = "Update Artikel";
-            toggleArticleView(); alert("Siap diedit!");
+            Swal.fire({title: 'Menarik Konten...', didOpen:()=>Swal.showLoading()});
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${p}`, { headers: { 'Authorization': `token ${token}` } });
+                const data = await res.json(); const doc = new DOMParser().parseFromString(decodeURIComponent(escape(atob(data.content))), 'text/html');
+                document.getElementById('postTitle').value = doc.querySelector('h1')?.innerText || "";
+                qPost.root.innerHTML = doc.querySelector('.prose')?.innerHTML || "";
+                const cat = doc.querySelector('meta[name="category"]')?.getAttribute('content'); if(cat) document.getElementById('postCategory').value = cat;
+                const date = doc.querySelector('meta[name="publish-date"]')?.getAttribute('content'); if(date) editTime = parseInt(date);
+                editSha = s; editPath = p; document.getElementById('btnPublish').innerText = "Update Artikel";
+                toggleArticleView(); Swal.close();
+            } catch(e) { Swal.fire('Error', 'Gagal narik artikel', 'error'); }
         }
 
         async function delArt(p, s) {
-            if(!confirm("Hapus permanen?")) return;
+            const result = await Swal.fire({title: 'Hapus permanen?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626'});
+            if(result.isConfirmed) {
+                const token = document.getElementById('ghToken').value;
+                Swal.fire({title: 'Menghapus...', didOpen:()=>Swal.showLoading()});
+                await fetch(`https://api.github.com/repos/${REPO}/contents/${p}`, { method: 'DELETE', headers: { 'Authorization': `token ${token}` }, body: JSON.stringify({ message: "Hapus", sha: s }) });
+                Swal.fire('Terhapus!', '', 'success'); loadArticlesList();
+            }
+        }
+
+        // --- FITUR PRO: AUTO-PATCH WEBSITE ---
+        async function autoPatchWebsite() {
             const token = document.getElementById('ghToken').value;
-            await fetch(`https://api.github.com/repos/${REPO}/contents/${p}`, { method: 'DELETE', headers: { 'Authorization': `token ${token}` }, body: JSON.stringify({ message: "Hapus", sha: s }) });
-            alert("Terhapus!"); loadArticlesList();
+            if(!token) return Swal.fire('Oops', 'Masukkan Token dulu ya Bang', 'warning');
+            
+            const confirm = await Swal.fire({
+                title: 'Konfirmasi Perbaikan',
+                text: "Sistem akan memperbaiki index.html, about.html, contact.html, dan privacy.html secara otomatis. Lanjutkan?",
+                icon: 'question', showCancelButton: true, confirmButtonColor: '#2563eb', confirmButtonText: 'Ya, Perbaiki!'
+            });
+
+            if(!confirm.isConfirmed) return;
+            Swal.fire({title: 'Sedang Menyuntik Kode...', html: 'Mohon tunggu, jangan tutup tab ini.', didOpen:()=>Swal.showLoading()});
+
+            const scriptBaru = `
+    <script>
+        async function loadSuperConfig() {
+            try {
+                const res = await fetch('/config.json');
+                const c = await res.json();
+                if(c.primaryColor) {
+                    document.documentElement.style.setProperty('--primary', c.primaryColor);
+                    document.querySelectorAll('.bg-red-600').forEach(el => el.style.backgroundColor = c.primaryColor);
+                    document.querySelectorAll('.text-red-600').forEach(el => el.style.color = c.primaryColor);
+                    document.querySelectorAll('.text-red-500').forEach(el => el.style.color = c.primaryColor);
+                }
+                document.querySelectorAll('header a.text-xl, footer h2.text-2xl').forEach(el => {
+                    if(c.logo) { 
+                        el.innerHTML = \`<img src="\${c.logo}" class="h-8 md:h-10">\`; 
+                    } else {
+                        let nArr = c.siteName.split(' ');
+                        if(nArr.length > 1) {
+                            let last = nArr.pop();
+                            el.innerHTML = nArr.join(' ') + \` <span style="color:\${c.primaryColor || '#dc2626'}">\${last}</span>\`;
+                        } else { el.innerText = c.siteName; }
+                    }
+                });
+                if(c.menus && c.menus.length > 0) {
+                    let dM = '', mM = '';
+                    c.menus.forEach(m => { dM += \`<a href="\${m.url}" class="hover:opacity-80 transition">\${m.name}</a>\`; mM += \`<a href="\${m.url}" class="text-white">\${m.name}</a>\`; });
+                    const dN = document.querySelector('header nav.hidden.lg\\\\:flex'); const mN = document.querySelector('#mobileMenu nav');
+                    if(dN) dN.innerHTML = dM; if(mN) mN.innerHTML = mM;
+                }
+                const fDesc = document.querySelector('footer p.text-zinc-500'); if(fDesc && c.footerDesc) fDesc.innerText = c.footerDesc;
+                const fCopy = document.querySelector('footer p.text-zinc-600'); if(fCopy && c.copyright) fCopy.innerText = c.copyright;
+                if(c.siteName && c.slogan) document.title = \`\${c.siteName} - \${c.slogan}\`;
+                if(c.favicon) { const fav = document.querySelector('link[rel="shortcut icon"]'); if(fav) fav.href = c.favicon; }
+                if(c.labelTrending && document.getElementById('section-title')) {
+                    document.getElementById('section-title').innerHTML = \`<span class="w-2 h-8 rounded-sm" style="background:\${c.primaryColor || '#dc2626'}"></span> \${c.labelTrending.toUpperCase()}\`;
+                }
+            } catch (e) { console.log("Config panel error."); }
+        }
+        window.addEventListener('load', loadSuperConfig);
+    <\/script>
+</body>`;
+
+            const files = ['index.html', 'about.html', 'contact.html', 'privacy.html'];
+            let successCount = 0;
+
+            for(let file of files) {
+                try {
+                    // Tarik file lama
+                    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, { headers: { 'Authorization': `token ${token}` } });
+                    if(!r.ok) continue;
+                    const data = await r.json();
+                    let htmlRaw = decodeURIComponent(escape(atob(data.content)));
+
+                    // Hapus script konfigurasi yang lama (versi berantakan) jika ada
+                    htmlRaw = htmlRaw.replace(/<script>\s*\/\/ SCRIPT PENGHUBUNG SUPER PANEL[\s\S]*?<\/script>\s*<\/body>/i, '</body>');
+                    htmlRaw = htmlRaw.replace(/<script>\s*async function applyGlobalSettings\(\)[\s\S]*?<\/script>\s*<\/body>/i, '</body>');
+                    htmlRaw = htmlRaw.replace(/<script>\s*async function loadDynamicConfig\(\)[\s\S]*?<\/script>\s*<\/body>/i, '</body>');
+                    htmlRaw = htmlRaw.replace(/<script>\s*async function loadSuperConfig\(\)[\s\S]*?<\/script>\s*<\/body>/i, '</body>');
+
+                    // Suntik yang baru tepat di atas </body>
+                    htmlRaw = htmlRaw.replace(/<\/body>/i, scriptBaru);
+
+                    // Kirim balik ke GitHub
+                    await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
+                        method: 'PUT', headers: { 'Authorization': `token ${token}` },
+                        body: JSON.stringify({ message: `Auto-Patch Config Web for ${file}`, content: btoa(unescape(encodeURIComponent(htmlRaw))), sha: data.sha })
+                    });
+                    successCount++;
+                } catch(e) { console.log(e); }
+            }
+
+            Swal.fire('Proses Selesai!', `Berhasil menyuntik dan memperbaiki ${successCount} file website. Warna dan Footer sudah normal.`, 'success');
         }
     </script>
 </body>
