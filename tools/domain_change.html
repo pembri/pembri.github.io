@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domain Change</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 15px; margin: 0; }
+    .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 450px; margin: auto; }
+    h2 { text-align: center; color: #1a1a1a; margin-bottom: 20px; font-size: 20px; }
+    label { font-size: 13px; font-weight: 600; color: #444; margin-top: 15px; display: block; }
+    input { width: 100%; padding: 12px; margin-top: 6px; margin-bottom: 5px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+    .info { font-size: 11px; color: #666; margin-bottom: 5px; display: block; }
+    
+    .btn-check { background-color: #6c757d; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; margin-bottom: 15px; }
+    .btn-exec { background-color: #007bff; color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 15px; }
+    button:disabled { background-color: #ccc !important; cursor: not-allowed; }
+    
+    .panel-info { background-color: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; display: none; border-left: 4px solid #007bff; }
+    #status { margin-top: 20px; padding: 12px; border-radius: 8px; font-size: 14px; text-align: center; display: none; font-weight: 600;}
+    .success { background-color: #d4edda; color: #155724; display: block !important; border: 1px solid #c3e6cb;}
+    .error { background-color: #f8d7da; color: #721c24; display: block !important; border: 1px solid #f5c6cb;}
+    .warning { background-color: #fff3cd; color: #856404; display: block !important; border: 1px solid #ffeeba;}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>All-in-One Domain Manager (Pro Max)</h2>
+    
+    <label>GitHub Token (PAT):</label>
+    <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxx">
+
+    <label>Nama Repository:</label>
+    <input type="text" id="repo" value="pembri/pembri.github.io">
+
+    <button class="btn-check" onclick="cekInfoWeb()" id="btn-cek">🔍 Cek Domain Saat Ini</button>
+
+    <div id="panel-info" class="panel-info">
+      <strong>Info Web Saat Ini:</strong><br>
+      Domain: <span id="info-domain">-</span>
+    </div>
+
+    <label>Domain Lama (Otomatis terisi):</label>
+    <input type="text" id="domain_lama" readonly style="background-color: #e9ecef;">
+
+    <label>Domain Baru Tujuan:</label>
+    <input type="text" id="domain_baru" placeholder="contoh: musikanywhere.online">
+
+    <button class="btn-exec" onclick="prosesSemua()" id="btn-submit" disabled>🚀 Eksekusi Semua Perubahan</button>
+    
+    <div id="status"></div>
+  </div>
+
+  <script>
+    async function cekInfoWeb() {
+      const token = document.getElementById('token').value.trim();
+      const repo = document.getElementById('repo').value.trim();
+      const panelInfo = document.getElementById('panel-info');
+      const btnCek = document.getElementById('btn-cek');
+      const btnSubmit = document.getElementById('btn-submit');
+      const statusEl = document.getElementById('status');
+
+      if (!token || !repo) {
+        alert("Token dan Nama Repository wajib diisi dulu!");
+        return;
+      }
+
+      btnCek.innerText = "Memeriksa...";
+      btnCek.disabled = true;
+
+      try {
+        const response = await fetch(`https://api.github.com/repos/${repo}/pages`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          let currentDomain = data.cname ? data.cname : `${repo.split('/')[0]}.github.io`;
+          
+          document.getElementById('info-domain').innerText = currentDomain;
+          panelInfo.style.display = 'block';
+          document.getElementById('domain_lama').value = currentDomain;
+          btnSubmit.disabled = false;
+          statusEl.style.display = 'none';
+        } else {
+          throw new Error("Gagal mengambil data dari GitHub Pages.");
+        }
+      } catch (error) {
+        statusEl.className = 'error';
+        statusEl.innerHTML = '❌ Error: ' + error.message;
+      }
+
+      btnCek.innerText = "🔍 Cek Ulang Domain";
+      btnCek.disabled = false;
+    }
+
+    async function prosesSemua() {
+      const token = document.getElementById('token').value.trim();
+      const repo = document.getElementById('repo').value.trim();
+      const domainLama = document.getElementById('domain_lama').value.trim();
+      const domainBaru = document.getElementById('domain_baru').value.trim();
+      const statusEl = document.getElementById('status');
+      const btn = document.getElementById('btn-submit');
+
+      if (!domainBaru) {
+        alert("Domain Baru belum diisi!");
+        return;
+      }
+
+      statusEl.className = 'warning';
+      statusEl.innerHTML = '⏳ Menyuruh Robot Bekerja...';
+      btn.disabled = true;
+
+      try {
+        // HANYA MENTRIGGER ROBOT ACTIONS (Robot yang akan atur CNAME dan teks)
+        const triggerWorkflow = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/ganti-domain.yml/dispatches`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: {
+              domain_lama: domainLama,
+              domain_baru: domainBaru
+            }
+          })
+        });
+
+        if (triggerWorkflow.ok || triggerWorkflow.status === 204) {
+          statusEl.className = 'success';
+          statusEl.innerHTML = "✅ Sukses! Robot GitHub sedang mengganti teks dan memasang CNAME Custom Domain barumu. Cek tab Actions di GitHub!";
+        } else {
+          statusEl.className = 'error';
+          statusEl.innerHTML = "❌ Gagal menyuruh robot. Pastikan izin Token benar.";
+        }
+      } catch (error) {
+        statusEl.className = 'error';
+        statusEl.innerHTML = 'Terjadi kesalahan jaringan: ' + error.message;
+      }
+
+      btn.innerText = "Selesai Diproses!";
+    }
+  </script>
+</body>
+</html>
