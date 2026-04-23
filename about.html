@@ -1,167 +1,61 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Portal Nada",
-      "url": "https://pembri.github.io"
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "NewsMediaOrganization",
-      "name": "Portal Nada",
-      "url": "https://pembri.github.io",
-      "logo": "https://pembri.github.io/android-icon-192x192.png",
-      "description": "Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia."
-    }
-    </script>
-    
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Musik Anywhere", "url": "https://pembri.github.io"}</script>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-    <meta name="theme-color" content="#ffffff"/>
-            
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tentang Kami - Portal Nada</title>
-    
-    <meta name="description" content="Mengenal Portal Nada, media berita musik independen paling akurat di Indonesia.">
-    <meta property="og:site_name" content="Portal Nada">
-    <meta property="og:title" content="Tentang Kami - Portal Nada">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://pembri.github.io/about.html">
-    
+    <title>Tentang Kami - Musik Anywhere</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1a1a1a; }
-        .nav-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .prose a { color: #ef4444; text-decoration: underline; font-weight: bold; }
-        .prose h2 { font-weight: 800; text-transform: uppercase; margin-top: 2rem; font-size: 1.5rem; }
-        
-        /* SEARCH STYLE JANGAN DIHAPUS */
-        #searchSuggestions { display: none; }
-        #searchSuggestions.active { display: block; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0a0a0a; color: #f4f4f5; display: flex; flex-direction: column; min-height: 100vh;}
+        main { flex: 1; }
+        .nav-glass { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
-<body class="antialiased" onclick="closeSearch()">
+<body>
 
     <header class="nav-glass sticky top-0 z-[100]">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-2 md:gap-4 shrink-0">
-                <a href="/" class="text-zinc-400 hover:text-black transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                </a>
-                <a href="/" class="text-lg md:text-2xl font-black tracking-tighter uppercase shrink-0">PORTAL<span class="text-red-600">NADA</span></a>
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+            <a href="/index.html" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center z-50 text-white">MUSIK<span class="text-red-600">ANYWHERE</span></a>
+            <nav class="hidden lg:flex gap-8 items-center text-[11px] font-black uppercase tracking-[0.15em] text-zinc-400">
+                <a href="/index.html" class="hover:text-red-500 transition">Home</a>
+                <a href="/index.html?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a>
+                <a href="/index.html?kategori=News" class="hover:text-red-500 transition">News</a>
+                <a href="/index.html?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a>
+            </nav>
+            <div class="flex items-center gap-4 z-50">
+                <button id="menuBtn" class="lg:hidden p-2 text-white focus:outline-none" onclick="toggleMenu()"><svg id="icon-menu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg><svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            
-            <div class="flex-1 max-w-sm relative" onclick="event.stopPropagation()">
-                <input type="text" id="innerSearch" oninput="handleSearch()" placeholder="Cari musik..." autocomplete="off" class="w-full bg-zinc-100 border-none rounded-xl py-2 px-4 text-xs md:text-sm outline-none focus:ring-2 focus:ring-red-600 transition-all">
-                
-                <div id="searchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-zinc-100 overflow-hidden z-[110]">
-                    <div id="suggestionsList" class="max-h-[60vh] overflow-y-auto"></div>
-                </div>
-            </div>
+        </div>
+        <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
+            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter">
+                <a href="/index.html" class="text-white hover:text-red-600">Home</a>
+                <a href="/index.html?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
+                <a href="/index.html?kategori=News" class="text-white hover:text-red-600">News</a>
+                <a href="/index.html?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a>
+                <hr class="border-zinc-800 my-2">
+                <a href="/about.html" class="text-red-600 flex items-center gap-4"><span class="w-2 h-2 bg-red-600 rounded-full"></span> About</a>
+                <a href="/contact.html" class="text-zinc-500 hover:text-white text-sm">Contact</a>
+                <a href="/privacy.html" class="text-zinc-500 hover:text-white text-sm">Privacy Policy</a>
+            </nav>
         </div>
     </header>
 
-    <main>
-        <article class="max-w-3xl mx-auto px-6 py-16 md:py-24">
-            <div class="mb-10">
-                <span class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 inline-block">Mengenal Kami</span>
-                <h1 class="text-4xl md:text-6xl font-black uppercase leading-tight tracking-tighter mb-6">Portal <span class="text-red-600">Nada</span> Media</h1>
-                <div class="flex items-center gap-4 text-zinc-400 text-xs font-bold uppercase tracking-widest border-b pb-8">
-                    <span>Portal Nada Media</span>
-                    <span>•</span>
-                    <span>Edisi 2026</span>
-                </div>
-            </div>
-            
-            <div class="prose prose-zinc prose-lg max-w-none leading-relaxed text-zinc-700">
-                <p><strong>Portal Nada</strong> adalah platform informasi musik tentang bagi audiens di Indonesia.</p>
-                
-                <h2 class="text-black">Tujuan</h2>
-                <p>Kami berfokus pada penyediaan informasi musik yang akurat dan relevan. Portal Nada mengkurasi perkembangan industri musik dari berbagai genre untuk memastikan pembaca mendapatkan pembaruan yang objektif.</p>
-
-                <h2 class="text-black">Standar Redaksi</h2>
-                <p>Setiap konten dikelola secara mandiri oleh tim redaksi untuk menjaga integritas informasi. Kami berkomitmen untuk menyajikan data dan fakta tanpa intervensi pihak luar guna memberikan layanan informasi yang transparan bagi komunitas musik.</p>
-            </div>
-
-            <div class="mt-20 p-8 bg-zinc-50 rounded-[2rem] text-center">
-                <p class="text-sm font-bold">Terima kasih telah menjadi bagian dari perjalanan kami.</p>
-            </div>
-        </article>
+    <main class="max-w-4xl mx-auto px-6 py-20 w-full text-zinc-300 text-lg leading-relaxed">
+        <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8 text-white">Tentang <span class="text-red-600">Kami</span></h1>
+        <div class="bg-zinc-900/50 p-8 md:p-12 rounded-[2rem] border border-zinc-800">
+            <p class="mb-6"><strong class="text-white">Musik Anywhere</strong> adalah platform media independen yang didedikasikan untuk audiens dan penikmat musik di Indonesia.</p>
+            <p class="mb-6">Kami berfokus pada penyediaan informasi yang akurat dan relevan terkait ekosistem musikal—mulai dari perilisan album terbaru, lirik lagu, hingga dinamika industri musik lokal dan global.</p>
+            <p>Setiap konten dikelola untuk menjaga integritas seni dan informasi, menyajikan data dan fakta secara transparan bagi komunitas pendengar.</p>
+        </div>
     </main>
 
-    <footer class="bg-zinc-950 text-white mt-32 pt-20 pb-10">
-        <div class="max-w-7xl mx-auto px-8">
-            <div class="flex flex-col items-center text-center border-b border-zinc-800 pb-12 mb-8">
-                <div>
-                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">Portal<span class="text-red-600">Nada</span></h2>
-                    <p class="text-zinc-500 text-sm max-w-sm leading-relaxed mx-auto"> Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia. </p>
-                </div>
-                <div class="flex gap-8 text-[11px] font-black uppercase tracking-[0.2em] mt-8">
-                    <a href="/about" class="hover:text-red-600 transition">About</a>
-                    <a href="/contact" class="hover:text-red-600 transition">Contact</a>
-                    <a href="/privacy" class="hover:text-red-600 transition">Privacy</a>
-                </div>
-            </div>
-            <div class="flex justify-center items-center">
-                <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center"> © 2026 Portal Nada Media </p>
-            </div>
-        </div>
-    </footer>
+    <footer class="bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900 w-full"><div class="max-w-7xl mx-auto px-8"><div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-900 pb-12 mb-8"><div class="md:col-span-1"><h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">MUSIK<span class="text-red-600">ANYWHERE</span></h2><p class="text-zinc-500 text-sm leading-relaxed mb-6">Sumber berita musik independen, review rilisan terbaru, dan lirik paling akurat untuk audiens Indonesia.</p></div><div><h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Kategori</h4><ul class="space-y-3 text-sm font-bold text-zinc-400"><li><a href="/index.html?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a></li><li><a href="/index.html?kategori=News" class="hover:text-red-500 transition">News</a></li><li><a href="/index.html?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a></li></ul></div><div><h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Perusahaan</h4><ul class="space-y-3 text-sm font-bold text-zinc-400"><li><a href="/about.html" class="hover:text-red-500 transition">About</a></li><li><a href="/contact.html" class="hover:text-red-500 transition">Contact</a></li><li><a href="/privacy.html" class="hover:text-red-500 transition">Privacy Policy</a></li></ul></div></div><p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center"> © 2026 Musik Anywhere Media.</p></div></footer>
 
     <script>
-        let allArticles = [];
-
-        async function handleSearch() {
-            const input = document.getElementById('innerSearch');
-            const suggestions = document.getElementById('searchSuggestions');
-            const list = document.getElementById('suggestionsList');
-            const query = input.value.toLowerCase();
-            if (query.length < 1) { suggestions.classList.remove('active'); return; }
-            
-            const filtered = allArticles.filter(art => {
-                const titleText = art.name.replace(/-/g, ' ').toLowerCase();
-                return titleText.includes(query);
-            }).slice(0, 8);
-
-            if (filtered.length > 0) {
-                list.innerHTML = filtered.map(art => {
-                    const title = art.name.replace(/-/g, ' ').replace('.html', '');
-                    return `<a href="/artikel/${art.name}" class="block px-5 py-4 hover:bg-zinc-50 border-b border-zinc-50 transition flex items-center gap-3">
-                        <div class="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
-                        <span class="text-[11px] font-black text-zinc-800 uppercase truncate tracking-tight">${title}</span>
-                    </a>`;
-                }).join('');
-                suggestions.classList.add('active');
-            } else {
-                list.innerHTML = `<div class="px-5 py-4 text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Tidak ditemukan</div>`;
-                suggestions.classList.add('active');
-            }
-        }
-
-        function closeSearch() { document.getElementById('searchSuggestions').classList.remove('active'); }
-
-        async function initSearch() {
-            try {
-                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
-                allArticles = await res.json();
-            } catch (e) { console.log("Search error:", e); }
-        }
-        window.onload = initSearch;
+        function toggleMenu() { const menu = document.getElementById('mobileMenu'); const iconMenu = document.getElementById('icon-menu'); const iconClose = document.getElementById('icon-close'); if(menu.classList.contains('hidden')) { menu.classList.remove('hidden'); menu.classList.add('flex'); document.body.style.overflow = 'hidden'; iconMenu.classList.add('hidden'); iconClose.classList.remove('hidden'); } else { menu.classList.add('hidden'); menu.classList.remove('flex'); document.body.style.overflow = 'auto'; iconMenu.classList.remove('hidden'); iconClose.classList.add('hidden'); } }
     </script>
 </body>
 </html>
