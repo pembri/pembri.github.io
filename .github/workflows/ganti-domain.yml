@@ -1,13 +1,13 @@
-name: Ganti Domain Massal
+name: Ganti Domain Massal Pro
 
 on:
   workflow_dispatch:
     inputs:
       domain_lama:
-        description: 'Domain lama (contoh: pembri.github.io)'
+        description: 'Domain lama'
         required: true
       domain_baru:
-        description: 'Domain baru (contoh: musikanywhere.online)'
+        description: 'Domain baru'
         required: true
 
 jobs:
@@ -19,13 +19,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Ganti Teks Massal
+      - name: Ganti Teks (Hanya File Web)
         run: |
-          find . -type f -not -path '*/\.git/*' -exec sed -i "s|${{ github.event.inputs.domain_lama }}|${{ github.event.inputs.domain_baru }}|g" {} +
+          # Hanya mencari di file html, js, css, json, xml, dan md agar tidak nabrak file gambar/audio
+          find . -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.xml" -o -name "*.md" \) -exec sed -i "s|${{ github.event.inputs.domain_lama }}|${{ github.event.inputs.domain_baru }}|g" {} +
 
-      - name: Commit dan Push Perubahan
+      - name: Cek Perubahan dan Push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto: Ganti domain ${{ github.event.inputs.domain_lama }} ke ${{ github.event.inputs.domain_baru }}" && git push)
+          # Paksa commit hanya jika ada file yang berubah
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto Pro: Ganti domain ${{ github.event.inputs.domain_lama }} ke ${{ github.event.inputs.domain_baru }}" && git push)
