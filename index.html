@@ -27,6 +27,14 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        
+        /* Animasi Titik Live */
+        @keyframes blinkLive {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .live-dot { animation: blinkLive 1.5s infinite ease-in-out; }
     </style>
 </head>
 <body onclick="closeSearch()">
@@ -79,11 +87,9 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 md:px-8 py-10 w-full">
-        <section id="hero-section" class="mb-16 relative">
-            <div id="hero-loader" class="h-[400px] md:h-[500px] bg-zinc-900 animate-pulse rounded-[2rem] border border-zinc-800"></div>
-            <div id="slider-container" class="relative h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden bg-zinc-900 shadow-2xl border border-zinc-800 hidden">
-                <div id="slider-content" class="h-full w-full relative"></div>
-            </div>
+        <section id="hero-section" class="mb-16 relative h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden bg-zinc-900 shadow-2xl border border-zinc-800">
+            <div id="hero-loader" class="absolute inset-0 bg-zinc-800 animate-pulse"></div>
+            <div id="hero-content" class="absolute inset-0 w-full h-full hidden"></div>
         </section>
 
         <div class="flex items-center justify-between mb-10 border-b border-zinc-800 pb-4">
@@ -129,8 +135,7 @@
         let allArticles = [];
         let currentPage = 1; 
         const postsPerPage = 6;
-        let slideInterval;
-        let currentSlide = 0;
+        let sliderInterval;
 
         function toggleMenu() {
             const menu = document.getElementById('mobileMenu'); const iconMenu = document.getElementById('icon-menu'); const iconClose = document.getElementById('icon-close');
@@ -169,7 +174,7 @@
                     const results = await Promise.all(promises);
                     allArticles = results.filter(r => r !== null);
                     
-                    // Urutkan artikel terbaru ke atas
+                    // Urutkan artikel paling baru ke paling lama (untuk grid Latest Updates)
                     allArticles.sort((a, b) => b.timestamp - a.timestamp);
                     
                     const urlParams = new URLSearchParams(window.location.search);
@@ -185,56 +190,64 @@
                             document.getElementById('empty-state').classList.remove('hidden');
                         } else { updatePage(); }
                     } else {
+                        // Jika di Home, render slider Terpopuler dan grid Latest
                         if(allArticles.length > 0) { 
-                            renderSlider(allArticles); 
+                            renderSliderTerpopuler(allArticles); 
                             updatePage(); 
                         }
                     }
                 } else { document.getElementById('empty-state').classList.remove('hidden'); }
                 
                 document.getElementById('hero-loader').style.display = 'none';
+                const urlP = new URLSearchParams(window.location.search);
+                if(!urlP.get('kategori')) document.getElementById('hero-content').classList.remove('hidden');
                 
             } catch (err) { console.error(err); }
         }
 
-        // FUNGSI SLIDER TERPOPULER
-        function renderSlider(articles) {
-            const container = document.getElementById('slider-container');
-            const sliderContent = document.getElementById('slider-content');
+        // SLIDER TERPOPULER OTOMATIS + TITIK KEDIP
+        function renderSliderTerpopuler(articles) {
+            // Karena gak ada database, kita acak dari artikel yang ada agar simulasi "Populer" terlihat dinamis
+            const shuffled = [...articles].sort(() => 0.5 - Math.random());
+            const populer = shuffled.slice(0, 3); // Ambil 3 artikel untuk slider
             
-            // Karena tidak ada database, kita pilih 3-4 artikel secara acak untuk simulasi terpopuler
-            // (Agar halaman terlihat dinamis setiap kali direfresh pengunjung)
-            let popularArticles = [...articles].sort(() => 0.5 - Math.random()).slice(0, 4);
-            
-            let html = '';
-            popularArticles.forEach((art, index) => {
-                // Menghilangkan .html dari Judul dan URL
+            const sliderContainer = document.getElementById('hero-content');
+            sliderContainer.innerHTML = '';
+
+            populer.forEach((art, index) => {
                 const title = art.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
-                const cleanUrl = `/artikel/${art.name.replace('.html', '')}`; 
+                // PENTING: LINK BERSIH TANPA .HTML
+                const cleanUrl = `/artikel/${art.name.replace('.html', '')}`;
                 
-                html += `
-                    <a href="${cleanUrl}" class="slide absolute inset-0 transition-opacity duration-1000 ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} group block">
+                const slide = document.createElement('div');
+                slide.className = `absolute inset-0 transition-opacity duration-1000 ease-in-out slide-item ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
+                slide.innerHTML = `
+                    <a href="${cleanUrl}" class="block w-full h-full group">
                         <img src="${art.img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-40 transition duration-1000">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent"></div>
-                        <div class="absolute bottom-0 p-8 w-full md:w-3/4">
-                            <span class="bg-red-600 text-white px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-block">Terpopuler #${index + 1}</span>
+                        <div class="absolute bottom-0 p-8 w-full md:w-3/4 z-20">
+                            <span class="bg-red-600 text-white px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-flex items-center gap-1.5">
+                                Terpopuler <span class="w-1.5 h-1.5 bg-white rounded-full live-dot"></span>
+                            </span>
                             <h1 class="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase tracking-tighter group-hover:text-red-500 transition">${title}</h1>
                         </div>
-                    </a>`;
+                    </a>
+                `;
+                sliderContainer.appendChild(slide);
             });
-            
-            sliderContent.innerHTML = html;
-            container.classList.remove('hidden');
 
-            if(popularArticles.length > 1) {
-                slideInterval = setInterval(() => {
-                    const slides = document.querySelectorAll('.slide');
-                    slides[currentSlide].classList.remove('opacity-100', 'z-10');
-                    slides[currentSlide].classList.add('opacity-0', 'z-0');
+            // Logika Auto-Slide
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide-item');
+            if(slides.length > 1) {
+                if(sliderInterval) clearInterval(sliderInterval);
+                sliderInterval = setInterval(() => {
+                    slides[currentSlide].classList.replace('opacity-100', 'opacity-0');
+                    slides[currentSlide].classList.replace('z-10', 'z-0');
                     currentSlide = (currentSlide + 1) % slides.length;
-                    slides[currentSlide].classList.remove('opacity-0', 'z-0');
-                    slides[currentSlide].classList.add('opacity-100', 'z-10');
-                }, 5000); // Ganti gambar tiap 5 detik
+                    slides[currentSlide].classList.replace('opacity-0', 'opacity-100');
+                    slides[currentSlide].classList.replace('z-0', 'z-10');
+                }, 4000); // Ganti gambar tiap 4 detik
             }
         }
 
@@ -245,10 +258,9 @@
             const paginatedItems = allArticles.slice(start, start + postsPerPage);
             let html = '';
             for(let item of paginatedItems) {
-                // Menghilangkan .html dari Judul dan URL
                 const title = item.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
+                // PENTING: LINK BERSIH TANPA .HTML UNTUK GRID LATEST UPDATES
                 const cleanUrl = `/artikel/${item.name.replace('.html', '')}`;
-                
                 html += `
                     <article class="group flex flex-col h-full bg-zinc-900 p-3 rounded-[1.5rem] border border-zinc-800 hover:border-zinc-700 hover:shadow-2xl transition-all">
                         <a href="${cleanUrl}" class="block overflow-hidden rounded-[1rem] aspect-[16/10] bg-zinc-950 relative">
@@ -278,7 +290,6 @@
             container.appendChild(createBtn('&rarr;', currentPage + 1, currentPage === totalPages));
         }
 
-        // PENCARIAN (UDAH BERSIH DARI .HTML)
         function handleSearch(inputId, suggestionsId, listId) {
             const input = document.getElementById(inputId); const suggestions = document.getElementById(suggestionsId); const list = document.getElementById(listId);
             const query = input.value.toLowerCase().trim(); if (query.length < 2) { suggestions.classList.remove('active'); return; }
@@ -286,9 +297,9 @@
             if (filtered.length > 0) {
                 list.innerHTML = filtered.map(art => {
                     const title = art.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
-                    const cleanUrl = `/artikel/${art.name.replace('.html', '')}`;
                     const highlightedTitle = title.replace(new RegExp(`(${query})`, "gi"), "<span class='text-red-600'>$1</span>");
-                    return `<a href="${cleanUrl}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${highlightedTitle}</span></a>`;
+                    // PENTING: LINK BERSIH TANPA .HTML UNTUK SEARCH
+                    return `<a href="/artikel/${art.name.replace('.html', '')}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${highlightedTitle}</span></a>`;
                 }).join(''); suggestions.classList.add('active');
             } else { list.innerHTML = `<div class="px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest">Tidak ditemukan</div>`; suggestions.classList.add('active'); }
         }
