@@ -1,1 +1,21 @@
-{"siteName":"MUSIK ANYWHERE","slogan":"Portal Berita Musik","primaryColor":"#dc2626","labelPopuler":"Terpopuler","labelTrending":"Latest Updates","menus":[{"name":"Home","url":"/index.html"},{"name":"Artikel","url":"/index.html?kategori=Artikel"}]}
+{
+  "siteName": "MUSIK ANYWHERE.NET",
+  "slogan": "Portal Berita Musik",
+  "primaryColor": "#dc2626",
+  "labelPopuler": "Terpopuler",
+  "labelTrending": "Latest Updates",
+  "menus": [
+    {
+      "name": "Home",
+      "url": "/index.html"
+    },
+    {
+      "name": "Artikel",
+      "url": "/index.html?kategori=Artikel"
+    }
+  ],
+  "metaDesc": "",
+  "favicon": "",
+  "logo": "",
+  "copyright": "2026 MUSIK ANYWHERE MEDIA"
+}
