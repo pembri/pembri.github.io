@@ -58,7 +58,13 @@
         </div>
         
         <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
-            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()"><div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800"><svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white"></div><div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div></div>
+            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()">
+                <div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800">
+                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white">
+                </div>
+                <div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div>
+            </div>
             <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter">
                 <a href="/index.html" class="text-white hover:text-red-600">Home</a>
                 <a href="/index.html?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
@@ -127,46 +133,62 @@
             if(menu.classList.contains('hidden')) { menu.classList.remove('hidden'); menu.classList.add('flex'); document.body.style.overflow = 'hidden'; iconMenu.classList.add('hidden'); iconClose.classList.remove('hidden'); } else { menu.classList.add('hidden'); menu.classList.remove('flex'); document.body.style.overflow = 'auto'; iconMenu.classList.remove('hidden'); iconClose.classList.add('hidden'); }
         }
 
-        async function fetchImage(fileName) {
-            const fallback = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
-            try {
-                const response = await fetch(`/artikel/${fileName}`);
-                if (!response.ok) return fallback;
-                const text = await response.text();
-                const match = text.match(/<img[^>]+src="([^">]+)"/);
-                if (match && match[1]) {
-                    let src = match[1];
-                    if (src.startsWith('data:image')) return src;
-                    if (!src.startsWith('http') && !src.startsWith('/')) return `/artikel/${src}`;
-                    return src;
-                }
-                return fallback;
-            } catch (error) { return fallback; }
-        }
-
         async function initPortal() {
             try {
+                // Tarik daftar file
                 const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
-                const data = await res.json();
+                let files = await res.json();
+                files = files.filter(f => f.name.endsWith('.html'));
                 
-                if(data && data.length > 0) {
-                    allArticles = data.filter(f => f.name.endsWith('.html')).reverse();
+                if(files.length > 0) {
+                    // MENGAMBIL METADATA DARI SETIAP ARTIKEL SECARA PARALEL (AGAR CEPAT)
+                    const promises = files.map(async (file) => {
+                        try {
+                            const htmlRes = await fetch(`/artikel/${file.name}`);
+                            const htmlText = await htmlRes.text();
+                            
+                            // Ekstrak waktu dari tag metadata rahasia
+                            const dateMatch = htmlText.match(/<meta name="publish-date" content="([0-9]+)">/);
+                            const timestamp = dateMatch ? parseInt(dateMatch[1]) : 0;
+                            
+                            // Ekstrak Kategori
+                            const catMatch = htmlText.match(/<meta name="category" content="([^"]+)">/);
+                            const category = catMatch ? catMatch[1] : '';
+
+                            // Ekstrak Gambar Pertama
+                            const imgMatch = htmlText.match(/<img[^>]+src="([^">]+)"/);
+                            let img = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
+                            if (imgMatch && imgMatch[1]) {
+                                img = imgMatch[1];
+                                if (!img.startsWith('data:image') && !img.startsWith('http') && !img.startsWith('/')) img = '/artikel/' + img;
+                            }
+
+                            return { name: file.name, timestamp: timestamp, category: category, img: img };
+                        } catch(e) { return null; }
+                    });
+
+                    const results = await Promise.all(promises);
+                    allArticles = results.filter(r => r !== null);
                     
-                    // CEK URL PARAMETER UNTUK FILTER KATEGORI
+                    // JURUS RAHASIA: MENGURUTKAN DARI WAKTU PALING BARU (Tanpa harus ada angka di URL)
+                    allArticles.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    // Sistem Filter Kategori
                     const urlParams = new URLSearchParams(window.location.search);
                     const activeKategori = urlParams.get('kategori');
 
                     if(activeKategori) {
-                        // Sembunyikan Slider karena ini masuk ke menu kategori
                         document.getElementById('hero-section').style.display = 'none';
                         document.getElementById('section-title').innerHTML = `<span class="w-2 h-8 bg-red-600 rounded-sm"></span> KATEGORI: ${activeKategori.toUpperCase()}`;
-                        await filterByCategory(activeKategori);
+                        allArticles = allArticles.filter(a => a.category === activeKategori);
+                        
+                        if(allArticles.length === 0) {
+                            document.getElementById('empty-state').innerText = `Belum ada publikasi di kategori ${activeKategori}.`;
+                            document.getElementById('empty-state').classList.remove('hidden');
+                        } else { updatePage(); }
                     } else {
-                        // Load normal jika di halaman Home
-                        if(allArticles.length > 0) {
-                            renderHero(allArticles[0]);
-                            updatePage();
-                        }
+                        // Kalau di halaman depan biasa
+                        if(allArticles.length > 0) { renderHero(allArticles[0]); updatePage(); }
                     }
                 } else { document.getElementById('empty-state').classList.remove('hidden'); }
                 
@@ -177,67 +199,33 @@
             } catch (err) { console.error(err); }
         }
 
-        // SISTEM PENYARING KATEGORI OTOMATIS
-        async function filterByCategory(cat) {
-            const grid = document.getElementById('post-grid');
-            grid.innerHTML = `<div class="col-span-full text-center py-20 text-red-500 font-bold uppercase tracking-widest animate-pulse">Menyaring Kategori ${cat}...</div>`;
-            
-            // Membaca file secara paralel agar loading super cepat
-            const promises = allArticles.map(async (art) => {
-                try {
-                    const res = await fetch(`/artikel/${art.name}`);
-                    const text = await res.text();
-                    // Mencari jejak tag kategori yang dibuat oleh CMS (post.html)
-                    if(text.includes(`category" content="${cat}"`) || text.includes(`Kategori: ${cat}`)) {
-                        return art;
-                    }
-                } catch(e) {}
-                return null;
-            });
-
-            const results = await Promise.all(promises);
-            allArticles = results.filter(r => r !== null); // Timpa array utama dengan hasil filter
-            
-            currentPage = 1;
-            if(allArticles.length === 0) {
-                grid.innerHTML = '';
-                document.getElementById('empty-state').innerText = `Belum ada publikasi di kategori ${cat}.`;
-                document.getElementById('empty-state').classList.remove('hidden');
-            } else {
-                document.getElementById('empty-state').classList.add('hidden');
-                updatePage();
-            }
-        }
-
-        async function renderHero(art) {
-            const img = await fetchImage(art.name);
+        function renderHero(art) {
             const title = art.name.replace(/-/g, ' ').replace('.html', '');
-            const cleanUrl = `/artikel/${art.name.replace('.html', '')}`;
+            const cleanUrl = `/artikel/${art.name}`;
             document.getElementById('hero-content').innerHTML = `
                 <a href="${cleanUrl}" class="group relative block h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden bg-zinc-900 shadow-2xl border border-zinc-800">
-                    <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-40 transition duration-1000">
+                    <img src="${art.img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-40 transition duration-1000">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent"></div>
                     <div class="absolute bottom-0 p-8 w-full md:w-3/4">
-                        <span class="bg-red-600 text-white px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-block">Trending</span>
+                        <span class="bg-red-600 text-white px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-block">Trending / Terkini</span>
                         <h1 class="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase tracking-tighter group-hover:text-red-500 transition">${title}</h1>
                     </div>
                 </a>`;
         }
 
-        async function updatePage() {
+        function updatePage() {
             const grid = document.getElementById('post-grid');
-            grid.innerHTML = '<div class="col-span-full text-center py-10 text-zinc-600 font-bold uppercase tracking-widest animate-pulse">Memuat Artikel...</div>';
+            grid.innerHTML = '';
             const start = (currentPage - 1) * postsPerPage;
             const paginatedItems = allArticles.slice(start, start + postsPerPage);
             let html = '';
             for(let item of paginatedItems) {
-                const img = await fetchImage(item.name);
                 const title = item.name.replace(/-/g, ' ').replace('.html', '');
-                const cleanUrl = `/artikel/${item.name.replace('.html', '')}`;
+                const cleanUrl = `/artikel/${item.name}`;
                 html += `
                     <article class="group flex flex-col h-full bg-zinc-900 p-3 rounded-[1.5rem] border border-zinc-800 hover:border-zinc-700 hover:shadow-2xl transition-all">
                         <a href="${cleanUrl}" class="block overflow-hidden rounded-[1rem] aspect-[16/10] bg-zinc-950 relative">
-                            <img src="${img}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-700">
+                            <img src="${item.img}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-700">
                         </a>
                         <div class="pt-5 pb-3 px-3 flex-1 flex flex-col">
                             <h3 class="text-lg font-black uppercase leading-tight tracking-tight text-white group-hover:text-red-500 transition line-clamp-3">${title}</h3>
@@ -263,7 +251,7 @@
             container.appendChild(createBtn('&rarr;', currentPage + 1, currentPage === totalPages));
         }
 
-        // FUNGSI PENCARIAN 
+        // PENCARIAN LANGSUNG KE OBJEK YANG SUDAH DILAYANI
         function handleSearch(inputId, suggestionsId, listId) {
             const input = document.getElementById(inputId); const suggestions = document.getElementById(suggestionsId); const list = document.getElementById(listId);
             const query = input.value.toLowerCase().trim(); if (query.length < 2) { suggestions.classList.remove('active'); return; }
@@ -272,7 +260,7 @@
                 list.innerHTML = filtered.map(art => {
                     const title = art.name.replace(/-/g, ' ').replace('.html', '');
                     const highlightedTitle = title.replace(new RegExp(`(${query})`, "gi"), "<span class='text-red-600'>$1</span>");
-                    return `<a href="/artikel/${art.name.replace('.html', '')}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${highlightedTitle}</span></a>`;
+                    return `<a href="/artikel/${art.name}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${highlightedTitle}</span></a>`;
                 }).join(''); suggestions.classList.add('active');
             } else { list.innerHTML = `<div class="px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest">Tidak ditemukan</div>`; suggestions.classList.add('active'); }
         }
