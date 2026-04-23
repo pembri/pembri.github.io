@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Musik Anywhere", "url": "https://pembri.github.io"}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsMediaOrganization", "name": "Musik Anywhere", "url": "https://pembri.github.io", "logo": "https://pembri.github.io/android-icon-192x192.png", "description": "Media berita musik independen paling akurat dan terpercaya untuk audiens Indonesia."}</script>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#111111"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musik Anywhere - Media Informasi Seputar Musik</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0a0a0a; color: #f4f4f5; display: flex; flex-direction: column; min-height: 100vh;}
+        main { flex: 1; }
+        .nav-glass { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        #searchSuggestions, #mobileSearchSuggestions { display: none; }
+        #searchSuggestions.active, #mobileSearchSuggestions.active { display: block; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        
+        /* Animasi Titik Live */
+        @keyframes blinkLive {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .live-dot { animation: blinkLive 1.5s infinite ease-in-out; }
+    </style>
+</head>
+<body onclick="closeSearch()">
+
+    <header class="nav-glass sticky top-0 z-[100]">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+            <a href="/" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center z-50 text-white">
+                MUSIK<span class="text-red-600">ANYWHERE</span>
+            </a>
+            <nav class="hidden lg:flex gap-8 items-center text-[11px] font-black uppercase tracking-[0.15em] text-zinc-400">
+                <a href="/" class="hover:text-red-500 transition">Home</a>
+                <a href="/index?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a>
+                <a href="/index?kategori=News" class="hover:text-red-500 transition">News</a>
+                <a href="/index?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a>
+            </nav>
+            <div class="flex items-center gap-4 z-50">
+                <div class="relative group hidden lg:block" onclick="event.stopPropagation()">
+                    <div class="flex items-center bg-zinc-900 rounded-full px-4 py-2 border border-zinc-800 focus-within:border-red-500 transition-all">
+                        <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" id="searchInput" oninput="handleSearch('searchInput', 'searchSuggestions', 'suggestionsList')" placeholder="Cari..." autocomplete="off" class="bg-transparent border-none outline-none text-xs ml-2 w-48 text-white">
+                    </div>
+                    <div id="searchSuggestions" class="absolute top-full right-0 mt-3 w-80 bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden z-[110]"><div id="suggestionsList" class="max-h-[350px] overflow-y-auto"></div></div>
+                </div>
+                <button id="menuBtn" class="lg:hidden p-2 text-white focus:outline-none" onclick="toggleMenu()">
+                    <svg id="icon-menu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
+            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()">
+                <div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800">
+                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white">
+                </div>
+                <div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div>
+            </div>
+            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter">
+                <a href="/" class="text-white hover:text-red-600">Home</a>
+                <a href="/index?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
+                <a href="/index?kategori=News" class="text-white hover:text-red-600">News</a>
+                <a href="/index?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a>
+                <hr class="border-zinc-800 my-2">
+                <a href="/about" class="text-zinc-500 hover:text-white text-sm">About</a>
+                <a href="/contact" class="text-zinc-500 hover:text-white text-sm">Contact</a>
+                <a href="/privacy" class="text-zinc-500 hover:text-white text-sm">Privacy Policy</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-10 w-full">
+        <section id="hero-section" class="mb-16 relative h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden bg-zinc-900 shadow-2xl border border-zinc-800">
+            <div id="hero-loader" class="absolute inset-0 bg-zinc-800 animate-pulse"></div>
+            <div id="hero-content" class="absolute inset-0 w-full h-full hidden"></div>
+        </section>
+
+        <div class="flex items-center justify-between mb-10 border-b border-zinc-800 pb-4">
+            <h2 id="section-title" class="text-3xl font-black uppercase tracking-tighter flex items-center gap-3 text-white">
+                <span class="w-2 h-8 bg-red-600 rounded-sm"></span> LATEST UPDATES
+            </h2>
+        </div>
+        
+        <div id="post-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div id="pagination-container" class="mt-16 flex justify-center items-center gap-2"></div>
+        <div id="empty-state" class="hidden py-20 text-center text-zinc-600 font-bold uppercase tracking-widest">Belum ada konten.</div>
+    </main>
+
+    <footer class="bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900 w-full">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-900 pb-12 mb-8">
+                <div class="md:col-span-1">
+                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">MUSIK<span class="text-red-600">ANYWHERE</span></h2>
+                    <p class="text-zinc-500 text-sm leading-relaxed mb-6">Sumber berita musik independen, review rilisan terbaru, dan lirik paling akurat.</p>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Kategori</h4>
+                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
+                        <li><a href="/index?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a></li>
+                        <li><a href="/index?kategori=News" class="hover:text-red-500 transition">News</a></li>
+                        <li><a href="/index?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Perusahaan</h4>
+                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
+                        <li><a href="/about" class="hover:text-red-500 transition">About</a></li>
+                        <li><a href="/contact" class="hover:text-red-500 transition">Contact</a></li>
+                        <li><a href="/privacy" class="hover:text-red-500 transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center"> © 2026 Musik Anywhere Media. </p>
+        </div>
+    </footer>
+
+    <script>
+        let allArticles = [];
+        let currentPage = 1; 
+        const postsPerPage = 6;
+        let sliderInterval;
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu'); const iconMenu = document.getElementById('icon-menu'); const iconClose = document.getElementById('icon-close');
+            if(menu.classList.contains('hidden')) { menu.classList.remove('hidden'); menu.classList.add('flex'); document.body.style.overflow = 'hidden'; iconMenu.classList.add('hidden'); iconClose.classList.remove('hidden'); } else { menu.classList.add('hidden'); menu.classList.remove('flex'); document.body.style.overflow = 'auto'; iconMenu.classList.remove('hidden'); iconClose.classList.add('hidden'); }
+        }
+
+        async function initPortal() {
+            try {
+                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
+                let files = await res.json();
+                files = files.filter(f => f.name.endsWith('.html'));
+                
+                if(files.length > 0) {
+                    const promises = files.map(async (file) => {
+                        try {
+                            const htmlRes = await fetch(`/artikel/${file.name}`);
+                            const htmlText = await htmlRes.text();
+                            
+                            const dateMatch = htmlText.match(/<meta name="publish-date" content="([0-9]+)">/);
+                            const timestamp = dateMatch ? parseInt(dateMatch[1]) : 0;
+                            
+                            const catMatch = htmlText.match(/<meta name="category" content="([^"]+)">/);
+                            const category = catMatch ? catMatch[1] : '';
+
+                            const imgMatch = htmlText.match(/<img[^>]+src="([^">]+)"/);
+                            let img = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
+                            if (imgMatch && imgMatch[1]) {
+                                img = imgMatch[1];
+                                if (!img.startsWith('data:image') && !img.startsWith('http') && !img.startsWith('/')) img = '/artikel/' + img;
+                            }
+
+                            return { name: file.name, timestamp: timestamp, category: category, img: img };
+                        } catch(e) { return null; }
+                    });
+
+                    const results = await Promise.all(promises);
+                    allArticles = results.filter(r => r !== null);
+                    
+                    // Urutkan artikel paling baru ke paling lama (untuk grid Latest Updates)
+                    allArticles.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const activeKategori = urlParams.get('kategori');
+
+                    if(activeKategori) {
+                        document.getElementById('hero-section').style.display = 'none';
+                        document.getElementById('section-title').innerHTML = `<span class="w-2 h-8 bg-red-600 rounded-sm"></span> KATEGORI: ${activeKategori.toUpperCase()}`;
+                        allArticles = allArticles.filter(a => a.category === activeKategori);
+                        
+                        if(allArticles.length === 0) {
+                            document.getElementById('empty-state').innerText = `Belum ada publikasi di kategori ${activeKategori}.`;
+                            document.getElementById('empty-state').classList.remove('hidden');
+                        } else { updatePage(); }
+                    } else {
+                        // Jika di Home, render slider Terpopuler dan grid Latest
+                        if(allArticles.length > 0) { 
+                            renderSliderTerpopuler(allArticles); 
+                            updatePage(); 
+                        }
+                    }
+                } else { document.getElementById('empty-state').classList.remove('hidden'); }
+                
+                document.getElementById('hero-loader').style.display = 'none';
+                const urlP = new URLSearchParams(window.location.search);
+                if(!urlP.get('kategori')) document.getElementById('hero-content').classList.remove('hidden');
+                
+            } catch (err) { console.error(err); }
+        }
+
+        // SLIDER TERPOPULER OTOMATIS + TITIK KEDIP
+        function renderSliderTerpopuler(articles) {
+            // Karena gak ada database, kita acak dari artikel yang ada agar simulasi "Populer" terlihat dinamis
+            const shuffled = [...articles].sort(() => 0.5 - Math.random());
+            const populer = shuffled.slice(0, 3); // Ambil 3 artikel untuk slider
+            
+            const sliderContainer = document.getElementById('hero-content');
+            sliderContainer.innerHTML = '';
+
+            populer.forEach((art, index) => {
+                const title = art.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
+                // PENTING: LINK BERSIH TANPA .HTML
+                const cleanUrl = `/artikel/${art.name.replace('.html', '')}`;
+                
+                const slide = document.createElement('div');
+                slide.className = `absolute inset-0 transition-opacity duration-1000 ease-in-out slide-item ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
+                slide.innerHTML = `
+                    <a href="${cleanUrl}" class="block w-full h-full group">
+                        <img src="${art.img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-40 transition duration-1000">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent"></div>
+                        <div class="absolute bottom-0 p-8 w-full md:w-3/4 z-20">
+                            <span class="bg-red-600 text-white px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-flex items-center gap-1.5">
+                                Terpopuler <span class="w-1.5 h-1.5 bg-white rounded-full live-dot"></span>
+                            </span>
+                            <h1 class="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase tracking-tighter group-hover:text-red-500 transition">${title}</h1>
+                        </div>
+                    </a>
+                `;
+                sliderContainer.appendChild(slide);
+            });
+
+            // Logika Auto-Slide
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide-item');
+            if(slides.length > 1) {
+                if(sliderInterval) clearInterval(sliderInterval);
+                sliderInterval = setInterval(() => {
+                    slides[currentSlide].classList.replace('opacity-100', 'opacity-0');
+                    slides[currentSlide].classList.replace('z-10', 'z-0');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.replace('opacity-0', 'opacity-100');
+                    slides[currentSlide].classList.replace('z-0', 'z-10');
+                }, 4000); // Ganti gambar tiap 4 detik
+            }
+        }
+
+        function updatePage() {
+            const grid = document.getElementById('post-grid');
+            grid.innerHTML = '';
+            const start = (currentPage - 1) * postsPerPage;
+            const paginatedItems = allArticles.slice(start, start + postsPerPage);
+            let html = '';
+            for(let item of paginatedItems) {
+                const title = item.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
+                // PENTING: LINK BERSIH TANPA .HTML UNTUK GRID LATEST UPDATES
+                const cleanUrl = `/artikel/${item.name.replace('.html', '')}`;
+                html += `
+                    <article class="group flex flex-col h-full bg-zinc-900 p-3 rounded-[1.5rem] border border-zinc-800 hover:border-zinc-700 hover:shadow-2xl transition-all">
+                        <a href="${cleanUrl}" class="block overflow-hidden rounded-[1rem] aspect-[16/10] bg-zinc-950 relative">
+                            <img src="${item.img}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-700">
+                        </a>
+                        <div class="pt-5 pb-3 px-3 flex-1 flex flex-col">
+                            <h3 class="text-lg font-black uppercase leading-tight tracking-tight text-white group-hover:text-red-500 transition line-clamp-3">${title}</h3>
+                        </div>
+                    </article>`;
+            }
+            grid.innerHTML = html; renderPagination();
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('pagination-container');
+            const totalPages = Math.ceil(allArticles.length / postsPerPage);
+            container.innerHTML = '';
+            if (totalPages <= 1) return;
+            const createBtn = (text, page, disabled, active) => {
+                const btn = document.createElement('button'); btn.innerHTML = text;
+                btn.className = `w-10 h-10 text-[11px] font-black border rounded-xl transition-colors ${active ? 'bg-red-600 text-white border-red-600' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:bg-zinc-800'} ${disabled ? 'opacity-30 cursor-not-allowed' : ''}`;
+                if(!disabled) btn.onclick = () => { currentPage = page; updatePage(); document.getElementById('post-grid').scrollIntoView({behavior: 'smooth'}); };
+                return btn;
+            };
+            container.appendChild(createBtn('&larr;', currentPage - 1, currentPage === 1));
+            for(let i = 1; i <= totalPages; i++) container.appendChild(createBtn(i, i, false, i === currentPage));
+            container.appendChild(createBtn('&rarr;', currentPage + 1, currentPage === totalPages));
+        }
+
+        function handleSearch(inputId, suggestionsId, listId) {
+            const input = document.getElementById(inputId); const suggestions = document.getElementById(suggestionsId); const list = document.getElementById(listId);
+            const query = input.value.toLowerCase().trim(); if (query.length < 2) { suggestions.classList.remove('active'); return; }
+            const filtered = allArticles.filter(art => art.name.replace(/-/g, ' ').toLowerCase().includes(query)).slice(0, 6);
+            if (filtered.length > 0) {
+                list.innerHTML = filtered.map(art => {
+                    const title = art.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
+                    const highlightedTitle = title.replace(new RegExp(`(${query})`, "gi"), "<span class='text-red-600'>$1</span>");
+                    // PENTING: LINK BERSIH TANPA .HTML UNTUK SEARCH
+                    return `<a href="/artikel/${art.name.replace('.html', '')}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${highlightedTitle}</span></a>`;
+                }).join(''); suggestions.classList.add('active');
+            } else { list.innerHTML = `<div class="px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest">Tidak ditemukan</div>`; suggestions.classList.add('active'); }
+        }
+        function closeSearch() { if(document.getElementById('searchSuggestions')) document.getElementById('searchSuggestions').classList.remove('active'); if(document.getElementById('mobileSearchSuggestions')) document.getElementById('mobileSearchSuggestions').classList.remove('active'); }
+
+        window.onload = initPortal;
+    </script>
+</body>
+</html>
