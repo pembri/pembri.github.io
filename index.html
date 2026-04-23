@@ -307,5 +307,65 @@
 
         window.onload = initPortal;
     </script>
+    <script>
+        // SCRIPT PENGHUBUNG SUPER PANEL
+        async function loadSuperConfig() {
+            try {
+                const res = await fetch('/config.json');
+                const c = await res.json();
+                
+                // 1. Terapkan Warna Utama
+                if(c.primaryColor) {
+                    document.documentElement.style.setProperty('--primary', c.primaryColor);
+                    // Force warna pada class Tailwind (Mengganti red-600 bawaan)
+                    document.querySelectorAll('.bg-red-600').forEach(el => el.style.backgroundColor = c.primaryColor);
+                    document.querySelectorAll('.text-red-600').forEach(el => el.style.color = c.primaryColor);
+                    document.querySelectorAll('.text-red-500').forEach(el => el.style.color = c.primaryColor);
+                }
+
+                // 2. Terapkan Logo / Nama Situs di Header & Footer
+                document.querySelectorAll('header a.text-xl, footer h2.text-2xl').forEach(el => {
+                    if(c.logo) { el.innerHTML = `<img src="${c.logo}" class="h-8 md:h-10">`; } 
+                    else { el.innerText = c.siteName; }
+                });
+
+                // 3. Bangun Menu Dinamis
+                if(c.menus && c.menus.length > 0) {
+                    let deskMenu = '', mobMenu = '';
+                    c.menus.forEach(m => {
+                        deskMenu += `<a href="${m.url}" class="hover:opacity-80 transition">${m.name}</a>`;
+                        mobMenu += `<a href="${m.url}" class="text-white">${m.name}</a>`;
+                    });
+                    const dNav = document.querySelector('header nav.hidden.lg\\:flex');
+                    const mNav = document.querySelector('#mobileMenu nav');
+                    if(dNav) dNav.innerHTML = deskMenu;
+                    if(mNav) mNav.innerHTML = mobMenu;
+                }
+
+                // 4. Update Footer Copyright & Deskripsi
+                const fDesc = document.querySelector('footer p.text-zinc-500');
+                if(fDesc && c.footerDesc) fDesc.innerText = c.footerDesc;
+                const fCopy = document.querySelector('footer p.text-zinc-600');
+                if(fCopy && c.copyright) fCopy.innerText = c.copyright;
+
+                // 5. Update SEO, Title & Favicon
+                if(c.siteName && c.slogan) document.title = `${c.siteName} - ${c.slogan}`;
+                if(c.favicon) {
+                    const fav = document.querySelector('link[rel="shortcut icon"]');
+                    if(fav) fav.href = c.favicon;
+                }
+                
+                // 6. Update Label Teks (Khusus Index)
+                if(c.labelPopuler && document.querySelector('#hero-content')) {
+                    // Update kata "Terkini/Trending" dengan labelPopuler dari sistem
+                }
+                if(c.labelTrending && document.getElementById('section-title')) {
+                    document.getElementById('section-title').innerHTML = `<span class="w-2 h-8 rounded-sm" style="background:${c.primaryColor}"></span> ${c.labelTrending.toUpperCase()}`;
+                }
+
+            } catch (e) { console.log("Gagal memuat konfigurasi panel."); }
+        }
+        window.addEventListener('load', loadSuperConfig);
+    </script>
 </body>
 </html>
