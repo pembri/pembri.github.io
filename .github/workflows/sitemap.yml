@@ -1,4 +1,4 @@
-name: Auto Generate Sitemap Clean URLs
+name: Auto Generate Sitemap Clean URLs Pro
 
 on:
   push:
@@ -20,15 +20,20 @@ jobs:
         with:
           base-url-path: https://musikanywhere.online/
           drop-github-md: true
-          # Ini akan menghilangkan akhiran .html dari semua link di sitemap
+          # Ini kunci utamanya buat ngilangin .html
           include-html-extension: false
+          # Tambahkan ini biar robotnya makin yakin hapus ekstensi
+          strip-extension: true
 
-      - name: Rapikan Index dan Simpan
+      - name: Rapikan Index dan Hapus Sisa HTML
         run: |
-          # Perintah sakti untuk mengubah /index jadi cuma / saja
+          # 1. Hilangkan sisa-sisa /index
           sed -i 's/\/index<\/loc>/<\/loc>/g' sitemap.xml
+          
+          # 2. Paksa hapus manual .html kalau robotnya masih bandel
+          sed -i 's/\.html<\/loc>/<\/loc>/g' sitemap.xml
           
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "SEO: Update sitemap dengan Clean URLs" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "SEO: Fix paksa Clean URLs sitemap" && git push)
