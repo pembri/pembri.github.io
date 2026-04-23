@@ -128,15 +128,29 @@
     <meta name="publish-date" content="${publishTime}"> <title>${title} - Musik Anywhere</title>
     
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "NewsArticle",
-      "headline": "${title}",
-      "image": ["https://pembri.github.io/android-icon-192x192.png"],
-      "datePublished": "${new Date().toISOString()}",
-      "author": [{ "@type": "Organization", "name": "Musik Anywhere", "url": "https://pembri.github.io" }]
-    }
-    <\/script>
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Musik Anywhere",
+    "url": "https://pembri.github.io"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": "${title}",
+    "image": [
+      "https://pembri.github.io/android-icon-192x192.png"
+    ],
+    "datePublished": "${new Date().toISOString()}",
+    "author": [{
+      "@type": "Organization",
+      "name": "Musik Anywhere",
+      "url": "https://pembri.github.io"
+    }]
+  }
+]
+</script>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
