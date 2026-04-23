@@ -20,20 +20,28 @@ jobs:
         with:
           base-url-path: https://musikanywhere.online/
           drop-github-md: true
-          # Ini kunci utamanya buat ngilangin .html
           include-html-extension: false
-          # Tambahkan ini biar robotnya makin yakin hapus ekstensi
           strip-extension: true
+          # Mencegah robot men-scan folder tools
+          exclude-paths: "/tools/*"
 
-      - name: Rapikan Index dan Hapus Sisa HTML
+      - name: Rapikan Index, Tambah Kategori & Proteksi Tools
         run: |
-          # 1. Hilangkan sisa-sisa /index
+          # 1. Hilangkan sisa-sisa /index dan .html jika masih ada
           sed -i 's/\/index<\/loc>/<\/loc>/g' sitemap.xml
-          
-          # 2. Paksa hapus manual .html kalau robotnya masih bandel
           sed -i 's/\.html<\/loc>/<\/loc>/g' sitemap.xml
+          
+          # 2. Sisipkan Link Kategori sebelum tag penutup </urlset>
+          # Kita pakai 'Lirik%20Lagu' untuk spasi agar valid secara URL
+          sed -i '/<\/urlset>/i \
+          <url><loc>https://musikanywhere.online/?kategori=Artikel</loc><lastmod>'"$(date +%Y-%m-%d)"'</lastmod></url> \
+          <url><loc>https://musikanywhere.online/?kategori=News</loc><lastmod>'"$(date +%Y-%m-%d)"'</lastmod></url> \
+          <url><loc>https://musikanywhere.online/?kategori=Lirik%20Lagu</loc><lastmod>'"$(date +%Y-%m-%d)"'</lastmod></url>' sitemap.xml
+          
+          # 3. Pastikan tidak ada link /tools/ yang bocor (double check)
+          sed -i '/\/tools\//d' sitemap.xml
           
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "SEO: Fix paksa Clean URLs sitemap" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "SEO: Update sitemap (Kategori added, Tools excluded)" && git push)
