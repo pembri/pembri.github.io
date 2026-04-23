@@ -60,9 +60,9 @@
                     <h3 class="text-xl font-black uppercase tracking-tighter text-white">Dukung Musik Lokal</h3>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                    <a href="https://api.whatsapp.com/send?text=tae%20https://pembri.github.io/artikel/tae.html" target="_blank" class="flex items-center justify-center bg-[#25D366] text-white py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">WhatsApp</a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://pembri.github.io/artikel/tae.html" target="_blank" class="flex items-center justify-center bg-[#1877F2] text-white py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">Facebook</a>
-                    <a href="https://twitter.com/intent/tweet?url=https://pembri.github.io/artikel/tae.html" target="_blank" class="flex items-center justify-center bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">Twitter</a>
+                    <a href="https://api.whatsapp.com/send?text=tae%20https://musikanywhere.online/artikel/tae.html" target="_blank" class="flex items-center justify-center bg-[#25D366] text-white py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">WhatsApp</a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://musikanywhere.online/artikel/tae.html" target="_blank" class="flex items-center justify-center bg-[#1877F2] text-white py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">Facebook</a>
+                    <a href="https://twitter.com/intent/tweet?url=https://musikanywhere.online/artikel/tae.html" target="_blank" class="flex items-center justify-center bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">Twitter</a>
                     <a href="https://instagram.com" target="_blank" class="flex items-center justify-center bg-gradient-to-r from-purple-500 to-orange-500 text-white py-3 rounded-xl font-bold text-[10px] uppercase transition hover:opacity-80">Instagram</a>
                     <button onclick="navigator.clipboard.writeText(window.location.href);alert('Link tersalin!')" class="bg-zinc-800 text-white py-3 rounded-xl font-bold text-[10px] uppercase border border-zinc-700">Salin Link</button>
                 </div>
@@ -104,7 +104,7 @@
                 if(c.menus) c.menus.forEach(m => { dMenu += `<a href="${m.url}" class="hover:text-white transition">${m.name}</a>`; mMenu += `<a href="${m.url}" class="text-white">${m.name}</a>`; });
                 document.getElementById('sys-desktop-menu').innerHTML = dMenu; document.getElementById('sys-mobile-menu').innerHTML = mMenu;
 
-                const rArt = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
+                const rArt = await fetch('https://api.github.com/repos/pembri/musikanywhere.online/contents/artikel');
                 const data = await rArt.json(); const recCont = document.getElementById('rec-container');
                 data.filter(f => f.name.endsWith('.html') && !window.location.href.includes(f.name)).reverse().slice(0,3).forEach(async item => {
                     let img = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Musik Anywhere", "url": "https://pembri.github.io"}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Musik Anywhere", "url": "https://musikanywhere.online"}</script>
     <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsArticle", "headline": "Fakta gila", "datePublished": "2026-04-23T18:12:11.912Z", "author": {"@type": "Organization", "name": "Musik Anywhere"} }</script>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
@@ -14,7 +14,7 @@
     <title>Fakta gila - Musik Anywhere</title>
     <meta property="og:site_name" content="Musik Anywhere">
     <meta property="og:title" content="Fakta gila">
-    <meta property="og:url" content="https://pembri.github.io/artikel/fakta-gila.html">
+    <meta property="og:url" content="https://musikanywhere.online/artikel/fakta-gila.html">
     <meta property="og:type" content="article">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -76,9 +76,9 @@
             <div class="border-t border-zinc-900 pt-10">
                 <p class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6 text-center">Bagikan Konten Ini</p>
                 <div class="flex flex-wrap justify-center gap-3">
-                    <a href="https://wa.me/?text=Fakta%20gila%20https%3A%2F%2Fpembri.github.io%2Fartikel%2Ffakta-gila.html" target="_blank" class="bg-[#25D366] text-white p-3 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase">WA</a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://pembri.github.io/artikel/fakta-gila.html" target="_blank" class="bg-[#1877F2] text-white p-3 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase">FB</a>
-                    <a href="https://twitter.com/intent/tweet?text=Fakta%20gila&url=https://pembri.github.io/artikel/fakta-gila.html" target="_blank" class="bg-white text-black p-3 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase">X</a>
+                    <a href="https://wa.me/?text=Fakta%20gila%20https%3A%2F%2Fmusikanywhere.online%2Fartikel%2Ffakta-gila.html" target="_blank" class="bg-[#25D366] text-white p-3 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase">WA</a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://musikanywhere.online/artikel/fakta-gila.html" target="_blank" class="bg-[#1877F2] text-white p-3 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase">FB</a>
+                    <a href="https://twitter.com/intent/tweet?text=Fakta%20gila&url=https://musikanywhere.online/artikel/fakta-gila.html" target="_blank" class="bg-white text-black p-3 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase">X</a>
                     <button onclick="alert('Salin link artikel dan tempel di Bio atau Story Instagram kamu!')" class="bg-gradient-to-tr from-yellow-500 via-red-500 to-purple-500 text-white p-3 rounded-xl text-[10px] font-bold uppercase">IG</button>
                     <button onclick="navigator.clipboard.writeText(window.location.href); alert('Link disalin!')" class="bg-zinc-800 text-white p-3 rounded-xl text-[10px] font-bold uppercase border border-zinc-700">Salin</button>
                 </div>
@@ -132,7 +132,7 @@
         // AUTO LOAD REKOMENDASI
         async function loadRecs() {
             try {
-                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
+                const res = await fetch('https://api.github.com/repos/pembri/musikanywhere.online/contents/artikel');
                 const files = await res.json();
                 const container = document.getElementById('rekomendasi-list');
                 const others = files.filter(f => f.name.endsWith('.html') && !window.location.href.includes(f.name)).sort(() => 0.5 - Math.random()).slice(0, 4);

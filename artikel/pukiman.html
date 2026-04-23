@@ -12,21 +12,21 @@
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://pembri.github.io/#website",
-      "url": "https://pembri.github.io",
+      "@id": "https://musikanywhere.online/#website",
+      "url": "https://musikanywhere.online",
       "name": "Musik Anywhere"
     },
     {
       "@type": "NewsArticle",
       "headline": "pukiman",
-      "image": ["https://pembri.github.io/android-icon-192x192.png"],
+      "image": ["https://musikanywhere.online/android-icon-192x192.png"],
       "datePublished": "2026-04-23T14:31:18.737Z",
       "author": [{ 
         "@type": "Organization", 
         "name": "Musik Anywhere", 
-        "url": "https://pembri.github.io" 
+        "url": "https://musikanywhere.online" 
       }],
-      "isPartOf": { "@id": "https://pembri.github.io/#website" }
+      "isPartOf": { "@id": "https://musikanywhere.online/#website" }
     }
   ]
 }
@@ -45,7 +45,7 @@
     <meta property="og:site_name" content="Musik Anywhere">
     <meta property="og:title" content="pukiman - Musik Anywhere">
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://pembri.github.io/pukiman">
+    <meta property="og:url" content="https://musikanywhere.online/pukiman">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -102,11 +102,11 @@
                     <h3 class="text-xl font-black uppercase tracking-tighter text-white">Dukung Musik Lokal</h3>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                    <a href="https://api.whatsapp.com/send?text=pukiman%20https://pembri.github.io/artikel/pukiman.html" target="_blank" class="flex items-center justify-center bg-[#25D366] text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:opacity-80 transition">WhatsApp</a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://pembri.github.io/artikel/pukiman.html" target="_blank" class="flex items-center justify-center bg-[#1877F2] text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:opacity-80 transition">Facebook</a>
-                    <a href="https://twitter.com/intent/tweet?url=https://pembri.github.io/artikel/pukiman.html&text=pukiman" target="_blank" class="flex items-center justify-center bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:opacity-80 transition">X / Twitter</a>
+                    <a href="https://api.whatsapp.com/send?text=pukiman%20https://musikanywhere.online/artikel/pukiman.html" target="_blank" class="flex items-center justify-center bg-[#25D366] text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:opacity-80 transition">WhatsApp</a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://musikanywhere.online/artikel/pukiman.html" target="_blank" class="flex items-center justify-center bg-[#1877F2] text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:opacity-80 transition">Facebook</a>
+                    <a href="https://twitter.com/intent/tweet?url=https://musikanywhere.online/artikel/pukiman.html&text=pukiman" target="_blank" class="flex items-center justify-center bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:opacity-80 transition">X / Twitter</a>
                     <a href="https://instagram.com" target="_blank" class="flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:opacity-80 transition">Instagram</a>
-                    <button onclick="navigator.clipboard.writeText('https://pembri.github.io/artikel/pukiman.html'); alert('Link berhasil disalin!');" class="flex items-center justify-center bg-zinc-800 text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-zinc-700 hover:bg-zinc-700 transition col-span-2 md:col-span-1">Salin Link</button>
+                    <button onclick="navigator.clipboard.writeText('https://musikanywhere.online/artikel/pukiman.html'); alert('Link berhasil disalin!');" class="flex items-center justify-center bg-zinc-800 text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-zinc-700 hover:bg-zinc-700 transition col-span-2 md:col-span-1">Salin Link</button>
                 </div>
             </div>
 
@@ -127,7 +127,7 @@
         
         async function initPage() { 
             try { 
-                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel'); 
+                const res = await fetch('https://api.github.com/repos/pembri/musikanywhere.online/contents/artikel'); 
                 const data = await res.json(); 
                 allArticles = data.filter(f => f.name.endsWith('.html')); 
                 

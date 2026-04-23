@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Musik Anywhere", "url": "https://pembri.github.io"}</script>
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsMediaOrganization", "name": "Musik Anywhere", "url": "https://pembri.github.io", "logo": "https://pembri.github.io/android-icon-192x192.png", "description": "Media informasi tentang musik untuk audiens Indonesia."}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Musik Anywhere", "url": "https://musikanywhere.online"}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsMediaOrganization", "name": "Musik Anywhere", "url": "https://musikanywhere.online", "logo": "https://musikanywhere.online/android-icon-192x192.png", "description": "Media informasi tentang musik untuk audiens Indonesia."}</script>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
@@ -17,7 +17,7 @@
     <title>Musik Anywhere - Media Informasi Seputar Musik</title>
     <meta property="og:site_name" content="Musik Anywhere">
     <meta property="og:title" content="Musik Anywhere - Media Informasi Seputar Musik">
-    <meta property="og:url" content="https://pembri.github.io/">
+    <meta property="og:url" content="https://musikanywhere.online/">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -147,7 +147,7 @@
 
         async function initPortal() {
             try {
-                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel');
+                const res = await fetch('https://api.github.com/repos/pembri/musikanywhere.online/contents/artikel');
                 let files = await res.json();
                 files = files.filter(f => f.name.endsWith('.html'));
                 
