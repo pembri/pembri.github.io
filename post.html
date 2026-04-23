@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <script>
+      var password = "Anjing526"; 
+      var input;
+      while (input !== password) {
+        input = prompt("Admin Area: Masukkan kata sandi:");
+        if (input === null) { window.location.href = "https://pembri.github.io"; break; }
+        if (input !== password) { alert("Sandi Salah! Akses ditolak."); }
+      }
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,8 +67,8 @@
                 <button onclick="loadArticleList()" class="text-[10px] font-bold uppercase tracking-widest bg-zinc-800 px-6 py-3 rounded-xl hover:bg-zinc-700 transition">Tarik Data Server</button>
             </div>
             <div id="articleList" class="grid grid-cols-1 gap-4">
-                <div class="bg-[#111] border border-zinc-800 p-8 rounded-2xl text-center">
-                    <p class="text-zinc-500 text-sm italic">Masukkan Token Github di atas lalu klik "Tarik Data Server" untuk melihat daftar artikel.</p>
+                <div class="bg-[#111] border border-zinc-800 p-8 rounded-2xl text-center text-zinc-500 text-sm italic">
+                    Masukkan Token Github di atas lalu klik "Tarik Data Server".
                 </div>
             </div>
         </div>
@@ -91,6 +99,8 @@
         let isEditMode = false;
         let currentSha = null;
         let currentPath = null;
+        // Kita simpan waktu asli saat mode edit agar urutannya gak berubah jadi baru lagi
+        let originalTimestamp = null; 
 
         async function handlePublish() {
             const token = document.getElementById('ghToken').value;
@@ -102,9 +112,12 @@
             if(!token || !title) return alert("Token Github dan Judul wajib diisi!");
             btn.innerText = "PROSES UPLOAD KE SERVER..."; btn.disabled = true;
 
+            // URL BERSIH TANPA ANGKA
             const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-            const timePrefix = Date.now();
-            const filePath = isEditMode ? currentPath : `artikel/${timePrefix}-${slug}.html`;
+            const filePath = isEditMode ? currentPath : `artikel/${slug}.html`;
+            
+            // Waktu untuk sistem pengurutan
+            const publishTime = isEditMode && originalTimestamp ? originalTimestamp : Date.now();
 
             const fullTemplate = `<!DOCTYPE html>
 <html lang="id">
@@ -112,7 +125,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="category" content="${category}">
-    <title>${title} - Musik Anywhere</title>
+    <meta name="publish-date" content="${publishTime}"> <title>${title} - Musik Anywhere</title>
     
     <script type="application/ld+json">
     {
@@ -166,33 +179,13 @@
                 <a href="/index.html?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a>
             </nav>
             <div class="flex items-center gap-4 z-50">
-                <div class="relative group hidden lg:block" onclick="event.stopPropagation()">
-                    <div class="flex items-center bg-zinc-900 rounded-full px-4 py-2 border border-zinc-800 focus-within:border-red-500 transition-all">
-                        <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <input type="text" id="searchInput" oninput="handleSearch('searchInput', 'searchSuggestions', 'suggestionsList')" placeholder="Cari..." autocomplete="off" class="bg-transparent border-none outline-none text-xs ml-2 w-48 text-white">
-                    </div>
-                    <div id="searchSuggestions" class="absolute top-full right-0 mt-3 w-80 bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden z-[110]"><div id="suggestionsList" class="max-h-[350px] overflow-y-auto"></div></div>
-                </div>
+                <div class="relative group hidden lg:block" onclick="event.stopPropagation()"><div class="flex items-center bg-zinc-900 rounded-full px-4 py-2 border border-zinc-800 focus-within:border-red-500 transition-all"><svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input type="text" id="searchInput" oninput="handleSearch('searchInput', 'searchSuggestions', 'suggestionsList')" placeholder="Cari..." autocomplete="off" class="bg-transparent border-none outline-none text-xs ml-2 w-48 text-white"></div><div id="searchSuggestions" class="absolute top-full right-0 mt-3 w-80 bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden z-[110]"><div id="suggestionsList" class="max-h-[350px] overflow-y-auto"></div></div></div>
                 <button id="menuBtn" class="lg:hidden p-2 text-white focus:outline-none" onclick="toggleMenu()"><svg id="icon-menu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg><svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
         </div>
         <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
-            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()">
-                <div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800">
-                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white">
-                </div>
-                <div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div>
-            </div>
-            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter">
-                <a href="/index.html" class="text-white hover:text-red-600">Home</a>
-                <a href="/index.html?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
-                <a href="/index.html?kategori=News" class="text-white hover:text-red-600">News</a>
-                <a href="/index.html?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a>
-                <hr class="border-zinc-800 my-2">
-                <a href="/about.html" class="text-zinc-500 hover:text-white text-sm">About</a>
-                <a href="/contact.html" class="text-zinc-500 hover:text-white text-sm">Contact</a>
-            </nav>
+            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()"><div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800"><svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white"></div><div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div></div>
+            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter"><a href="/index.html" class="text-white hover:text-red-600">Home</a><a href="/index.html?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a><a href="/index.html?kategori=News" class="text-white hover:text-red-600">News</a><a href="/index.html?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a><hr class="border-zinc-800 my-2"><a href="/about.html" class="text-zinc-500 hover:text-white text-sm">About</a><a href="/contact.html" class="text-zinc-500 hover:text-white text-sm">Contact</a><a href="/privacy.html" class="text-zinc-500 hover:text-white text-sm">Privacy Policy</a></nav>
         </div>
     </header>
 
@@ -223,9 +216,7 @@
             </div>
 
             <section class="mt-20 border-t border-zinc-800 pt-16">
-                <h2 class="text-2xl font-black uppercase mb-10 tracking-tighter flex items-center gap-3 text-white">
-                    <span class="w-2 h-8 bg-red-600 rounded-sm"></span> BACA JUGA
-                </h2>
+                <h2 class="text-2xl font-black uppercase mb-10 tracking-tighter flex items-center gap-3 text-white"><span class="w-2 h-8 bg-red-600 rounded-sm"></span> BACA JUGA</h2>
                 <div id="rec-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
             </section>
         </article>
@@ -236,7 +227,7 @@
     <script>
         let allArticles = [];
         function toggleMenu() { const menu = document.getElementById('mobileMenu'); const iconMenu = document.getElementById('icon-menu'); const iconClose = document.getElementById('icon-close'); if(menu.classList.contains('hidden')) { menu.classList.remove('hidden'); menu.classList.add('flex'); document.body.style.overflow = 'hidden'; iconMenu.classList.add('hidden'); iconClose.classList.remove('hidden'); } else { menu.classList.add('hidden'); menu.classList.remove('flex'); document.body.style.overflow = 'auto'; iconMenu.classList.remove('hidden'); iconClose.classList.add('hidden'); } }
-        function handleSearch(inputId, suggestionsId, listId) { const input = document.getElementById(inputId); const suggestions = document.getElementById(suggestionsId); const list = document.getElementById(listId); const query = input.value.toLowerCase().trim(); if (query.length < 2) { suggestions.classList.remove('active'); return; } const filtered = allArticles.filter(art => art.name.replace(/-/g, ' ').toLowerCase().includes(query)).slice(0, 6); if (filtered.length > 0) { list.innerHTML = filtered.map(art => { const title = art.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', ''); const cleanUrl = \`/artikel/\${art.name}\`; const highlightedTitle = title.replace(new RegExp(\`(\${query})\`, "gi"), "<span class='text-red-600'>$1</span>"); return \`<a href="\${cleanUrl}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">\${highlightedTitle}</span></a>\`; }).join(''); suggestions.classList.add('active'); } else { list.innerHTML = \`<div class="px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest">Tidak ditemukan</div>\`; suggestions.classList.add('active'); } }
+        function handleSearch(inputId, suggestionsId, listId) { const input = document.getElementById(inputId); const suggestions = document.getElementById(suggestionsId); const list = document.getElementById(listId); const query = input.value.toLowerCase().trim(); if (query.length < 2) { suggestions.classList.remove('active'); return; } const filtered = allArticles.filter(art => art.name.replace(/-/g, ' ').toLowerCase().includes(query)).slice(0, 6); if (filtered.length > 0) { list.innerHTML = filtered.map(art => { const title = art.name.replace(/-/g, ' ').replace('.html', ''); const cleanUrl = \`/artikel/\${art.name}\`; const highlightedTitle = title.replace(new RegExp(\`(\${query})\`, "gi"), "<span class='text-red-600'>$1</span>"); return \`<a href="\${cleanUrl}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">\${highlightedTitle}</span></a>\`; }).join(''); suggestions.classList.add('active'); } else { list.innerHTML = \`<div class="px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest">Tidak ditemukan</div>\`; suggestions.classList.add('active'); } }
         function closeSearch() { if(document.getElementById('searchSuggestions')) document.getElementById('searchSuggestions').classList.remove('active'); if(document.getElementById('mobileSearchSuggestions')) document.getElementById('mobileSearchSuggestions').classList.remove('active'); }
         
         async function initPage() { 
@@ -245,7 +236,7 @@
                 const data = await res.json(); 
                 allArticles = data.filter(f => f.name.endsWith('.html')); 
                 
-                // Load Rekomendasi Baca Juga
+                // SKRIP BACA JUGA (REKOMENDASI)
                 const container = document.getElementById('rec-container');
                 const currentFile = window.location.pathname.split('/').pop();
                 const filtered = allArticles.filter(f => f.name !== currentFile).reverse().slice(0, 3);
@@ -256,16 +247,11 @@
                         const r = await fetch('/artikel/' + item.name);
                         const t = await r.text();
                         const m = t.match(/<img[^>]+src="([^">]+)"/);
-                        if(m) {
-                            thumb = m[1];
-                            if (!thumb.startsWith('data:image') && !thumb.startsWith('http') && !thumb.startsWith('/')) thumb = '/artikel/' + thumb;
-                        }
+                        if(m) { thumb = m[1]; if (!thumb.startsWith('data:image') && !thumb.startsWith('http') && !thumb.startsWith('/')) thumb = '/artikel/' + thumb; }
                     } catch(e){}
-                    const tTitle = item.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
+                    const tTitle = item.name.replace(/-/g, ' ').replace('.html', '');
                     container.innerHTML += \`<a href="/artikel/\${item.name}" class="group flex flex-col bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-zinc-700 transition overflow-hidden">
-                        <div class="aspect-[16/10] bg-zinc-950 relative overflow-hidden">
-                            <img src="\${thumb}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition duration-700">
-                        </div>
+                        <div class="aspect-[16/10] bg-zinc-950 relative overflow-hidden"><img src="\${thumb}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition duration-700"></div>
                         <div class="p-4"><h4 class="text-white font-black uppercase text-sm leading-tight tracking-tight group-hover:text-red-500 transition line-clamp-2">\${tTitle}</h4></div>
                     </a>\`;
                 }
@@ -289,6 +275,7 @@
             btn.innerText = "Publikasikan Artikel"; btn.disabled = false;
         }
 
+        // FUNGSI LOAD ARTIKEL DI ADMIN
         async function loadArticleList() {
             const token = document.getElementById('ghToken').value;
             const listDiv = document.getElementById('articleList');
@@ -296,15 +283,13 @@
             
             listDiv.innerHTML = '<p class="text-zinc-400 text-xs font-bold uppercase tracking-widest animate-pulse text-center py-5">Menarik Data Server...</p>';
             try {
-                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel', {
-                    headers: { 'Authorization': `token ${token}` }
-                });
+                const res = await fetch('https://api.github.com/repos/pembri/pembri.github.io/contents/artikel', { headers: { 'Authorization': `token ${token}` } });
                 const files = await res.json();
                 const articles = files.filter(f => f.name.endsWith('.html'));
                 
                 listDiv.innerHTML = '';
                 articles.reverse().forEach(file => {
-                    const cleanTitle = file.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '').toUpperCase();
+                    const cleanTitle = file.name.replace(/-/g, ' ').replace('.html', '').toUpperCase();
                     listDiv.innerHTML += `
                         <div class="bg-[#111] border border-zinc-800 p-5 rounded-2xl flex flex-col md:flex-row md:justify-between md:items-center gap-4 group hover:border-red-600 transition">
                             <div>
@@ -317,16 +302,15 @@
                             </div>
                         </div>`;
                 });
-            } catch (e) { listDiv.innerHTML = '<p class="text-red-500 font-bold text-center">Gagal memuat daftar artikel. Cek Token.</p>'; }
+            } catch (e) { listDiv.innerHTML = '<p class="text-red-500 font-bold text-center">Gagal memuat daftar artikel.</p>'; }
         }
 
+        // FUNGSI EDIT ARTIKEL
         async function editArticle(path, sha) {
             const token = document.getElementById('ghToken').value;
             const btn = document.getElementById('pubBtn');
             try {
-                const res = await fetch(`https://api.github.com/repos/pembri/pembri.github.io/contents/${path}`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
+                const res = await fetch(`https://api.github.com/repos/pembri/pembri.github.io/contents/${path}`, { headers: { 'Authorization': `token ${token}` } });
                 const data = await res.json();
                 const htmlContent = decodeURIComponent(escape(atob(data.content)));
                 
@@ -336,33 +320,30 @@
                 const title = doc.querySelector('h1')?.innerText || "";
                 const content = doc.querySelector('.prose')?.innerHTML || "";
                 const categoryMeta = doc.querySelector('meta[name="category"]');
+                const dateMeta = doc.querySelector('meta[name="publish-date"]');
                 
                 document.getElementById('postTitle').value = title;
                 if(categoryMeta) document.getElementById('postCategory').value = categoryMeta.getAttribute('content');
+                if(dateMeta) originalTimestamp = parseInt(dateMeta.getAttribute('content'));
                 quill.root.innerHTML = content;
                 
-                isEditMode = true; 
-                currentSha = sha; 
-                currentPath = path;
-                
+                isEditMode = true; currentSha = sha; currentPath = path;
                 btn.innerText = "UPDATE ARTIKEL SEKARANG";
                 btn.classList.replace('bg-red-600', 'bg-blue-600');
                 btn.classList.replace('hover:bg-red-700', 'hover:bg-blue-700');
-                btn.classList.replace('shadow-[0_0_40px_rgba(220,38,38,0.3)]', 'shadow-[0_0_40px_rgba(37,99,235,0.3)]');
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                alert("Mode Edit Diaktifkan! Silakan ubah teks lalu klik Update.");
+                alert("Mode Edit Aktif! Teks ditarik dari server.");
             } catch (e) { alert("Gagal mengambil file artikel dari server."); }
         }
 
+        // FUNGSI HAPUS ARTIKEL
         async function deleteArticle(path, sha) {
-            if(!confirm("Anda yakin ingin menghapus artikel ini secara permanen?")) return;
+            if(!confirm("Anda yakin ingin menghapus artikel ini permanen?")) return;
             const token = document.getElementById('ghToken').value;
             try {
                 const res = await fetch(`https://api.github.com/repos/pembri/pembri.github.io/contents/${path}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: `Hapus Artikel: ${path}`, sha: sha })
+                    method: 'DELETE', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `Hapus Artikel: ${path}`, sha: sha })
                 });
                 if(res.ok) { alert("ARTIKEL BERHASIL DIHAPUS!"); loadArticleList(); }
             } catch (e) { alert("Error: " + e.message); }
