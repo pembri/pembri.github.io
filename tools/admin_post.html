@@ -182,8 +182,7 @@
         .prose p { color: #d4d4d8; line-height: 1.8; margin-bottom: 1rem; font-size: 1.15rem;}
         #searchSuggestions, #mobileSearchSuggestions { display: none; }
         #searchSuggestions.active, #mobileSearchSuggestions.active { display: block; }
-
-        .share-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #27272a; }
+        .share-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 40px 0; padding: 20px 0; border-top: 1px solid #27272a; border-bottom: 1px solid #27272a; }
         .share-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 99px; background: #18181b; border: 1px solid #27272a; color: #a1a1aa; font-size: 12px; font-weight: 800; text-transform: uppercase; transition: all 0.3s ease; cursor: pointer; text-decoration: none; }
         .share-btn:hover { background: #27272a; color: white; border-color: #52525b; }
         .share-btn svg { width: 16px; height: 16px; fill: currentColor; }
@@ -210,30 +209,7 @@
                     </div>
                     <div id=\"searchSuggestions\" class=\"absolute top-full right-0 mt-3 w-80 bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden z-[110]\"><div id=\"suggestionsList\" class=\"max-h-[350px] overflow-y-auto\"></div></div>
                 </div>
-                <button id=\"menuBtn\" class=\"lg:hidden p-2 text-white\" onclick=\"toggleMenu()\">
-                    <svg id=\"icon-menu\" class=\"w-6 h-6\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 6h16M4 12h16M4 18h16\"></path></svg>
-                    <svg id=\"icon-close\" class=\"w-6 h-6 hidden\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M6 18L18 6M6 6l12 12\"></path></svg>
-                </button>
             </div>
-        </div>
-        <div id=\"mobileMenu\" class=\"fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto px-6\">
-            <div class=\"relative w-full mb-8 lg:hidden\" onclick=\"event.stopPropagation()\">
-                <div class=\"flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800\">
-                    <svg class=\"w-5 h-5 text-zinc-500\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z\"></path></svg>
-                    <input type=\"text\" id=\"mobileSearchInput\" oninput=\"handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')\" placeholder=\"Cari artikel...\" class=\"bg-transparent border-none outline-none text-sm ml-3 w-full text-white\">
-                </div>
-                <div id=\"mobileSearchSuggestions\" class=\"absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden z-[110]\"><div id=\"mobileSuggestionsList\" class=\"max-h-[300px] overflow-y-auto\"></div></div>
-            </div>
-            <nav class=\"flex flex-col gap-6 text-xl font-black uppercase tracking-tighter\">
-                <a href=\"/\" class=\"text-white hover:text-red-600\">Home</a>
-                <a href=\"/index?kategori=Artikel\" class=\"text-white hover:text-red-600\">Artikel</a>
-                <a href=\"/index?kategori=News\" class=\"text-white hover:text-red-600\">News</a>
-                <a href=\"/index?kategori=Lirik Lagu\" class=\"text-white hover:text-red-600\">Lirik Lagu</a>
-                <hr class=\"border-zinc-800 my-2\">
-                <a href=\"/about\" class=\"text-zinc-500 text-sm\">About</a>
-                <a href=\"/contact\" class=\"text-zinc-500 text-sm\">Contact</a>
-                <a href=\"/privacy\" class=\"text-zinc-500 text-sm\">Privacy Policy</a>
-            </nav>
         </div>
     </header>
 
@@ -244,20 +220,17 @@
                 <h1 class=\"text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-8 leading-tight\">\${title}</h1>
                 <p class=\"text-zinc-500 text-[11px] font-bold uppercase tracking-widest border-t border-b border-zinc-800 py-4\">Oleh Redaksi • \${getIndoDate()}</p>
             </div>
+            
             <div class=\"prose prose-zinc max-w-none w-full\">\${content}</div>
             
-            <section class=\"mt-20 border-t border-zinc-800 pt-16\">
-                <div class=\"share-container mb-12\">
-                    <span class=\"w-full text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2\">Bagikan Artikel:</span>
-                    <button onclick=\"copyToClipboard()\" class=\"share-btn\">
-                        <svg viewBox=\"0 0 24 24\"><path d=\"M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z\"/></svg>
-                        Salin Link
-                    </button>
-                    <a href=\"https://api.whatsapp.com/send?text=\${encodeURIComponent(title)}%20\${encodeURIComponent(window.location.href)}\" target=\"_blank\" class=\"share-btn\">WhatsApp</a>
-                    <a href=\"https://www.facebook.com/sharer/sharer.php?u=\${encodeURIComponent(window.location.href)}\" target=\"_blank\" class=\"share-btn\">Facebook</a>
-                    <a href=\"https://twitter.com/intent/tweet?text=\${encodeURIComponent(title)}&url=\${encodeURIComponent(window.location.href)}\" target=\"_blank\" class=\"share-btn\">X</a>
-                </div>
+            <div class=\"share-container\">
+                <span class=\"w-full text-[10px] font-black uppercase text-zinc-500 mb-2\">Bagikan Artikel:</span>
+                <button onclick=\"copyToClipboard()\" class=\"share-btn\">SALIN LINK</button>
+                <a href=\"https://api.whatsapp.com/send?text=\${encodeURIComponent(title)}%20\${encodeURIComponent(window.location.href)}\" target=\"_blank\" class=\"share-btn\">WHATSAPP</a>
+                <a href=\"https://www.facebook.com/sharer/sharer.php?u=\${encodeURIComponent(window.location.href)}\" target=\"_blank\" class=\"share-btn\">FACEBOOK</a>
+            </div>
 
+            <section class=\"mt-20 border-t border-zinc-800 pt-16\">
                 <h2 class=\"text-2xl font-black uppercase mb-10 tracking-tighter flex items-center gap-3 text-white\"><span class=\"w-2 h-8 bg-red-600 rounded-sm\"></span> BACA JUGA</h2>
                 <div id=\"rec-container\" class=\"grid grid-cols-1 md:grid-cols-3 gap-6\"></div>
             </section>
@@ -265,36 +238,14 @@
     </main>
 
     <footer class=\"bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900 w-full\">
-        <div class=\"max-w-7xl mx-auto px-8\">
-            <div class=\"grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-900 pb-12 mb-8 text-left\">
-                <div class=\"md:col-span-1\">
-                    <h2 class=\"text-2xl font-black uppercase mb-4 tracking-tighter text-white\">MUSIK<span class=\"text-red-600\">ANYWHERE</span></h2>
-                    <p class=\"text-zinc-500 text-sm leading-relaxed mb-6\">Menyajikan informasi musik, ulasan rilisan terbaru, dan kumpulan lirik lagu.</p>
-                </div>
-                <div>
-                    <h4 class=\"text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6 font-bold uppercase\">Kategori</h4>
-                    <ul class=\"space-y-3 text-sm font-bold text-zinc-400 uppercase\">
-                        <li><a href=\"/index?kategori=Artikel\" class=\"hover:text-red-500 transition\">Artikel</a></li>
-                        <li><a href=\"/index?kategori=News\" class=\"hover:text-red-500 transition\">News</a></li>
-                        <li><a href=\"/index?kategori=Lirik Lagu\" class=\"hover:text-red-500 transition\">Lirik Lagu</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class=\"text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6 font-bold uppercase\">Bantuan</h4>
-                    <ul class=\"space-y-3 text-sm font-bold text-zinc-400 uppercase\">
-                        <li><a href=\"/about\" class=\"hover:text-red-500 transition\">About</a></li>
-                        <li><a href=\"/contact\" class=\"hover:text-red-500 transition\">Contact</a></li>
-                        <li><a href=\"/privacy\" class=\"hover:text-red-500 transition\">Privacy Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <p class=\"text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center py-4\"> © 2026 Musik Anywhere Media. </p>
+        <div class=\"max-w-7xl mx-auto px-8 text-center\">
+            <h2 class=\"text-2xl font-black uppercase mb-4 tracking-tighter text-white\">MUSIK<span class=\"text-red-600\">ANYWHERE</span></h2>
+            <p class=\"text-zinc-600 text-[10px] font-bold uppercase tracking-widest\">© 2026 Musik Anywhere Media.</p>
         </div>
     </footer>
 
     <script>
         let allArticles = [];
-        function toggleMenu() { const m = document.getElementById('mobileMenu'); const im = document.getElementById('icon-menu'); const ic = document.getElementById('icon-close'); m.classList.toggle('hidden'); im.classList.toggle('hidden'); ic.classList.toggle('hidden'); }
         function handleSearch(inputId, suggestionsId, listId) {
             const query = document.getElementById(inputId).value.toLowerCase().trim();
             const suggestions = document.getElementById(suggestionsId);
@@ -306,6 +257,7 @@
             } else { suggestions.classList.remove('active'); }
         }
         function closeSearch() { document.querySelectorAll('[id$=\"Suggestions\"]').forEach(s => s.classList.remove('active')); }
+        function copyToClipboard() { navigator.clipboard.writeText(window.location.href); alert(\"Link disalin!\"); }
         
         async function initPage() { 
             try { 
@@ -327,24 +279,18 @@
                         const artData = { name: file.name.replace('.html',''), title: title, thumb: thumb };
                         loaded.push(artData);
                         if (file.name !== currentFile && container.children.length < 3) {
-                            container.innerHTML += \`<a href=\"/artikel/\${artData.name}\" class=\"group flex flex-col bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-zinc-700 transition overflow-hidden\">
-                                <div class=\"aspect-[16/10] bg-zinc-950 relative overflow-hidden\"><img src=\"\${thumb}\" class=\"absolute inset-0 w-full h-full object-contain p-2 opacity-80 group-hover:scale-110 group-hover:opacity-100 transition duration-700\"></div>
-                                <div class=\"p-4 text-left\"><h4 class=\"text-white font-black uppercase text-sm leading-tight tracking-tight group-hover:text-red-500 transition line-clamp-2\">\${title}</h4></div>
-                            </a>\`;
+                            container.innerHTML += \`<a href=\"/artikel/\${artData.name}\" class=\"group flex flex-col bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-zinc-700 transition overflow-hidden\"><div class=\"aspect-[16/10] bg-zinc-950 relative overflow-hidden\"><img src=\"\${thumb}\" class=\"absolute inset-0 w-full h-full object-contain p-2 opacity-80 group-hover:scale-110 group-hover:opacity-100 transition duration-700\"></div><div class=\"p-4 text-left\"><h4 class=\"text-white font-black uppercase text-sm leading-tight tracking-tight group-hover:text-red-500 transition line-clamp-2\">\${title}</h4></div></a>\`;
                         }
                     } catch(e){}
                 }
                 allArticles = loaded;
             } catch(e) {} 
         } 
-        function copyToClipboard() {
-            navigator.clipboard.writeText(window.location.href);
-            alert(\"Link disalin!\");
-        }
         window.onload = initPage;
     <\/script>
 </body>
 </html>\`;
+
 
             const payload = { message: isEditMode ? `Update: ${title}` : `Publish: ${title}`, content: btoa(unescape(encodeURIComponent(fullTemplate))), sha: isEditMode ? currentSha : undefined };
             try {
