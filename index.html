@@ -37,7 +37,7 @@
 
     <header class="nav-glass sticky top-0 z-[100]">
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-            <a href="/" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center gap-3 z-50">
+            <a href="/" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center gap-3 z-50 text-white">
                 <img src="/favicon-192x192.png" alt="Logo" class="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-zinc-800">
                 <span>MUSIK<span class="text-red-600">ANYWHERE</span></span>
             </a>
@@ -51,7 +51,7 @@
                 <div class="relative group hidden lg:block" onclick="event.stopPropagation()">
                     <div class="flex items-center bg-zinc-900 rounded-full px-4 py-2 border border-zinc-800 focus-within:border-red-500 transition-all">
                         <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <input type="text" id="searchInput" oninput="handleSearch('searchInput', 'searchSuggestions', 'suggestionsList')" placeholder="Cari musik..." autocomplete="off" class="bg-transparent border-none outline-none text-xs ml-2 w-48">
+                        <input type="text" id="searchInput" oninput="handleSearch('searchInput', 'searchSuggestions', 'suggestionsList')" placeholder="Cari musik..." autocomplete="off" class="bg-transparent border-none outline-none text-xs ml-2 w-48 text-white">
                     </div>
                     <div id="searchSuggestions" class="absolute top-full right-0 mt-3 w-80 bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden z-[110]"><div id="suggestionsList" class="max-h-[350px] overflow-y-auto"></div></div>
                 </div>
@@ -62,22 +62,11 @@
             </div>
         </div>
         <div id="mobileMenu" class="fixed inset-0 bg-[#050505] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
-            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()">
-                <div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800">
-                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full">
-                </div>
-                <div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div>
-            </div>
             <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter">
                 <a href="/" class="text-white hover:text-red-600">Home</a>
                 <a href="?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
                 <a href="?kategori=News" class="text-white hover:text-red-600">News</a>
                 <a href="?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a>
-                <hr class="border-zinc-800 my-2">
-                <a href="/about" class="text-zinc-500 hover:text-white text-sm">About</a>
-                <a href="/contact" class="text-zinc-500 hover:text-white text-sm">Contact</a>
-                <a href="/privacy" class="text-zinc-500 hover:text-white text-sm">Privacy Policy</a>
             </nav>
         </div>
     </header>
@@ -91,19 +80,12 @@
                 </div>
             </div>
             <div id="featured-container" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-8 bg-zinc-900 aspect-video rounded-[2.5rem] animate-pulse"></div>
-                <div class="lg:col-span-4 flex flex-col gap-6">
-                    <div class="flex-1 bg-zinc-900 rounded-[2rem] animate-pulse"></div>
-                    <div class="flex-1 bg-zinc-900 rounded-[2rem] animate-pulse"></div>
                 </div>
-            </div>
         </section>
 
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
-            <div>
-                <h2 id="currentCategory" class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-2 text-white">TERBARU</h2>
-                <p class="text-zinc-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.3em]">Update Harian Musik Anywhere</p>
-            </div>
+        <div class="mb-12">
+            <h2 id="currentCategory" class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-2 text-white">TERBARU</h2>
+            <p class="text-zinc-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.3em]">Update Harian Musik Anywhere</p>
         </div>
 
         <div id="post-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
@@ -117,28 +99,9 @@
     <footer class="bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900 w-full">
         <div class="max-w-7xl mx-auto px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-900 pb-12 mb-8">
-                <div class="md:col-span-1">
-                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">MUSIK<span class="text-red-600">ANYWHERE</span></h2>
-                    <p class="text-zinc-500 text-sm leading-relaxed mb-6">Media informasi terdepan yang menyajikan ulasan musik, berita industri, dan kumpulan lirik lagu terlengkap di Indonesia.</p>
-                </div>
-                <div>
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Eksplorasi</h4>
-                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
-                        <li><a href="?kategori=Artikel" class="hover:text-red-500 transition">Artikel & Opini</a></li>
-                        <li><a href="?kategori=News" class="hover:text-red-500 transition">Berita Terkini</a></li>
-                        <li><a href="?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Perusahaan</h4>
-                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
-                        <li><a href="/about" class="hover:text-red-500 transition">About</a></li>
-                        <li><a href="/contact" class="hover:text-red-500 transition">Contact</a></li>
-                        <li><a href="/privacy" class="hover:text-red-500 transition">Privacy Policy</a></li>
-                    </ul>
-                </div>
+                <div><h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">MUSIK<span class="text-red-600">ANYWHERE</span></h2></div>
             </div>
-            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center">© 2026 Musik Anywhere Media. Seluruh Hak Cipta Dilindungi.</p>
+            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center">© 2026 Musik Anywhere Media.</p>
         </div>
     </footer>
 
@@ -146,21 +109,6 @@
         let allArticles = [];
         let itemsPerPage = 9;
         let currentPage = 1;
-
-        function toggleMenu() {
-            const menu = document.getElementById('mobileMenu');
-            const iconMenu = document.getElementById('icon-menu');
-            const iconClose = document.getElementById('icon-close');
-            if(menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden'); menu.classList.add('flex');
-                document.body.style.overflow = 'hidden';
-                iconMenu.classList.add('hidden'); iconClose.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden'); menu.classList.remove('flex');
-                document.body.style.overflow = 'auto';
-                iconMenu.classList.remove('hidden'); iconClose.classList.add('hidden');
-            }
-        }
 
         async function initPortal() {
             try {
@@ -179,46 +127,32 @@
                         const t = await r.text();
                         const doc = new DOMParser().parseFromString(t, 'text/html');
                         
-                        // AMBIL JUDUL ASLI (PENTING!)
+                        // AMBIL JUDUL ASLI DARI H1
                         const title = doc.querySelector('h1')?.innerText || file.name.replace(/-/g, ' ').replace('.html', '');
-                        const category = doc.querySelector('meta[name="category"]')?.getAttribute('content') || "Artikel";
-                        const dateRaw = doc.querySelector('meta[name="publish-date"]')?.getAttribute('content');
+                        const category = doc.querySelector('meta[name=\"category\"]')?.getAttribute('content') || \"Artikel\";
                         
-                        // AMBIL GAMBAR ASLI DARI KONTEN (FOLDER asset_gambar TERDETEKSI OTOMATIS)
-                        let thumb = "/android-icon-192x192.png";
-                        const firstImg = doc.querySelector('.prose img') || doc.querySelector('img');
-                        if(firstImg) thumb = firstImg.getAttribute('src');
-
-                        const articleData = {
-                            name: file.name,
-                            title: title,
-                            category: category,
-                            thumb: thumb,
-                            date: dateRaw ? parseInt(dateRaw) : 0
-                        };
+                        // CARI GAMBAR (Support asset_gambar)
+                        let thumb = \"/android-icon-192x192.png\";
+                        const img = doc.querySelector('.prose img') || doc.querySelector('img');
+                        if(img) thumb = img.getAttribute('src');
 
                         if (!filterKategori || category.toLowerCase() === filterKategori.toLowerCase()) {
-                            loadedData.push(articleData);
+                            loadedData.push({ name: file.name, title: title, category: category, thumb: thumb });
                         }
-                    } catch (e) { console.error("Skip file error:", file.name); }
+                    } catch (e) {}
                 }
 
                 allArticles = loadedData;
                 
-                // Tampilkan bagian Featured Terpopuler hanya jika di Home
-                const featSection = document.getElementById('featured-section');
                 if(!filterKategori) {
-                    featSection.style.display = 'block';
+                    document.getElementById('featured-section').style.display = 'block';
                     displayFeatured();
                 } else {
-                    featSection.style.display = 'none';
+                    document.getElementById('featured-section').style.display = 'none';
                 }
                 
                 displayPosts();
-            } catch (error) {
-                console.error("Portal Error:", error);
-                document.getElementById('post-container').innerHTML = '<p class="text-zinc-500 text-center col-span-full py-20">Koneksi Error.</p>';
-            }
+            } catch (error) { console.log(error); }
         }
 
         function displayFeatured() {
@@ -227,63 +161,48 @@
             if(feat.length < 1) return;
 
             let html = `
-            <div class="lg:col-span-8 group cursor-pointer" onclick="window.location.href='/artikel/${feat[0].name.replace('.html','')}'">
-                <div class="relative aspect-video overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 shadow-2xl">
-                    <img src="${feat[0].thumb}" class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition duration-1000">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
-                        <span class="bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-md uppercase tracking-widest mb-6 inline-block">${feat[0].category}</span>
-                        <h3 class="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9] text-white line-clamp-2">${feat[0].title}</h3>
+            <div class=\"lg:col-span-8 group cursor-pointer\" onclick=\"window.location.href='/artikel/\${feat[0].name.replace('.html','')}'\">
+                <div class=\"relative aspect-video overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 shadow-2xl\">
+                    <img src=\"\${feat[0].thumb}\" class=\"w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition duration-1000\">
+                    <div class=\"absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent\"></div>
+                    <div class=\"absolute bottom-0 left-0 p-8 md:p-12 w-full\">
+                        <span class=\"bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-md uppercase tracking-widest mb-6 inline-block\">\${feat[0].category}</span>
+                        <h3 class=\"text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9] text-white line-clamp-2\">\${feat[0].title}</h3>
                     </div>
                 </div>
             </div>
-            <div class="lg:col-span-4 flex flex-col gap-6">`;
+            <div class=\"lg:col-span-4 flex flex-col gap-6\">`;
 
             feat.slice(1).forEach(post => {
                 html += `
-                <div class="flex-1 group cursor-pointer" onclick="window.location.href='/artikel/${post.name.replace('.html','')}'">
-                    <div class="relative h-full min-h-[200px] overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800 shadow-xl">
-                        <img src="${post.thumb}" class="w-full h-full object-cover opacity-40 group-hover:scale-110 group-hover:opacity-80 transition duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-80"></div>
-                        <div class="absolute bottom-0 left-0 p-6">
-                            <span class="text-red-500 text-[9px] font-black uppercase tracking-widest mb-2 block">${post.category}</span>
-                            <h4 class="text-lg font-black uppercase tracking-tighter leading-tight text-white line-clamp-2">${post.title}</h4>
+                <div class=\"flex-1 group cursor-pointer\" onclick=\"window.location.href='/artikel/\${post.name.replace('.html','')}'\">
+                    <div class=\"relative h-full min-h-[200px] overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800 shadow-xl\">
+                        <img src=\"\${post.thumb}\" class=\"w-full h-full object-cover opacity-40 group-hover:scale-110 group-hover:opacity-80 transition duration-700\">
+                        <div class=\"absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-80\"></div>
+                        <div class=\"absolute bottom-0 left-0 p-6\">
+                            <span class=\"text-red-500 text-[9px] font-black uppercase tracking-widest mb-2 block\">\${post.category}</span>
+                            <h4 class=\"text-lg font-black uppercase tracking-tighter leading-tight text-white line-clamp-2\">\${post.title}</h4>
                         </div>
                     </div>
                 </div>`;
             });
-
-            html += `</div>`;
-            container.innerHTML = html;
+            container.innerHTML = html + `</div>`;
         }
 
         function displayPosts() {
             const container = document.getElementById('post-container');
             container.innerHTML = '';
             const start = (currentPage - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            const paginatedItems = allArticles.slice(start, end);
-
-            if(paginatedItems.length === 0) {
-                container.innerHTML = '<p class="text-zinc-500 text-center col-span-full py-20 font-bold uppercase tracking-widest">Tidak ada artikel.</p>';
-                return;
-            }
+            const paginatedItems = allArticles.slice(start, start + itemsPerPage);
 
             paginatedItems.forEach(post => {
                 container.innerHTML += `
-                    <article class="group cursor-pointer" onclick="window.location.href='/artikel/${post.name.replace('.html','')}'">
-                        <div class="relative aspect-[16/10] mb-6 overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800">
-                            <img src="${post.thumb}" class="w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-60"></div>
-                            <span class="absolute top-6 left-6 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-md uppercase tracking-widest shadow-xl">${post.category}</span>
+                    <article class=\"group cursor-pointer\" onclick=\"window.location.href='/artikel/\${post.name.replace('.html','')}'\">
+                        <div class=\"relative aspect-[16/10] mb-6 overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800\">
+                            <img src=\"\${post.thumb}\" class=\"w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition duration-700\">
+                            <span class=\"absolute top-6 left-6 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-md uppercase tracking-widest shadow-xl\">\${post.category}</span>
                         </div>
-                        <h3 class="text-xl md:text-2xl font-black uppercase tracking-tighter leading-tight group-hover:text-red-500 transition duration-300 line-clamp-2 text-white">
-                            ${post.title}
-                        </h3>
-                        <div class="mt-4 flex items-center gap-3">
-                            <div class="w-8 h-[1px] bg-zinc-800"></div>
-                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Read Article</span>
-                        </div>
+                        <h3 class=\"text-xl md:text-2xl font-black uppercase tracking-tighter leading-tight group-hover:text-red-500 transition line-clamp-2 text-white\">\${post.title}</h3>
                     </article>`;
             });
             setupPagination();
@@ -297,7 +216,7 @@
             for (let i = 1; i <= pageCount; i++) {
                 const btn = document.createElement('button');
                 btn.innerText = i;
-                btn.className = `w-10 h-10 rounded-lg font-black text-xs transition ${i === currentPage ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'}`;
+                btn.className = `w-10 h-10 rounded-lg font-black text-xs \${i === currentPage ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'}`;
                 btn.onclick = () => { currentPage = i; displayPosts(); window.scrollTo({top: 0, behavior: 'smooth'}); };
                 pagination.appendChild(btn);
             }
@@ -311,18 +230,13 @@
             if (query.length < 2) { suggestions.classList.remove('active'); return; }
             const filtered = allArticles.filter(art => art.title.toLowerCase().includes(query)).slice(0, 6);
             if (filtered.length > 0) {
-                list.innerHTML = filtered.map(art => `<a href="/artikel/${art.name.replace('.html','')}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${art.title}</span></a>`).join('');
+                list.innerHTML = filtered.map(art => `<a href=\"/artikel/\${art.name.replace('.html','')}\" class=\"block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group\"><span class=\"text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate\">\${art.title}</span></a>`).join('');
                 suggestions.classList.add('active');
-            } else {
-                list.innerHTML = `<div class="px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest">Tidak ditemukan</div>`;
-                suggestions.classList.add('active');
-            }
+            } else { suggestions.classList.add('active'); list.innerHTML = `<div class=\"px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest\">Tidak ditemukan</div>`; }
         }
 
-        function closeSearch() {
-            document.getElementById('searchSuggestions')?.classList.remove('active');
-            document.getElementById('mobileSearchSuggestions')?.classList.remove('active');
-        }
+        function closeSearch() { document.getElementById('searchSuggestions')?.classList.remove('active'); document.getElementById('mobileSearchSuggestions')?.classList.remove('active'); }
+        function toggleMenu() { const m = document.getElementById('mobileMenu'); m.classList.toggle('hidden'); }
 
         window.onload = initPortal;
     </script>
