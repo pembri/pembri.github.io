@@ -182,6 +182,40 @@
         .prose p { color: #d4d4d8; line-height: 1.8; margin-bottom: 1rem; font-size: 1.15rem;}
         #searchSuggestions, #mobileSearchSuggestions { display: none; }
         #searchSuggestions.active, #mobileSearchSuggestions.active { display: block; }
+
+        .share-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #27272a;
+}
+.share-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 99px;
+    background: #18181b;
+    border: 1px solid #27272a;
+    color: #a1a1aa;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.share-btn:hover {
+    background: #27272a;
+    color: white;
+    border-color: #52525b;
+}
+.share-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
     </style>
 </head>
 <body onclick=\"closeSearch()\">
@@ -241,6 +275,40 @@
             </div>
             <div class=\"prose prose-zinc max-w-none w-full\">${content}</div>
             <section class=\"mt-20 border-t border-zinc-800 pt-16\">
+            <div class="share-container">
+    <span class="w-full text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2">Bagikan Artikel:</span>
+    
+    <button onclick="copyToClipboard()" class="share-btn">
+        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        Salin Link
+    </button>
+
+    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(title)}%20${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        WhatsApp
+    </a>
+
+    <a href="https://www.instagram.com/" target="_blank" class="share-btn">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.332 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.332-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.2 4.353 2.612 6.777 6.97 6.977 1.28.057 1.688.072 4.948.072s3.667-.015 4.947-.072c4.351-.2 6.777-2.612 6.977-6.97.058-1.28.072-1.688.072-4.947s-.015-3.667-.072-4.947c-.2-4.353-2.612-6.777-6.97-6.977C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        Instagram
+    </a>
+
+    <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
+        <svg viewBox="0 0 24 24"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg>
+        Facebook
+    </a>
+
+    <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X
+    </a>
+
+    <a href="https://www.threads.net/intent/post?text=${encodeURIComponent(title)}%20${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
+        <svg viewBox="0 0 24 24"><path d="M14.886 12.204c.003-.511-.012-1.022-.047-1.53-.044-.64-.177-1.291-.453-1.89a3.81 3.81 0 0 0-1.716-1.83 4.1 4.1 0 0 0-2.1-.531c-.742 0-1.472.182-2.124.53a3.805 3.805 0 0 0-1.56 1.763c-.29.613-.424 1.285-.468 1.954a10.94 10.94 0 0 0-.012 1.53c0 .524.014 1.048.046 1.569.043.682.174 1.378.473 2.02.28.6.721 1.104 1.266 1.448.544.343 1.173.53 1.815.539h.101c.71-.001 1.408-.18 2.025-.52a3.81 3.81 0 0 0 1.536-1.632c.31-.643.46-1.348.51-2.057.035-.584.048-1.168.04-1.754V12.2zM24 12c0 15-24 15-24 0S24-3 24 12z"/></svg>
+        Threads
+    </a>
+</div>
+
                 <h2 class=\"text-2xl font-black uppercase mb-10 tracking-tighter flex items-center gap-3 text-white\"><span class=\"w-2 h-8 bg-red-600 rounded-sm\"></span> BACA JUGA</h2>
                 <div id=\"rec-container\" class=\"grid grid-cols-1 md:grid-cols-3 gap-6\"></div>
             </section>
@@ -317,6 +385,14 @@
                 allArticles = loaded;
             } catch(e) {} 
         } 
+        function copyToClipboard() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        alert("Link berhasil disalin ke clipboard!");
+    }).catch(err => {
+        console.error('Gagal menyalin: ', err);
+    });
+}
         window.onload = initPage;
     <\/script>
 </body>
