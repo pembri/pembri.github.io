@@ -32,7 +32,6 @@
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
         
-        /* Animasi Titik Live */
         @keyframes blinkLive {
             0% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.3; transform: scale(1.2); }
@@ -47,7 +46,6 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
             <a href="/" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center gap-3 z-50 text-white">
                 <img src="/favicon-192x192.png" alt="Logo" class="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-zinc-800">
-                
                 <span>MUSIK<span class="text-red-600">ANYWHERE</span></span>
             </a>
             <nav class="hidden lg:flex gap-8 items-center text-[11px] font-black uppercase tracking-[0.15em] text-zinc-400">
@@ -72,25 +70,21 @@
         </div>
         
         <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
-            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()">
-                <div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800">
-                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white">
-                </div>
-                <div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div>
-            </div>
-            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter">
+            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter px-6">
                 <a href="/" class="text-white hover:text-red-600">Home</a>
                 <a href="/index?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
                 <a href="/index?kategori=News" class="text-white hover:text-red-600">News</a>
                 <a href="/index?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a>
-                <hr class="border-zinc-800 my-2">
-                <a href="/about" class="text-zinc-500 hover:text-white text-sm">About</a>
-                <a href="/contact" class="text-zinc-500 hover:text-white text-sm">Contact</a>
-                <a href="/privacy" class="text-zinc-500 hover:text-white text-sm">Privacy Policy</a>
             </nav>
         </div>
     </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-10 w-full">
+        <section id="hero-section" class="mb-16 relative h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden bg-zinc-900 shadow-2xl border border-zinc-800">
+            <div id="hero-loader" class="absolute inset-0 bg-zinc-800 animate-pulse"></div>
+            <div id="hero-content" class="absolute inset-0 w-full h-full hidden"></div>
+        </section>
+
         <div class="flex items-center justify-between mb-10 border-b border-zinc-800 pb-4">
             <h2 id="section-title" class="text-3xl font-black uppercase tracking-tighter flex items-center gap-3 text-white">
                 <span class="w-2 h-8 bg-red-600 rounded-sm"></span> LATEST UPDATES
@@ -102,7 +96,25 @@
         <div id="empty-state" class="hidden py-20 text-center text-zinc-600 font-bold uppercase tracking-widest">Belum ada konten.</div>
     </main>
 
-    <footer class="bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900 w-full"><div class="max-w-7xl mx-auto px-8"><div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-900 pb-12 mb-8"><div class="md:col-span-1"><h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">MUSIK<span class="text-red-600">ANYWHERE</span></h2><p class="text-zinc-500 text-sm leading-relaxed mb-6">Menyajikan informasi musik, ulasan rilisan terbaru, dan kumpulan lirik lagu.</p></div><div><h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Kategori</h4><ul class="space-y-3 text-sm font-bold text-zinc-400"><li><a href="/index?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a></li><li><a href="/index?kategori=News" class="hover:text-red-500 transition">News</a></li><li><a href="/index?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a></li></ul></div><div><h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Perusahaan</h4><ul class="space-y-3 text-sm font-bold text-zinc-400"><li><a href="/about" class="hover:text-red-500 transition">About</a></li><li><a href="/contact" class="hover:text-red-500 transition">Contact</a></li><li><a href="/privacy" class="hover:text-red-500 transition">Privacy Policy</a></li></ul></div></div><p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center"> © 2026 Musik Anywhere Media.</p></div></footer>
+    <footer class="bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900 w-full">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-900 pb-12 mb-8 text-center md:text-left">
+                <div class="md:col-span-1">
+                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter text-white">MUSIK<span class="text-red-600">ANYWHERE</span></h2>
+                    <p class="text-zinc-500 text-sm leading-relaxed mb-6">Menyajikan informasi musik, ulasan rilisan terbaru, dan kumpulan lirik lagu.</p>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6 font-bold uppercase">Kategori</h4>
+                    <ul class="space-y-3 text-sm font-bold text-zinc-400 uppercase">
+                        <li><a href="/index?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a></li>
+                        <li><a href="/index?kategori=News" class="hover:text-red-500 transition">News</a></li>
+                        <li><a href="/index?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center py-4"> © 2026 Musik Anywhere Media. </p>
+        </div>
+    </footer>
 
     <script>
         let allArticles = [];
@@ -181,7 +193,7 @@
                     <a href="/artikel/${art.name}" class="block w-full h-full group">
                         <img src="${art.img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition duration-1000">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent"></div>
-                        <div class="absolute bottom-0 p-8 w-full md:w-3/4 z-20">
+                        <div class="absolute bottom-0 p-8 w-full md:w-3/4 z-20 text-left">
                             <span class="bg-red-600 text-white px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-flex items-center gap-1.5">
                                 Terpopuler <span class="w-1.5 h-1.5 bg-white rounded-full live-dot"></span>
                             </span>
@@ -215,7 +227,7 @@
                         <a href="/artikel/${item.name}" class="block overflow-hidden rounded-[1rem] aspect-[16/10] bg-zinc-950 relative">
                             <img src="${item.img}" class="absolute inset-0 w-full h-full object-contain p-2 transition duration-700">
                         </a>
-                        <div class="pt-5 pb-3 px-3 flex-1">
+                        <div class="pt-5 pb-3 px-3 flex-1 text-left">
                             <h3 class="text-lg font-black uppercase leading-tight tracking-tight text-white group-hover:text-red-500 transition line-clamp-3">${item.title}</h3>
                         </div>
                     </article>`;
@@ -243,7 +255,7 @@
             if (query.length < 2) { suggestions.classList.remove('active'); return; }
             const filtered = allArticles.filter(art => art.title.toLowerCase().includes(query)).slice(0, 6);
             if (filtered.length > 0) {
-                document.getElementById(listId).innerHTML = filtered.map(art => `<a href="/artikel/${art.name}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 uppercase font-bold text-xs"><span class="truncate block">${art.title}</span></a>`).join('');
+                document.getElementById(listId).innerHTML = filtered.map(art => `<a href="/artikel/${art.name}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 uppercase font-bold text-xs"><span class="truncate block text-white">${art.title}</span></a>`).join('');
                 suggestions.classList.add('active');
             } else { suggestions.classList.remove('active'); }
         }
