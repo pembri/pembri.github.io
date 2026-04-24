@@ -99,24 +99,57 @@
         let isEditMode = false;
         let currentSha = null;
         let currentPath = null;
-        // Kita simpan waktu asli saat mode edit agar urutannya gak berubah jadi baru lagi
         let originalTimestamp = null; 
+
+        // FUNGSI BARU: Simpan gambar ke folder asset_gambar agar HTML tidak berat
+        async function processImages(content, token) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(content, 'text/html');
+            const images = doc.querySelectorAll('img');
+            
+            for (let img of images) {
+                const src = img.getAttribute('src');
+                if (src && src.startsWith('data:')) {
+                    const extension = src.split(';')[0].split('/')[1] || 'png';
+                    const fileName = `img_${Date.now()}_${Math.floor(Math.random() * 1000)}.${extension}`;
+                    const filePath = `asset_gambar/${fileName}`;
+                    const base64Data = src.split(',')[1];
+
+                    try {
+                        const res = await fetch(`https://api.github.com/repos/pembri/musikanywhere.online/contents/${filePath}`, {
+                            method: 'PUT',
+                            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                message: `Upload image: ${fileName}`,
+                                content: base64Data
+                            })
+                        });
+                        if (res.ok) {
+                            img.setAttribute('src', `/asset_gambar/${fileName}`);
+                        }
+                    } catch (e) { console.error("Gagal simpan gambar:", e); }
+                }
+            }
+            return doc.body.innerHTML;
+        }
 
         async function handlePublish() {
             const token = document.getElementById('ghToken').value;
             const category = document.getElementById('postCategory').value;
             const title = document.getElementById('postTitle').value;
-            const content = quill.root.innerHTML;
+            let content = quill.root.innerHTML;
             const btn = document.getElementById('pubBtn');
 
             if(!token || !title) return alert("Token Github dan Judul wajib diisi!");
-            btn.innerText = "PROSES UPLOAD KE SERVER..."; btn.disabled = true;
+            btn.innerText = "MENGOLAH GAMBAR..."; btn.disabled = true;
 
-            // URL BERSIH TANPA ANGKA
+            // Proses pemindahan gambar ke folder fisik
+            content = await processImages(content, token);
+
+            btn.innerText = "PROSES UPLOAD ARTIKEL...";
+
             const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
             const filePath = isEditMode ? currentPath : `artikel/${slug}.html`;
-            
-            // Waktu untuk sistem pengurutan
             const publishTime = isEditMode && originalTimestamp ? originalTimestamp : Date.now();
 
             const fullTemplate = `<!DOCTYPE html>
@@ -163,7 +196,6 @@
         .prose img { border-radius: 1.5rem; margin: 2rem 0; width: 100%; border: 1px solid #27272a; }
         .prose a { color: #ef4444; font-weight: 800; border-bottom: 2px solid #7f1d1d; text-decoration: none;}
         .prose h1, .prose h2, .prose h3 { color: white; font-weight: 900; text-transform: uppercase; margin-top: 2rem; }
-        /* DISINI PERBAIKANNYA: margin-bottom jadi 0 agar enter rapat */
         .prose p { color: #d4d4d8; line-height: 1.8; margin-bottom: 0rem; font-size: 1.15rem;}
         #searchSuggestions, #mobileSearchSuggestions { display: none; }
         #searchSuggestions.active, #mobileSearchSuggestions.active { display: block; }
@@ -175,7 +207,6 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
             <a href="/" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center gap-3 z-50 text-white">
                 <img src="/favicon-192x192.png" alt="Logo" class="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-zinc-800">
-                
                 <span>MUSIK<span class="text-red-600">ANYWHERE</span></span>
             </a>
             <nav class="hidden lg:flex gap-8 items-center text-[11px] font-black uppercase tracking-[0.15em] text-zinc-400">
@@ -267,7 +298,6 @@
                 const data = await res.json(); 
                 allArticles = data.filter(f => f.name.endsWith('.html')); 
                 
-                // SKRIP BACA JUGA (REKOMENDASI)
                 const container = document.getElementById('rec-container');
                 const currentFile = window.location.pathname.split('/').pop();
                 const filtered = allArticles.filter(f => f.name !== currentFile).reverse().slice(0, 3);
@@ -306,7 +336,6 @@
             btn.innerText = "Publikasikan Artikel"; btn.disabled = false;
         }
 
-        // FUNGSI LOAD ARTIKEL DI ADMIN
         async function loadArticleList() {
             const token = document.getElementById('ghToken').value;
             const listDiv = document.getElementById('articleList');
@@ -336,7 +365,6 @@
             } catch (e) { listDiv.innerHTML = '<p class="text-red-500 font-bold text-center">Gagal memuat daftar artikel.</p>'; }
         }
 
-        // FUNGSI EDIT ARTIKEL
         async function editArticle(path, sha) {
             const token = document.getElementById('ghToken').value;
             const btn = document.getElementById('pubBtn');
@@ -368,7 +396,6 @@
             } catch (e) { alert("Gagal mengambil file artikel dari server."); }
         }
 
-        // FUNGSI HAPUS ARTIKEL
         async function deleteArticle(path, sha) {
             if(!confirm("Anda yakin ingin menghapus artikel ini permanen?")) return;
             const token = document.getElementById('ghToken').value;
