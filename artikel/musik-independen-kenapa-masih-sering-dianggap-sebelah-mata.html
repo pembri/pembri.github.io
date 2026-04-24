@@ -65,13 +65,56 @@ color:#fff;
 }
 </style>
 </head>
+<body onclick="closeSearch()">
 
-<body>
-<div class="wrap">
-
-<div class="top">
-<b>MUSIK ANYWHERE</b>
-</div>
+    <header class="nav-glass sticky top-0 z-[100]">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+            <a href="/" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center gap-3 z-50 text-white">
+                <img src="/favicon-192x192.png" alt="Logo" class="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-zinc-800">
+                
+                <span>MUSIK<span class="text-red-600">ANYWHERE</span></span>
+            </a>
+            <nav class="hidden lg:flex gap-8 items-center text-[11px] font-black uppercase tracking-[0.15em] text-zinc-400">
+                <a href="/" class="hover:text-red-500 transition">Home</a>
+                <a href="/index?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a>
+                <a href="/index?kategori=News" class="hover:text-red-500 transition">News</a>
+                <a href="/index?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a>
+            </nav>
+            <div class="flex items-center gap-4 z-50">
+                <div class="relative group hidden lg:block" onclick="event.stopPropagation()">
+                    <div class="flex items-center bg-zinc-900 rounded-full px-4 py-2 border border-zinc-800 focus-within:border-red-500 transition-all">
+                        <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" id="searchInput" oninput="handleSearch('searchInput', 'searchSuggestions', 'suggestionsList')" placeholder="Cari..." autocomplete="off" class="bg-transparent border-none outline-none text-xs ml-2 w-48 text-white">
+                    </div>
+                    <div id="searchSuggestions" class="absolute top-full right-0 mt-3 w-80 bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden z-[110]"><div id="suggestionsList" class="max-h-[350px] overflow-y-auto"></div></div>
+                </div>
+                <button id="menuBtn" class="lg:hidden p-2 text-white focus:outline-none" onclick="toggleMenu()">
+                    <svg id="icon-menu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
+            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()">
+                <div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800">
+                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white">
+                </div>
+                <div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div>
+            </div>
+            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter">
+                <a href="/" class="text-white hover:text-red-600">Home</a>
+                <a href="/index?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
+                <a href="/index?kategori=News" class="text-white hover:text-red-600">News</a>
+                <a href="/index?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a>
+                <hr class="border-zinc-800 my-2">
+                <a href="/about" class="text-zinc-500 hover:text-white text-sm">About</a>
+                <a href="/contact" class="text-zinc-500 hover:text-white text-sm">Contact</a>
+                <a href="/privacy" class="text-zinc-500 hover:text-white text-sm">Privacy Policy</a>
+            </nav>
+        </div>
+    </header>
 
 <h1>Musik Independen: Kenapa Masih Sering Dianggap Sebelah Mata?</h1>
 <p><b>Kategori:</b> Artikel</p>
