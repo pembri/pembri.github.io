@@ -46,6 +46,7 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
             <a href="/" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center gap-3 z-50 text-white">
                 <img src="/favicon-192x192.png" alt="Logo" class="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-zinc-800">
+                
                 <span>MUSIK<span class="text-red-600">ANYWHERE</span></span>
             </a>
             <nav class="hidden lg:flex gap-8 items-center text-[11px] font-black uppercase tracking-[0.15em] text-zinc-400">
@@ -70,21 +71,25 @@
         </div>
         
         <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
-            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter px-6">
+            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()">
+                <div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800">
+                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white">
+                </div>
+                <div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div>
+            </div>
+            <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter">
                 <a href="/" class="text-white hover:text-red-600">Home</a>
                 <a href="/index?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
                 <a href="/index?kategori=News" class="text-white hover:text-red-600">News</a>
                 <a href="/index?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a>
+                <hr class="border-zinc-800 my-2">
+                <a href="/about" class="text-zinc-500 hover:text-white text-sm">About</a>
+                <a href="/contact" class="text-zinc-500 hover:text-white text-sm">Contact</a>
+                <a href="/privacy" class="text-zinc-500 hover:text-white text-sm">Privacy Policy</a>
             </nav>
         </div>
     </header>
-
-    <main class="max-w-7xl mx-auto px-4 md:px-8 py-10 w-full">
-        <section id="hero-section" class="mb-16 relative h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden bg-zinc-900 shadow-2xl border border-zinc-800">
-            <div id="hero-loader" class="absolute inset-0 bg-zinc-800 animate-pulse"></div>
-            <div id="hero-content" class="absolute inset-0 w-full h-full hidden"></div>
-        </section>
-
         <div class="flex items-center justify-between mb-10 border-b border-zinc-800 pb-4">
             <h2 id="section-title" class="text-3xl font-black uppercase tracking-tighter flex items-center gap-3 text-white">
                 <span class="w-2 h-8 bg-red-600 rounded-sm"></span> LATEST UPDATES
