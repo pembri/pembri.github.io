@@ -1,29 +1,22 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
 <script>
 var password="Anjing526";
 var input;
 while(input!==password){
 input=prompt("Admin Area: Masukkan kata sandi:");
-if(input===null){location.href="https://musikanywhere.online";break;}
-if(input!==password) alert("Sandi Salah!");
+if(input===null){window.location.href="https://musikanywhere.online";break;}
+if(input!==password){alert("Sandi Salah! Akses ditolak.");}
 }
 </script>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Musik Anywhere - Admin Dashboard</title>
-
-<link rel="icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-<meta name="robots" content="noindex,nofollow">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;900&display=swap');
@@ -34,219 +27,226 @@ background:#050505;
 color:#fff;
 }
 
-.ql-toolbar.ql-snow{
-background:#111;
-border:1px solid #27272a;
-border-radius:18px 18px 0 0;
-border-bottom:none;
-}
-
 .ql-container.ql-snow{
 border:none!important;
 }
 
-.ql-editor{
-background:#0a0a0a;
-color:#f4f4f5;
-min-height:560px;
-font-size:17px;
-line-height:1.8;
+.ql-toolbar.ql-snow{
+background:#18181b;
+border-radius:1rem 1rem 0 0;
 border:1px solid #27272a;
-border-radius:0 0 18px 18px;
-resize:vertical;
-overflow:auto;
-}
-
-.ql-editor img{
-max-width:100%;
-border-radius:16px;
-margin:16px 0;
-}
-
-.ql-editor iframe{
-width:100%;
-height:420px;
-border:none;
-border-radius:16px;
-margin:16px 0;
+border-bottom:none;
 }
 
 .ql-toolbar button{
 filter:invert(1);
 }
 
-.fullscreen-mode{
-position:fixed!important;
-inset:0!important;
-z-index:9999!important;
-background:#050505!important;
-padding:20px!important;
-overflow:auto!important;
-}
-
-.fullscreen-mode #editor{
-height:calc(100vh - 220px);
-}
-
-.card{
+.ql-editor{
 background:#0a0a0a;
+color:#e4e4e7;
+min-height:520px;
+border-radius:0 0 1rem 1rem;
+font-size:1.08rem;
+line-height:1.8;
 border:1px solid #27272a;
-border-radius:28px;
+resize:vertical;
+overflow:auto;
 }
 
-.helper{
+.ql-editor img{
+border-radius:1rem;
+margin:1rem 0;
+max-width:100%;
+}
+
+.ql-editor iframe{
+width:100%;
+height:420px;
+border:none;
+border-radius:1rem;
+margin:1rem 0;
+}
+
+.fullscreen-editor{
+position:fixed;
+inset:0;
+z-index:9999;
+background:#050505;
+padding:20px;
+overflow:auto;
+}
+
+.fullscreen-editor #editor{
+height:calc(100vh - 240px);
+}
+
+.helper-box{
 background:#111;
 border:1px solid #27272a;
-border-radius:18px;
+border-radius:1rem;
 padding:14px;
-font-size:13px;
+font-size:12px;
 color:#a1a1aa;
+line-height:1.7;
 }
 </style>
-
 </head>
 
-<body class="py-10 md:py-16">
+<body class="py-10 md:py-20">
 
-<div class="max-w-6xl mx-auto px-5" id="wrap">
+<div class="max-w-6xl mx-auto px-6" id="adminWrap">
 
-<header class="pb-8 mb-10 border-b border-zinc-800 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+<header class="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-6 border-b border-zinc-800 pb-8">
 
 <div>
-<h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter">
-ADMIN<span class="text-red-600">POST</span>
+<h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white">
+ADMIN<span class="text-red-600">PANEL</span>
 </h1>
-<p class="text-zinc-500 mt-2 text-sm">
-Panel publish artikel Musik Anywhere
+<p class="text-zinc-500 text-sm mt-2">
+Dashboard publish artikel Musik Anywhere
 </p>
 </div>
 
 <a href="/"
-class="px-6 py-3 bg-zinc-900 border border-zinc-800 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-zinc-800 transition">
-Kembali ke Website
+class="bg-zinc-900 px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-zinc-800 transition border border-zinc-800 w-max">
+Ke Beranda
 </a>
 
 </header>
 
-<section class="card p-6 md:p-10 space-y-8">
+<div class="space-y-8 bg-[#0a0a0a] p-6 md:p-10 rounded-[2rem] border border-zinc-800 shadow-2xl">
 
-<div class="grid md:grid-cols-3 gap-5">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-<div>
-<label class="text-[10px] font-black uppercase tracking-widest text-zinc-500 block mb-3">
-Github Token
+<div class="space-y-3">
+<label class="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+Token Github
 </label>
-<input id="ghToken" type="password" placeholder="ghp_xxxxx"
-class="w-full bg-[#111] border border-zinc-800 rounded-xl p-4 outline-none focus:border-red-600">
+<input type="password" id="ghToken" placeholder="ghp_xxxx"
+class="w-full bg-[#111] border border-zinc-800 p-4 rounded-xl outline-none text-sm focus:border-red-600 text-white">
 </div>
 
-<div>
-<label class="text-[10px] font-black uppercase tracking-widest text-zinc-500 block mb-3">
-Kategori
+<div class="space-y-3">
+<label class="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+Pilih Kategori
 </label>
 <select id="postCategory"
-class="w-full bg-[#111] border border-zinc-800 rounded-xl p-4 outline-none focus:border-red-600">
-<option>Artikel</option>
-<option>News</option>
-<option>Lirik Lagu</option>
+class="w-full bg-[#111] border border-zinc-800 p-4 rounded-xl outline-none text-white font-bold focus:border-red-600">
+<option value="Artikel">Artikel</option>
+<option value="News">News</option>
+<option value="Lirik Lagu">Lirik Lagu</option>
 </select>
 </div>
 
-<div>
-<label class="text-[10px] font-black uppercase tracking-widest text-zinc-500 block mb-3">
+<div class="space-y-3">
+<label class="text-[10px] font-black uppercase tracking-widest text-zinc-500">
 Judul Artikel
 </label>
-<input id="postTitle" type="text" placeholder="Masukkan judul artikel"
-class="w-full bg-[#111] border border-zinc-800 rounded-xl p-4 outline-none focus:border-red-600">
+<input type="text" id="postTitle" placeholder="Ketik Judul..."
+class="w-full bg-[#111] border border-zinc-800 p-4 rounded-xl outline-none font-bold text-white focus:border-red-600">
 </div>
 
 </div>
 
-<div class="grid md:grid-cols-4 gap-4">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
 <button onclick="toggleFullscreen()"
-class="bg-zinc-900 border border-zinc-800 py-3 rounded-xl text-xs font-black uppercase hover:bg-zinc-800">
+class="bg-zinc-900 border border-zinc-800 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-zinc-800">
 Fullscreen
 </button>
 
 <button onclick="insertYoutubePrompt()"
-class="bg-zinc-900 border border-zinc-800 py-3 rounded-xl text-xs font-black uppercase hover:bg-zinc-800">
-Embed YouTube
+class="bg-zinc-900 border border-zinc-800 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-zinc-800">
+YouTube
 </button>
 
-<button onclick="previewPost()"
-class="bg-zinc-900 border border-zinc-800 py-3 rounded-xl text-xs font-black uppercase hover:bg-zinc-800">
+<button onclick="previewArticle()"
+class="bg-zinc-900 border border-zinc-800 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-zinc-800">
 Preview
 </button>
 
-<button onclick="loadArticles()"
-class="bg-zinc-900 border border-zinc-800 py-3 rounded-xl text-xs font-black uppercase hover:bg-zinc-800">
-Load Artikel
+<button onclick="loadArticleList()"
+class="bg-zinc-900 border border-zinc-800 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-zinc-800">
+Tarik Data
 </button>
 
 </div>
 
-<div>
-<label class="text-[10px] font-black uppercase tracking-widest text-zinc-500 block mb-3">
-Isi Artikel
+<div class="space-y-3">
+<label class="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+Isi Konten (Klik icon gambar untuk upload)
 </label>
 <div id="editor"></div>
 </div>
 
-<div class="helper">
+<div class="helper-box">
+• Tampilan tetap original<br>
 • Upload gambar otomatis ke folder <b>/asset_gambar/</b><br>
-• File artikel jadi ringan<br>
-• Paste link YouTube untuk embed otomatis<br>
-• Resize editor dari pojok bawah kanan
+• Artikel jadi ringan, bukan base64 besar<br>
+• Bisa fullscreen editor<br>
+• Paste URL YouTube otomatis embed
 </div>
 
-<button id="publishBtn" onclick="publishPost()"
-class="w-full py-5 bg-red-600 rounded-xl text-xl font-black uppercase tracking-widest hover:bg-red-700 transition">
+<button onclick="handlePublish()" id="pubBtn"
+class="w-full bg-red-600 text-white py-5 rounded-xl font-black text-xl uppercase tracking-widest hover:bg-red-700 transition-all shadow-[0_0_40px_rgba(220,38,38,0.3)]">
 Publikasikan Artikel
 </button>
 
-</section>
+</div>
 
-<section class="mt-14">
+<div class="mt-20 pt-10 border-t border-zinc-800">
 
-<h2 class="text-2xl font-black uppercase tracking-tighter mb-6">
+<div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
+
+<h2 class="text-2xl font-black uppercase tracking-tighter">
 Database <span class="text-red-600">Artikel</span>
 </h2>
 
-<div id="articleList" class="space-y-4">
-<div class="card p-8 text-center text-zinc-500">
-Belum memuat data.
-</div>
-</div>
-
-</section>
+<button onclick="loadArticleList()"
+class="text-[10px] font-bold uppercase tracking-widest bg-zinc-800 px-6 py-3 rounded-xl hover:bg-zinc-700 transition">
+Tarik Data Server
+</button>
 
 </div>
+
+<div id="articleList" class="grid grid-cols-1 gap-4">
+
+<div class="bg-[#111] border border-zinc-800 p-8 rounded-2xl text-center text-zinc-500 text-sm italic">
+Masukkan Token Github di atas lalu klik "Tarik Data Server".
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 <script>
-let isEdit=false;
-let currentSha=null;
-let currentPath=null;
-let oldTimestamp=null;
-
-/* QUILL */
-const quill=new Quill('#editor',{
+var quill=new Quill('#editor',{
 theme:'snow',
 modules:{
-toolbar:[
-[{header:[1,2,3,false]}],
+toolbar:{
+container:[
 ['bold','italic','underline','strike'],
-[{color:[]},{background:[]}],
-[{align:[]}],
+[{header:1},{header:2}],
 [{list:'ordered'},{list:'bullet'}],
-['blockquote','code-block'],
-['link','image','video'],
+[{color:[]},{background:[]}],
+['blockquote','link','image','video'],
 ['clean']
 ]
 }
+}
 });
 
-/* upload image => temp preview */
+let isEditMode=false;
+let currentSha=null;
+let currentPath=null;
+let originalTimestamp=null;
+
+/* upload image temp preview */
 quill.getModule('toolbar').addHandler('image',function(){
 
 const input=document.createElement('input');
@@ -272,18 +272,28 @@ reader.readAsDataURL(file);
 
 });
 
-/* auto youtube paste */
+/* auto detect youtube paste */
 quill.root.addEventListener('paste',function(e){
 
 const text=(e.clipboardData||window.clipboardData).getData('text');
 
-if(text.includes('youtu.be')||text.includes('youtube.com')){
+if(text.includes('youtube.com')||text.includes('youtu.be')){
 setTimeout(()=>autoEmbedYoutube(text),100);
 }
 
 });
+
+function slugify(text){
+return text.toLowerCase().trim().replace(/\s+/g,'-').replace(/[^\w\-]+/g,'');
+}
+
+function getIndoDate(){
+const d=new Date();
+const m=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+return d.getDate()+" "+m[d.getMonth()]+" "+d[d.getFullYear];
+}
 function toggleFullscreen(){
-document.getElementById('wrap').classList.toggle('fullscreen-mode');
+document.getElementById('adminWrap').classList.toggle('fullscreen-editor');
 }
 
 function insertYoutubePrompt(){
@@ -295,56 +305,32 @@ function autoEmbedYoutube(url){
 
 let id='';
 
-if(url.includes('youtu.be/')){
-id=url.split('youtu.be/')[1].split('?')[0];
-}
-
 if(url.includes('watch?v=')){
 id=url.split('watch?v=')[1].split('&')[0];
+}else if(url.includes('youtu.be/')){
+id=url.split('youtu.be/')[1].split('?')[0];
 }
 
 if(!id) return;
 
 const range=quill.getSelection(true);
-
-quill.insertEmbed(
-range.index,
-'video',
-'https://www.youtube.com/embed/'+id
-);
-
+quill.insertEmbed(range.index,'video','https://www.youtube.com/embed/'+id);
 quill.insertText(range.index+1,"\n");
 
 }
 
-function slugify(text){
-return text.toLowerCase()
-.trim()
-.replace(/\s+/g,'-')
-.replace(/[^\w\-]+/g,'');
-}
+/* upload base64 image to github asset folder */
+async function uploadImage(token,data,title){
 
-function indoDate(){
-const d=new Date();
-const m=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-return d.getDate()+" "+m[d.getMonth()]+" "+d.getFullYear();
-}
+if(!data.startsWith('data:image')) return data;
 
-/* ======================
-UPLOAD IMAGE TO GITHUB
-====================== */
-async function uploadImageToGithub(token,dataUrl,title){
-
-if(!dataUrl.startsWith('data:image')) return dataUrl;
-
-const base64=dataUrl.split(',')[1];
-const ext='webp';
-const fileName=slugify(title)+'-'+Date.now()+'.'+ext;
+const pure=data.split(',')[1];
+const fileName=slugify(title)+'-'+Date.now()+'.webp';
 const path='asset_gambar/'+fileName;
 
 const payload={
-message:'Upload image '+fileName,
-content:base64
+message:'upload image '+fileName,
+content:pure
 };
 
 const res=await fetch(
@@ -362,36 +348,33 @@ body:JSON.stringify(payload)
 if(!res.ok) throw new Error('Gagal upload gambar');
 
 return '/asset_gambar/'+fileName;
+
 }
 
-/* ======================
-PROCESS CONTENT IMAGE
-====================== */
+/* scan editor image */
 async function processImages(token,title){
 
-const temp=document.createElement('div');
-temp.innerHTML=quill.root.innerHTML;
+const box=document.createElement('div');
+box.innerHTML=quill.root.innerHTML;
 
-const imgs=temp.querySelectorAll('img');
+const imgs=box.querySelectorAll('img');
 
 for(let img of imgs){
 
 const src=img.getAttribute('src');
 
 if(src && src.startsWith('data:image')){
-const newUrl=await uploadImageToGithub(token,src,title);
-img.setAttribute('src',newUrl);
+const url=await uploadImage(token,src,title);
+img.setAttribute('src',url);
 }
 
 }
 
-return temp.innerHTML;
+return box.innerHTML;
+
 }
 
-/* ======================
-PREVIEW
-====================== */
-function previewPost(){
+function previewArticle(){
 
 const w=window.open('','_blank');
 
@@ -400,9 +383,9 @@ w.document.write(`
 <head>
 <title>Preview</title>
 <style>
-body{font-family:Arial;max-width:900px;margin:auto;padding:30px;line-height:1.8}
-img{max-width:100%;border-radius:14px}
-iframe{width:100%;height:420px;border:none;border-radius:14px}
+body{font-family:Arial;max-width:900px;margin:auto;padding:30px;line-height:1.8;background:#111;color:#fff}
+img{max-width:100%;border-radius:16px}
+iframe{width:100%;height:420px;border:none;border-radius:16px}
 </style>
 </head>
 <body>
@@ -414,44 +397,41 @@ ${quill.root.innerHTML}
 
 }
 
-/* ======================
-PUBLISH
-====================== */
-async function publishPost(){
+/* publish */
+async function handlePublish(){
 
 const token=document.getElementById('ghToken').value.trim();
 const title=document.getElementById('postTitle').value.trim();
 const category=document.getElementById('postCategory').value;
-const btn=document.getElementById('publishBtn');
+const btn=document.getElementById('pubBtn');
 
-if(!token||!title){
-alert('Token dan judul wajib diisi');
+if(!token || !title){
+alert('Judul dan token wajib diisi');
 return;
 }
 
-btn.innerText='PROSES UPLOAD...';
+btn.innerText='MEMPROSES...';
 btn.disabled=true;
 
 try{
 
-const finalContent=await processImages(token,title);
+const content=await processImages(token,title);
 
-/* ambil thumbnail pertama */
 const temp=document.createElement('div');
-temp.innerHTML=finalContent;
-const firstImg=temp.querySelector('img');
-const thumb=firstImg ? firstImg.src : '/android-icon-192x192.png';
+temp.innerHTML=content;
+
+const first=temp.querySelector('img');
+const thumb=first ? first.src : '/android-icon-192x192.png';
 
 const slug=slugify(title);
-const filePath=isEdit ? currentPath : 'artikel/'+slug+'.html';
-const stamp=isEdit&&oldTimestamp ? oldTimestamp : Date.now();
+const path=isEditMode ? currentPath : 'artikel/'+slug+'.html';
+const stamp=isEditMode && originalTimestamp ? originalTimestamp : Date.now();
 
 const html=`<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>${title} - Musik Anywhere</title>
 
 <link rel="icon" href="/favicon.ico">
@@ -460,62 +440,97 @@ const html=`<!DOCTYPE html>
 <meta name="description" content="${title}">
 <meta name="category" content="${category}">
 <meta name="publish-date" content="${stamp}">
-
-<meta property="og:site_name" content="Musik Anywhere">
 <meta property="og:title" content="${title}">
-<meta property="og:type" content="article">
 <meta property="og:image" content="${thumb}">
-<meta property="og:url" content="https://musikanywhere.online/${filePath}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://musikanywhere.online/${path}">
 
-<script type="application/ld+json">
-{
-"@context":"https://schema.org",
-"@type":"NewsArticle",
-"headline":"${title}",
-"image":["${thumb}"],
-"datePublished":"${new Date(stamp).toISOString()}",
-"publisher":{
-"@type":"Organization",
-"name":"Musik Anywhere"
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#050505;
+color:#fff;
+line-height:1.8;
 }
+.wrap{
+max-width:900px;
+margin:auto;
+padding:30px;
 }
-</script>
-
+img{
+max-width:100%;
+border-radius:18px;
+margin:18px 0;
+}
+iframe{
+width:100%;
+height:420px;
+border:none;
+border-radius:18px;
+margin:18px 0;
+}
+a{color:#ef4444}
+.top{
+border-bottom:1px solid #222;
+padding-bottom:20px;
+margin-bottom:30px;
+}
+.bottom{
+margin-top:50px;
+padding-top:30px;
+border-top:1px solid #222;
+color:#aaa;
+font-size:14px;
+}
+.share a{
+display:inline-block;
+margin-right:10px;
+padding:10px 14px;
+background:#111;
+border-radius:10px;
+text-decoration:none;
+color:#fff;
+}
+</style>
 </head>
 
-<body style="font-family:Arial,sans-serif;max-width:900px;margin:auto;padding:25px;line-height:1.8;color:#111">
+<body>
+<div class="wrap">
 
-<header style="padding:15px 0;border-bottom:1px solid #ddd;margin-bottom:20px">
+<div class="top">
 <b>MUSIK ANYWHERE</b>
-</header>
+</div>
 
 <h1>${title}</h1>
 <p><b>Kategori:</b> ${category}</p>
-<p><b>Tanggal:</b> ${indoDate()}</p>
-<hr>
+<p><b>Tanggal:</b> ${new Date(stamp).toLocaleDateString('id-ID')}</p>
 
-${finalContent}
+${content}
 
-<hr>
-
+<div class="share">
 <h3>Bagikan Artikel</h3>
+<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://musikanywhere.online/${path}">Facebook</a>
+<a target="_blank" href="https://wa.me/?text=https://musikanywhere.online/${path}">WhatsApp</a>
+</div>
 
-<footer style="margin-top:40px;padding-top:20px;border-top:1px solid #ddd">
+<div class="bottom">
 © Musik Anywhere
-</footer>
+</div>
 
+</div>
 </body>
 </html>`;
 
 const payload={
-message:isEdit?'Update '+title:'Publish '+title,
+message:isEditMode?'update '+title:'publish '+title,
 content:btoa(unescape(encodeURIComponent(html)))
 };
 
-if(isEdit) payload.sha=currentSha;
+if(isEditMode) payload.sha=currentSha;
 
 const res=await fetch(
-'https://api.github.com/repos/pembri/musikanywhere.online/contents/'+filePath,
+'https://api.github.com/repos/pembri/musikanywhere.online/contents/'+path,
 {
 method:'PUT',
 headers:{
@@ -527,35 +542,29 @@ body:JSON.stringify(payload)
 );
 
 if(res.ok){
-alert('Artikel berhasil dipublish!');
+alert('Artikel berhasil dipublish');
 location.reload();
 }else{
-alert('Gagal publish.');
+alert('Gagal publish artikel');
 }
 
-}catch(e){
-alert(e.message);
+}catch(err){
+alert(err.message);
 }
 
-btn.innerText='Publikasikan Artikel';
 btn.disabled=false;
+btn.innerText='Publikasikan Artikel';
 
 }
 
-/* ======================
-LOAD ARTICLES
-====================== */
-async function loadArticles(){
+/* load files */
+async function loadArticleList(){
 
 const token=document.getElementById('ghToken').value.trim();
+if(!token) return alert('Masukkan token');
+
 const box=document.getElementById('articleList');
-
-if(!token){
-alert('Masukkan token');
-return;
-}
-
-box.innerHTML='<div class="card p-8 text-center text-zinc-500">Memuat...</div>';
+box.innerHTML='<div class="bg-[#111] border border-zinc-800 p-8 rounded-2xl text-center text-zinc-500">Memuat...</div>';
 
 try{
 
@@ -566,30 +575,29 @@ headers:{'Authorization':'token '+token}
 }
 );
 
-const files=await res.json();
-const list=files.filter(x=>x.name.endsWith('.html')).reverse();
+const data=await res.json();
 
 box.innerHTML='';
 
-list.forEach(f=>{
+data.reverse().forEach(file=>{
 
 box.innerHTML+=`
-<div class="card p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div class="bg-[#111] border border-zinc-800 p-5 rounded-2xl flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
 
 <div>
-<div class="font-black text-sm uppercase">${f.name.replace('.html','').replace(/-/g,' ')}</div>
-<div class="text-zinc-500 text-[10px] mt-1">${f.path}</div>
+<div class="font-black uppercase text-sm">${file.name.replace('.html','').replace(/-/g,' ')}</div>
+<div class="text-zinc-500 text-[10px] mt-1">${file.path}</div>
 </div>
 
 <div class="flex gap-2">
 
-<button onclick="editPost('${f.path}','${f.sha}')"
-class="px-4 py-2 bg-zinc-800 rounded-lg text-[10px] font-black uppercase hover:bg-blue-600">
+<button onclick="editArticle('${file.path}','${file.sha}')"
+class="px-4 py-2 rounded-xl bg-blue-600 text-[10px] font-black uppercase">
 Edit
 </button>
 
-<button onclick="deletePost('${f.path}','${f.sha}')"
-class="px-4 py-2 bg-zinc-800 rounded-lg text-[10px] font-black uppercase hover:bg-red-600">
+<button onclick="deleteArticle('${file.path}','${file.sha}')"
+class="px-4 py-2 rounded-xl bg-red-600 text-[10px] font-black uppercase">
 Hapus
 </button>
 
@@ -601,44 +609,12 @@ Hapus
 });
 
 }catch(e){
-box.innerHTML='<div class="card p-8 text-center text-red-500">Gagal memuat.</div>';
+box.innerHTML='<div class="bg-[#111] border border-red-800 p-8 rounded-2xl text-center text-red-400">Gagal memuat data</div>';
 }
 
 }
 
-/* EDIT */
-async function editPost(path,sha){
-
-const token=document.getElementById('ghToken').value.trim();
-
-const res=await fetch(
-'https://api.github.com/repos/pembri/musikanywhere.online/contents/'+path,
-{
-headers:{'Authorization':'token '+token}
-}
-);
-
-const data=await res.json();
-
-const html=decodeURIComponent(escape(atob(data.content)));
-
-const doc=new DOMParser().parseFromString(html,'text/html');
-
-document.getElementById('postTitle').value=doc.querySelector('h1')?.innerText||'';
-quill.root.innerHTML=doc.body.innerHTML;
-
-isEdit=true;
-currentSha=sha;
-currentPath=path;
-
-alert('Mode edit aktif');
-
-scrollTo({top:0,behavior:'smooth'});
-
-}
-
-/* DELETE */
-async function deletePost(path,sha){
+async function deleteArticle(path,sha){
 
 if(!confirm('Hapus artikel ini?')) return;
 
@@ -653,16 +629,16 @@ headers:{
 'Content-Type':'application/json'
 },
 body:JSON.stringify({
-message:'Delete '+path,
+message:'delete '+path,
 sha:sha
 })
 }
 );
 
-loadArticles();
+loadArticleList();
 
 }
-</script>
 
+</script>
 </body>
 </html>
