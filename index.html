@@ -70,13 +70,6 @@
         </div>
         
         <div id="mobileMenu" class="fixed inset-0 bg-[#0a0a0a] z-40 hidden flex-col pt-24 px-6 pb-8 h-screen overflow-y-auto transition-all">
-            <div class="relative w-full mb-8 lg:hidden" onclick="event.stopPropagation()">
-                <div class="flex items-center bg-zinc-900 rounded-full px-5 py-3 border border-zinc-800">
-                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input type="text" id="mobileSearchInput" oninput="handleSearch('mobileSearchInput', 'mobileSearchSuggestions', 'mobileSuggestionsList')" placeholder="Cari artikel..." autocomplete="off" class="bg-transparent border-none outline-none text-sm ml-3 w-full text-white">
-                </div>
-                <div id="mobileSearchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 overflow-hidden z-[110]"><div id="mobileSuggestionsList" class="max-h-[300px] overflow-y-auto"></div></div>
-            </div>
             <nav class="flex flex-col gap-6 text-xl font-black uppercase tracking-tighter px-6">
                 <a href="/" class="text-white hover:text-red-600">Home</a>
                 <a href="/index?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
@@ -111,23 +104,15 @@
                     <p class="text-zinc-500 text-sm leading-relaxed mb-6">Menyajikan informasi musik, ulasan rilisan terbaru, dan kumpulan lirik lagu.</p>
                 </div>
                 <div>
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6 font-bold">Kategori</h4>
-                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6 font-bold uppercase">Kategori</h4>
+                    <ul class="space-y-3 text-sm font-bold text-zinc-400 uppercase">
                         <li><a href="/index?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a></li>
                         <li><a href="/index?kategori=News" class="hover:text-red-500 transition">News</a></li>
                         <li><a href="/index?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6 font-bold">Perusahaan</h4>
-                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
-                        <li><a href="/about" class="hover:text-red-500 transition">About</a></li>
-                        <li><a href="/contact" class="hover:text-red-500 transition">Contact</a></li>
-                        <li><a href="/privacy" class="hover:text-red-500 transition">Privacy Policy</a></li>
-                    </ul>
-                </div>
             </div>
-            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center py-4"> © 2026 Musik Anywhere Media. </p>
+            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center py-4 uppercase"> © 2026 Musik Anywhere Media. </p>
         </div>
     </footer>
 
@@ -138,8 +123,8 @@
         let sliderInterval;
 
         function toggleMenu() {
-            const menu = document.getElementById('mobileMenu');
-            if(menu.classList.contains('hidden')) menu.classList.remove('hidden'); else menu.classList.add('hidden');
+            const m = document.getElementById('mobileMenu');
+            m.classList.toggle('hidden');
         }
 
         async function initPortal() {
@@ -155,12 +140,10 @@
                             const htmlText = await htmlRes.text();
                             const doc = new DOMParser().parseFromString(htmlText, 'text/html');
                             
-                            // AMBIL JUDUL ASLI DARI H1 (Supaya karakter khusus muncul)
                             const realTitle = doc.querySelector('h1')?.innerText || file.name.replace(/-/g, ' ').replace('.html', '');
                             const timestamp = parseInt(doc.querySelector('meta[name="publish-date"]')?.getAttribute('content') || 0);
                             const category = doc.querySelector('meta[name="category"]')?.getAttribute('content') || "";
                             
-                            // AMBIL GAMBAR ASLI
                             let img = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
                             const firstImg = doc.querySelector('.prose img') || doc.querySelector('img');
                             if (firstImg) img = firstImg.getAttribute('src');
@@ -208,7 +191,7 @@
                 slide.className = `absolute inset-0 transition-opacity duration-1000 ease-in-out slide-item ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
                 slide.innerHTML = `
                     <a href="/artikel/${art.name}" class="block w-full h-full group">
-                        <img src="${art.img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-40 transition duration-1000">
+                        <img src="${art.img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition duration-1000">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent"></div>
                         <div class="absolute bottom-0 p-8 w-full md:w-3/4 z-20">
                             <span class="bg-red-600 text-white px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-flex items-center gap-1.5">
@@ -240,11 +223,11 @@
             const start = (currentPage - 1) * postsPerPage;
             allArticles.slice(start, start + postsPerPage).forEach(item => {
                 grid.innerHTML += `
-                    <article class="group flex flex-col h-full bg-zinc-900 p-3 rounded-[1.5rem] border border-zinc-800 hover:border-zinc-700 hover:shadow-2xl transition-all">
+                    <article class="group flex flex-col h-full bg-zinc-900 p-3 rounded-[1.5rem] border border-zinc-800 hover:border-zinc-700 transition-all">
                         <a href="/artikel/${item.name}" class="block overflow-hidden rounded-[1rem] aspect-[16/10] bg-zinc-950 relative">
-                            <img src="${item.img}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-700">
+                            <img src="${item.img}" class="absolute inset-0 w-full h-full object-contain p-2 transition duration-700">
                         </a>
-                        <div class="pt-5 pb-3 px-3 flex-1 flex flex-col">
+                        <div class="pt-5 pb-3 px-3 flex-1">
                             <h3 class="text-lg font-black uppercase leading-tight tracking-tight text-white group-hover:text-red-500 transition line-clamp-3">${item.title}</h3>
                         </div>
                     </article>`;
@@ -257,27 +240,26 @@
             const totalPages = Math.ceil(allArticles.length / postsPerPage);
             container.innerHTML = '';
             if (totalPages <= 1) return;
-            const createBtn = (text, page, disabled, active) => {
-                const btn = document.createElement('button'); btn.innerHTML = text;
-                btn.className = `w-10 h-10 text-[11px] font-black border rounded-xl transition-colors ${active ? 'bg-red-600 text-white border-red-600' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:bg-zinc-800'} ${disabled ? 'opacity-30 cursor-not-allowed' : ''}`;
-                if(!disabled) btn.onclick = () => { currentPage = page; updatePage(); document.getElementById('post-grid').scrollIntoView({behavior: 'smooth'}); };
-                return btn;
-            };
-            container.appendChild(createBtn('&larr;', currentPage - 1, currentPage === 1));
-            for(let i = 1; i <= totalPages; i++) container.appendChild(createBtn(i, i, false, i === currentPage));
-            container.appendChild(createBtn('&rarr;', currentPage + 1, currentPage === totalPages));
+            for(let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i;
+                btn.className = `w-10 h-10 text-[11px] font-black border rounded-xl transition-colors ${i === currentPage ? 'bg-red-600 text-white border-red-600' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:bg-zinc-800'}`;
+                btn.onclick = () => { currentPage = i; updatePage(); document.getElementById('post-grid').scrollIntoView({behavior: 'smooth'}); };
+                container.appendChild(btn);
+            }
         }
 
         function handleSearch(inputId, suggestionsId, listId) {
-            const input = document.getElementById(inputId); const suggestions = document.getElementById(suggestionsId);
-            const query = input.value.toLowerCase().trim(); if (query.length < 2) { suggestions.classList.remove('active'); return; }
+            const query = document.getElementById(inputId).value.toLowerCase().trim();
+            const suggestions = document.getElementById(suggestionsId);
+            if (query.length < 2) { suggestions.classList.remove('active'); return; }
             const filtered = allArticles.filter(art => art.title.toLowerCase().includes(query)).slice(0, 6);
             if (filtered.length > 0) {
-                document.getElementById(listId).innerHTML = filtered.map(art => `<a href="/artikel/${art.name}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${art.title}</span></a>`).join('');
+                document.getElementById(listId).innerHTML = filtered.map(art => `<a href="/artikel/${art.name}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 uppercase font-bold text-xs"><span class="truncate block">${art.title}</span></a>`).join('');
                 suggestions.classList.add('active');
             } else { suggestions.classList.remove('active'); }
         }
-        function closeSearch() { document.querySelectorAll('[id$="Suggestions"]').forEach(s => s.classList.remove('active')); }
+        function closeSearch() { document.querySelectorAll('[id$=\"Suggestions\"]').forEach(s => s.classList.remove('active')); }
 
         window.onload = initPortal;
     </script>
