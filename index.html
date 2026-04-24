@@ -73,15 +73,22 @@
                 <a href="?kategori=Artikel" class="text-white hover:text-red-600">Artikel</a>
                 <a href="?kategori=News" class="text-white hover:text-red-600">News</a>
                 <a href="?kategori=Lirik Lagu" class="text-white hover:text-red-600">Lirik Lagu</a>
-                <hr class="border-zinc-800 my-2">
-                <a href="/about" class="text-zinc-500 hover:text-white text-sm">About</a>
-                <a href="/contact" class="text-zinc-500 hover:text-white text-sm">Contact</a>
-                <a href="/privacy" class="text-zinc-500 hover:text-white text-sm">Privacy Policy</a>
             </nav>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 md:px-8 py-10">
+        <section id="featured-section" class="mb-20">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-xs font-black uppercase tracking-[0.4em] text-red-600 mb-2">Editor's Pick</h2>
+                    <h3 class="text-3xl md:text-5xl font-black uppercase tracking-tighter">TER<span class="text-zinc-700">POPULER</span></h3>
+                </div>
+            </div>
+            <div id="featured-container" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                </div>
+        </section>
+
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
             <div>
                 <h2 id="currentCategory" class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-2">TERBARU</h2>
@@ -90,12 +97,7 @@
         </div>
 
         <div id="post-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
-            <div class="animate-pulse space-y-4">
-                <div class="bg-zinc-900 aspect-[16/10] rounded-[2rem]"></div>
-                <div class="h-4 bg-zinc-900 w-1/4 rounded"></div>
-                <div class="h-8 bg-zinc-900 w-full rounded"></div>
             </div>
-        </div>
 
         <div class="mt-20 flex justify-center border-t border-zinc-900 pt-12">
             <div id="pagination" class="flex gap-3"></div>
@@ -104,29 +106,7 @@
 
     <footer class="bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900">
         <div class="max-w-7xl mx-auto px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-900 pb-12 mb-8">
-                <div class="md:col-span-1">
-                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">MUSIK<span class="text-red-600">ANYWHERE</span></h2>
-                    <p class="text-zinc-500 text-sm leading-relaxed mb-6">Media informasi terdepan yang menyajikan ulasan musik, berita industri, dan kumpulan lirik lagu terlengkap di Indonesia.</p>
-                </div>
-                <div>
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Eksplorasi</h4>
-                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
-                        <li><a href="?kategori=Artikel" class="hover:text-red-500 transition">Artikel & Opini</a></li>
-                        <li><a href="?kategori=News" class="hover:text-red-500 transition">Berita Terkini</a></li>
-                        <li><a href="?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Bantuan</h4>
-                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
-                        <li><a href="/about" class="hover:text-red-500 transition">Tentang Kami</a></li>
-                        <li><a href="/contact" class="hover:text-red-500 transition">Hubungi Redaksi</a></li>
-                        <li><a href="/privacy" class="hover:text-red-500 transition">Kebijakan Privasi</a></li>
-                    </ul>
-                </div>
-            </div>
-            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center">© 2026 Musik Anywhere Media. Seluruh Hak Cipta Dilindungi.</p>
+            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center">© 2026 Musik Anywhere Media.</p>
         </div>
     </footer>
 
@@ -134,21 +114,6 @@
         let allArticles = [];
         let itemsPerPage = 9;
         let currentPage = 1;
-
-        function toggleMenu() {
-            const menu = document.getElementById('mobileMenu');
-            const iconMenu = document.getElementById('icon-menu');
-            const iconClose = document.getElementById('icon-close');
-            if(menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden'); menu.classList.add('flex');
-                document.body.style.overflow = 'hidden';
-                iconMenu.classList.add('hidden'); iconClose.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden'); menu.classList.remove('flex');
-                document.body.style.overflow = 'auto';
-                iconMenu.classList.remove('hidden'); iconClose.classList.add('hidden');
-            }
-        }
 
         async function initPortal() {
             try {
@@ -158,8 +123,6 @@
 
                 const response = await fetch('https://api.github.com/repos/pembri/musikanywhere.online/contents/artikel');
                 const files = await response.json();
-                
-                // Urutkan berdasarkan waktu (paling baru di atas)
                 const htmlFiles = files.filter(f => f.name.endsWith('.html')).reverse();
                 
                 let loadedData = [];
@@ -173,62 +136,94 @@
                         const category = doc.querySelector('meta[name="category"]')?.getAttribute('content') || "Artikel";
                         const dateRaw = doc.querySelector('meta[name="publish-date"]')?.getAttribute('content');
                         
-                        // Cari gambar di konten
                         let thumb = "/android-icon-192x192.png";
                         const firstImg = doc.querySelector('.prose img');
                         if(firstImg) thumb = firstImg.getAttribute('src');
 
+                        const articleData = {
+                            name: file.name,
+                            title: title,
+                            category: category,
+                            thumb: thumb,
+                            date: dateRaw ? parseInt(dateRaw) : 0
+                        };
+
                         if (!filterKategori || category.toLowerCase() === filterKategori.toLowerCase()) {
-                            loadedData.push({
-                                name: file.name,
-                                title: title,
-                                category: category,
-                                thumb: thumb,
-                                date: dateRaw ? parseInt(dateRaw) : 0
-                            });
+                            loadedData.push(articleData);
                         }
-                    } catch (e) { console.error("Error loading article details:", e); }
+                    } catch (e) {}
                 }
 
                 allArticles = loadedData;
+                
+                // Tampilkan Featured (Hanya di Home/Tanpa Filter)
+                if(!filterKategori) {
+                    displayFeatured();
+                } else {
+                    document.getElementById('featured-section').style.display = 'none';
+                }
+                
                 displayPosts();
             } catch (error) {
-                document.getElementById('post-container').innerHTML = '<p class="text-zinc-500 text-center col-span-full py-20">Gagal memuat artikel.</p>';
+                console.log(error);
             }
+        }
+
+        function displayFeatured() {
+            const container = document.getElementById('featured-container');
+            const feat = allArticles.slice(0, 3);
+            if(feat.length < 1) return;
+
+            // Item Utama (Besar)
+            let html = `
+            <div class="lg:col-span-8 group cursor-pointer" onclick="window.location.href='/artikel/${feat[0].name.replace('.html','')}'">
+                <div class="relative aspect-[16/9] overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 shadow-2xl">
+                    <img src="${feat[0].thumb}" class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
+                        <span class="bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-md uppercase tracking-widest mb-6 inline-block">${feat[0].category}</span>
+                        <h3 class="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9] text-white line-clamp-2">${feat[0].title}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-4 flex flex-col gap-6">`;
+
+            // Item Samping
+            feat.slice(1).forEach(post => {
+                html += `
+                <div class="flex-1 group cursor-pointer" onclick="window.location.href='/artikel/${post.name.replace('.html','')}'">
+                    <div class="relative h-full min-h-[200px] overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800 shadow-xl">
+                        <img src="${post.thumb}" class="w-full h-full object-cover opacity-40 group-hover:scale-110 group-hover:opacity-80 transition duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-80"></div>
+                        <div class="absolute bottom-0 left-0 p-6">
+                            <span class="text-red-500 text-[9px] font-black uppercase tracking-widest mb-2 block">${post.category}</span>
+                            <h4 class="text-lg font-black uppercase tracking-tighter leading-tight text-white line-clamp-2">${post.title}</h4>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
         }
 
         function displayPosts() {
             const container = document.getElementById('post-container');
             container.innerHTML = '';
-            
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const paginatedItems = allArticles.slice(start, end);
 
-            if (paginatedItems.length === 0) {
-                container.innerHTML = '<p class="text-zinc-500 text-center col-span-full py-20 font-bold uppercase tracking-widest">Belum ada artikel.</p>';
-                return;
-            }
-
             paginatedItems.forEach(post => {
-                const cleanUrl = post.name.replace('.html', '');
                 container.innerHTML += `
-                    <article class="group cursor-pointer" onclick="window.location.href='/artikel/${cleanUrl}'">
+                    <article class="group cursor-pointer" onclick="window.location.href='/artikel/${post.name.replace('.html','')}'">
                         <div class="relative aspect-[16/10] mb-6 overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800">
-                            <img src="${post.thumb}" alt="${post.title}" class="w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-60"></div>
-                            <span class="absolute top-6 left-6 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-md uppercase tracking-widest shadow-xl">${post.category}</span>
+                            <img src="${post.thumb}" class="w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition duration-700">
+                            <span class="absolute top-6 left-6 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-md uppercase tracking-widest">${post.category}</span>
                         </div>
-                        <h3 class="text-xl md:text-2xl font-black uppercase tracking-tighter leading-tight group-hover:text-red-500 transition duration-300 line-clamp-2">
-                            ${post.title}
-                        </h3>
-                        <div class="mt-4 flex items-center gap-3">
-                            <div class="w-8 h-[1px] bg-zinc-800"></div>
-                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Read Article</span>
-                        </div>
+                        <h3 class="text-xl font-black uppercase tracking-tighter leading-tight group-hover:text-red-500 transition line-clamp-2">${post.title}</h3>
                     </article>`;
             });
-
             setupPagination();
         }
 
@@ -236,13 +231,11 @@
             const pagination = document.getElementById('pagination');
             const pageCount = Math.ceil(allArticles.length / itemsPerPage);
             pagination.innerHTML = '';
-
             if (pageCount <= 1) return;
-
             for (let i = 1; i <= pageCount; i++) {
                 const btn = document.createElement('button');
                 btn.innerText = i;
-                btn.className = `w-10 h-10 rounded-lg font-black text-xs transition ${i === currentPage ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'}`;
+                btn.className = `w-10 h-10 rounded-lg font-black text-xs ${i === currentPage ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'}`;
                 btn.onclick = () => { currentPage = i; displayPosts(); window.scrollTo({top: 0, behavior: 'smooth'}); };
                 pagination.appendChild(btn);
             }
@@ -253,17 +246,10 @@
             const suggestions = document.getElementById(suggestionsId);
             const list = document.getElementById(listId);
             const query = input.value.toLowerCase().trim();
-
             if (query.length < 2) { suggestions.classList.remove('active'); return; }
-
             const filtered = allArticles.filter(art => art.title.toLowerCase().includes(query)).slice(0, 6);
-
             if (filtered.length > 0) {
-                list.innerHTML = filtered.map(art => {
-                    const cleanUrl = art.name.replace('.html', '');
-                    const highlightedTitle = art.title.replace(new RegExp(`(${query})`, "gi"), "<span class='text-red-600'>$1</span>");
-                    return `<a href="/artikel/${cleanUrl}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${highlightedTitle}</span></a>`;
-                }).join('');
+                list.innerHTML = filtered.map(art => `<a href="/artikel/${art.name.replace('.html','')}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${art.title}</span></a>`).join('');
                 suggestions.classList.add('active');
             } else {
                 list.innerHTML = `<div class="px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest">Tidak ditemukan</div>`;
@@ -274,6 +260,11 @@
         function closeSearch() {
             document.getElementById('searchSuggestions')?.classList.remove('active');
             document.getElementById('mobileSearchSuggestions')?.classList.remove('active');
+        }
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            if(menu.classList.contains('hidden')) menu.classList.remove('hidden');
+            else menu.classList.add('hidden');
         }
 
         window.onload = initPortal;
