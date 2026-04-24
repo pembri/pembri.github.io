@@ -1,73 +1,49 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Musik Anywhere","url":"https://musikanywhere.online"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsMediaOrganization","name":"Musik Anywhere","url":"https://musikanywhere.online","logo":"https://musikanywhere.online/android-icon-192x192.png","description":"Media informasi tentang musik untuk audiens Indonesia."}</script>
-
-<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-
-<meta name="msapplication-TileColor" content="#111111">
-<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-<meta name="theme-color" content="#111111">
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Musik Anywhere - Media Informasi Seputar Musik</title>
-
-<meta property="og:site_name" content="Musik Anywhere">
-<meta property="og:title" content="Musik Anywhere - Media Informasi Seputar Musik">
-<meta property="og:url" content="https://musikanywhere.online/">
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
-
-body{
-font-family:'Plus Jakarta Sans',sans-serif;
-background:#0a0a0a;
-color:#f4f4f5;
-display:flex;
-flex-direction:column;
-min-height:100vh;
-}
-
-main{flex:1;}
-
-.nav-glass{
-background:rgba(10,10,10,.9);
-backdrop-filter:blur(16px);
-border-bottom:1px solid rgba(255,255,255,.05);
-}
-
-#searchSuggestions,#mobileSearchSuggestions{display:none;}
-#searchSuggestions.active,#mobileSearchSuggestions.active{display:block;}
-
-::-webkit-scrollbar{width:8px;}
-::-webkit-scrollbar-track{background:#111;}
-::-webkit-scrollbar-thumb{background:#3f3f46;border-radius:10px;}
-
-@keyframes blinkLive{
-0%{opacity:1;transform:scale(1);}
-50%{opacity:.3;transform:scale(1.2);}
-100%{opacity:1;transform:scale(1);}
-}
-
-.live-dot{animation:blinkLive 1.5s infinite ease-in-out;}
-.slide-item{transition:opacity 1s ease;}
-</style>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Musik Anywhere", "url": "https://musikanywhere.online"}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "NewsMediaOrganization", "name": "Musik Anywhere", "url": "https://musikanywhere.online", "logo": "https://musikanywhere.online/android-icon-192x192.png", "description": "Media informasi tentang musik untuk audiens Indonesia."}</script>
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="msapplication-TileColor" content="#111111" />
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#111111"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musik Anywhere - Media Informasi Seputar Musik</title>
+    <meta property="og:site_name" content="Musik Anywhere">
+    <meta property="og:title" content="Musik Anywhere - Media Informasi Seputar Musik">
+    <meta property="og:url" content="https://musikanywhere.online/">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0a0a0a; color: #f4f4f5; display: flex; flex-direction: column; min-height: 100vh;}
+        main { flex: 1; }
+        .nav-glass { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        #searchSuggestions, #mobileSearchSuggestions { display: none; }
+        #searchSuggestions.active, #mobileSearchSuggestions.active { display: block; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        
+        /* Animasi Titik Live */
+        @keyframes blinkLive {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .live-dot { animation: blinkLive 1.5s infinite ease-in-out; }
+    </style>
 </head>
-
 <body onclick="closeSearch()">
 
-<header class="nav-glass sticky top-0 z-[100]">
+    <header class="nav-glass sticky top-0 z-[100]">
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
             <a href="/" class="text-xl md:text-2xl font-black tracking-tighter uppercase flex items-center gap-3 z-50 text-white">
                 <img src="/favicon-192x192.png" alt="Logo" class="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover border border-zinc-800">
@@ -115,378 +91,227 @@ border-bottom:1px solid rgba(255,255,255,.05);
             </nav>
         </div>
     </header>
-<main class="max-w-7xl mx-auto px-4 md:px-8 py-8 w-full">
-
-<section id="hero-section" class="relative h-[420px] md:h-[520px] rounded-[2rem] overflow-hidden bg-zinc-900 border border-zinc-800">
 
-<div id="hero-loader" class="absolute inset-0 flex items-center justify-center text-zinc-500 text-xs font-black uppercase tracking-widest animate-pulse">
-Loading Highlight...
-</div>
-
-<div id="hero-content" class="hidden absolute inset-0"></div>
-
-</section>
-
-<section class="mt-12">
-
-<h2 id="section-title" class="text-3xl md:text-4xl font-black uppercase tracking-tighter flex items-center gap-3 mb-8">
-<span class="w-2 h-8 bg-red-600 rounded-sm"></span>
-LATEST UPDATES
-</h2>
-
-<div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-
-<div id="empty-state" class="hidden text-center text-zinc-500 font-bold py-20">
-Belum ada artikel.
-</div>
-
-<div id="pagination" class="flex justify-center gap-2 mt-10 flex-wrap"></div>
-
-</section>
-</main>
-
-<footer class="mt-16 border-t border-zinc-900 bg-[#050505]">
-<div class="max-w-7xl mx-auto px-4 md:px-8 py-12">
-
-<div class="grid md:grid-cols-3 gap-10">
-
-<div>
-<h3 class="text-2xl font-black uppercase tracking-tighter">
-MUSIK<span class="text-red-600">ANYWHERE</span>
-</h3>
-<p class="text-zinc-500 text-sm mt-4 leading-relaxed">
-Portal berita musik, artikel artis, lirik lagu, dan informasi terbaru dunia musik Indonesia.
-</p>
-</div>
-
-<div>
-<h4 class="text-[10px] uppercase tracking-[0.2em] font-black text-zinc-500 mb-4">
-Kategori
-</h4>
-<ul class="space-y-3 text-sm text-zinc-400 font-bold">
-<li><a href="/index?kategori=Artikel" class="hover:text-red-500">Artikel</a></li>
-<li><a href="/index?kategori=News" class="hover:text-red-500">News</a></li>
-<li><a href="/index?kategori=Lirik Lagu" class="hover:text-red-500">Lirik Lagu</a></li>
-</ul>
-</div>
-
-<div>
-<h4 class="text-[10px] uppercase tracking-[0.2em] font-black text-zinc-500 mb-4">
-Informasi
-</h4>
-<ul class="space-y-3 text-sm text-zinc-400 font-bold">
-<li><a href="/about">About</a></li>
-<li><a href="/contact">Contact</a></li>
-<li><a href="/privacy">Privacy Policy</a></li>
-</ul>
-</div>
-
-</div>
-
-<p class="text-center text-zinc-600 text-[11px] mt-10 uppercase tracking-widest font-bold">
-© 2026 Musik Anywhere Media
-</p>
-
-</div>
-</footer>
-
-<script>
-let allPosts=[];
-let currentPage=1;
-const perPage=6;
-let heroIndex=0;
-let heroTimer=null;
-
-/* ===========================
-HELPER THUMBNAIL
-=========================== */
-function detectThumbnail(html){
-
-let match=html.match(/property="og:image" content="([^"]+)"/i);
-if(match && match[1]) return match[1];
-
-match=html.match(/<img[^>]+src="([^"]+)"/i);
-if(match && match[1]) return match[1];
-
-return '/android-icon-192x192.png';
-}
-
-/* ===========================
-LOAD POSTS
-=========================== */
-async function loadPosts(){
-
-try{
-
-const repo=await fetch('https://api.github.com/repos/pembri/musikanywhere.online/contents/artikel');
-let files=await repo.json();
-
-files=files.filter(x=>x.name.endsWith('.html'));
-
-const posts=await Promise.all(files.map(async file=>{
-
-try{
-
-const res=await fetch('/artikel/'+file.name);
-const html=await res.text();
-
-const title=(html.match(/<title>(.*?)<\/title>/i)?.[1]||file.name.replace('.html',''))
-.replace(' - Musik Anywhere','');
-
-const category=html.match(/name="category" content="([^"]+)"/i)?.[1] || 'Artikel';
-
-const stamp=parseInt(
-html.match(/name="publish-date" content="([^"]+)"/i)?.[1] || Date.now()
-);
-
-return{
-file:file.name,
-title:title,
-category:category,
-stamp:stamp,
-img:detectThumbnail(html)
-};
-
-}catch(e){
-return null;
-}
-
-}));
-
-allPosts=posts.filter(Boolean).sort((a,b)=>b.stamp-a.stamp);
-
-const url=new URLSearchParams(location.search);
-const kategori=url.get('kategori');
-
-if(kategori){
-
-document.getElementById('hero-section').style.display='none';
-document.getElementById('section-title').innerHTML=
-'<span class="w-2 h-8 bg-red-600 rounded-sm"></span> '+kategori.toUpperCase();
-
-allPosts=allPosts.filter(x=>x.category===kategori);
-
-}
-
-if(!allPosts.length){
-document.getElementById('empty-state').classList.remove('hidden');
-return;
-}
-
-renderHero();
-renderGrid();
-
-}catch(err){
-console.log(err);
-}
-
-}
-
-/* ===========================
-HERO
-=========================== */
-function renderHero(){
-
-const picks=allPosts.slice(0,3);
-const hero=document.getElementById('hero-content');
-const loader=document.getElementById('hero-loader');
-
-hero.innerHTML='';
-
-picks.forEach((p,i)=>{
-
-hero.innerHTML+=`
-<a href="/artikel/${p.file.replace('.html','')}"
-class="slide-item absolute inset-0 ${i===0?'opacity-100 z-10':'opacity-0 z-0'}">
-
-<img src="${p.img}"
-class="absolute inset-0 w-full h-full object-cover opacity-70">
-
-<div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/20 to-transparent"></div>
-
-<div class="absolute bottom-0 left-0 p-8 md:p-12 max-w-4xl">
-
-<div class="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest mb-5">
-Terpopuler
-<span class="w-2 h-2 bg-white rounded-full live-dot"></span>
-</div>
-
-<h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-tight">
-${p.title}
-</h2>
-
-</div>
-
-</a>
-`;
-
-});
-
-loader.classList.add('hidden');
-hero.classList.remove('hidden');
-
-const slides=document.querySelectorAll('.slide-item');
-
-clearInterval(heroTimer);
-
-heroTimer=setInterval(()=>{
-
-slides[heroIndex].classList.replace('opacity-100','opacity-0');
-slides[heroIndex].classList.replace('z-10','z-0');
-
-heroIndex=(heroIndex+1)%slides.length;
-
-slides[heroIndex].classList.replace('opacity-0','opacity-100');
-slides[heroIndex].classList.replace('z-0','z-10');
-
-},4500);
-
-}
-
-/* ===========================
-GRID
-=========================== */
-function renderGrid(){
-
-const grid=document.getElementById('article-grid');
-const start=(currentPage-1)*perPage;
-const rows=allPosts.slice(start,start+perPage);
-
-grid.innerHTML='';
-
-rows.forEach(p=>{
-
-grid.innerHTML+=`
-<a href="/artikel/${p.file.replace('.html','')}"
-class="block bg-zinc-900 border border-zinc-800 rounded-[1.6rem] overflow-hidden group">
-
-<div class="aspect-[16/10] overflow-hidden">
-<img src="${p.img}" loading="lazy"
-class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-</div>
-
-<div class="p-5">
-<p class="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-black mb-3">
-${p.category}
-</p>
-
-<h3 class="font-black text-lg leading-tight uppercase tracking-tight group-hover:text-red-500 transition">
-${p.title}
-</h3>
-</div>
-
-</a>
-`;
-
-});
-
-renderPagination();
-
-}
-
-/* ===========================
-PAGINATION
-=========================== */
-function renderPagination(){
-
-const total=Math.ceil(allPosts.length/perPage);
-const box=document.getElementById('pagination');
-box.innerHTML='';
-
-if(total<=1) return;
-
-for(let i=1;i<=total;i++){
-
-box.innerHTML+=`
-<button onclick="gotoPage(${i})"
-class="w-10 h-10 rounded-xl text-xs font-black border ${
-i===currentPage
-?'bg-red-600 border-red-600 text-white'
-:'bg-zinc-900 border-zinc-800 text-zinc-400'
-}">
-${i}
-</button>
-`;
-
-}
-
-}
-
-function gotoPage(i){
-currentPage=i;
-renderGrid();
-scrollTo({top:0,behavior:'smooth'});
-}
-
-/* ===========================
-SEARCH
-=========================== */
-function searchArticles(q,target){
-
-const box=document.getElementById(target);
-
-q=q.toLowerCase().trim();
-
-if(q.length<2){
-box.classList.remove('active');
-return;
-}
-
-const found=allPosts.filter(x=>x.title.toLowerCase().includes(q)).slice(0,6);
-
-box.innerHTML='';
-
-if(!found.length){
-box.innerHTML='<div class="px-5 py-4 text-sm text-zinc-500">Tidak ditemukan</div>';
-box.classList.add('active');
-return;
-}
-
-found.forEach(p=>{
-
-box.innerHTML+=`
-<a href="/artikel/${p.file.replace('.html','')}"
-class="block px-5 py-4 border-b border-zinc-800 hover:bg-zinc-800 text-sm font-bold uppercase">
-${p.title}
-</a>
-`;
-
-});
-
-box.classList.add('active');
-
-}
-
-function closeSearch(){
-document.getElementById('searchSuggestions').classList.remove('active');
-document.getElementById('mobileSearchSuggestions').classList.remove('active');
-}
-
-/* ===========================
-MOBILE MENU
-=========================== */
-function toggleMobileMenu(){
-
-const menu=document.getElementById('mobileMenu');
-const open=document.getElementById('menuOpen');
-const close=document.getElementById('menuClose');
-
-menu.classList.toggle('hidden');
-
-if(menu.classList.contains('hidden')){
-document.body.style.overflow='auto';
-open.classList.remove('hidden');
-close.classList.add('hidden');
-}else{
-document.body.style.overflow='hidden';
-open.classList.add('hidden');
-close.classList.remove('hidden');
-}
-
-}
-
-window.onload=loadPosts;
-</script>
-
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-10 w-full">
+        <section id="hero-section" class="mb-16 relative h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden bg-zinc-900 shadow-2xl border border-zinc-800">
+            <div id="hero-loader" class="absolute inset-0 bg-zinc-800 animate-pulse"></div>
+            <div id="hero-content" class="absolute inset-0 w-full h-full hidden"></div>
+        </section>
+
+        <div class="flex items-center justify-between mb-10 border-b border-zinc-800 pb-4">
+            <h2 id="section-title" class="text-3xl font-black uppercase tracking-tighter flex items-center gap-3 text-white">
+                <span class="w-2 h-8 bg-red-600 rounded-sm"></span> LATEST UPDATES
+            </h2>
+        </div>
+        
+        <div id="post-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div id="pagination-container" class="mt-16 flex justify-center items-center gap-2"></div>
+        <div id="empty-state" class="hidden py-20 text-center text-zinc-600 font-bold uppercase tracking-widest">Belum ada konten.</div>
+    </main>
+
+    <footer class="bg-[#050505] text-white mt-20 pt-20 pb-10 border-t border-zinc-900 w-full">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-900 pb-12 mb-8">
+                <div class="md:col-span-1">
+                    <h2 class="text-2xl font-black uppercase mb-4 tracking-tighter">MUSIK<span class="text-red-600">ANYWHERE</span></h2>
+                    <p class="text-zinc-500 text-sm leading-relaxed mb-6">Menyajikan informasi musik, ulasan rilisan terbaru, dan kumpulan lirik lagu.</p>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Kategori</h4>
+                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
+                        <li><a href="/index?kategori=Artikel" class="hover:text-red-500 transition">Artikel</a></li>
+                        <li><a href="/index?kategori=News" class="hover:text-red-500 transition">News</a></li>
+                        <li><a href="/index?kategori=Lirik Lagu" class="hover:text-red-500 transition">Lirik Lagu</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-6">Perusahaan</h4>
+                    <ul class="space-y-3 text-sm font-bold text-zinc-400">
+                        <li><a href="/about" class="hover:text-red-500 transition">About</a></li>
+                        <li><a href="/contact" class="hover:text-red-500 transition">Contact</a></li>
+                        <li><a href="/privacy" class="hover:text-red-500 transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest text-center"> © 2026 Musik Anywhere Media. </p>
+        </div>
+    </footer>
+
+    <script>
+        let allArticles = [];
+        let currentPage = 1; 
+        const postsPerPage = 6;
+        let sliderInterval;
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu'); const iconMenu = document.getElementById('icon-menu'); const iconClose = document.getElementById('icon-close');
+            if(menu.classList.contains('hidden')) { menu.classList.remove('hidden'); menu.classList.add('flex'); document.body.style.overflow = 'hidden'; iconMenu.classList.add('hidden'); iconClose.classList.remove('hidden'); } else { menu.classList.add('hidden'); menu.classList.remove('flex'); document.body.style.overflow = 'auto'; iconMenu.classList.remove('hidden'); iconClose.classList.add('hidden'); }
+        }
+
+        async function initPortal() {
+            try {
+                const res = await fetch('https://api.github.com/repos/pembri/musikanywhere.online/contents/artikel');
+                let files = await res.json();
+                files = files.filter(f => f.name.endsWith('.html'));
+                
+                if(files.length > 0) {
+                    const promises = files.map(async (file) => {
+                        try {
+                            const htmlRes = await fetch(`/artikel/${file.name}`);
+                            const htmlText = await htmlRes.text();
+                            
+                            const dateMatch = htmlText.match(/<meta name="publish-date" content="([0-9]+)">/);
+                            const timestamp = dateMatch ? parseInt(dateMatch[1]) : 0;
+                            
+                            const catMatch = htmlText.match(/<meta name="category" content="([^"]+)">/);
+                            const category = catMatch ? catMatch[1] : '';
+
+                            const imgMatch = htmlText.match(/<img[^>]+src="([^">]+)"/);
+                            let img = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800';
+                            if (imgMatch && imgMatch[1]) {
+                                img = imgMatch[1];
+                                if (!img.startsWith('data:image') && !img.startsWith('http') && !img.startsWith('/')) img = '/artikel/' + img;
+                            }
+
+                            return { name: file.name, timestamp: timestamp, category: category, img: img };
+                        } catch(e) { return null; }
+                    });
+
+                    const results = await Promise.all(promises);
+                    allArticles = results.filter(r => r !== null);
+                    
+                    // Urutkan artikel paling baru ke paling lama (untuk grid Latest Updates)
+                    allArticles.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const activeKategori = urlParams.get('kategori');
+
+                    if(activeKategori) {
+                        document.getElementById('hero-section').style.display = 'none';
+                        document.getElementById('section-title').innerHTML = `<span class="w-2 h-8 bg-red-600 rounded-sm"></span> KATEGORI: ${activeKategori.toUpperCase()}`;
+                        allArticles = allArticles.filter(a => a.category === activeKategori);
+                        
+                        if(allArticles.length === 0) {
+                            document.getElementById('empty-state').innerText = `Belum ada publikasi di kategori ${activeKategori}.`;
+                            document.getElementById('empty-state').classList.remove('hidden');
+                        } else { updatePage(); }
+                    } else {
+                        // Jika di Home, render slider Terpopuler dan grid Latest
+                        if(allArticles.length > 0) { 
+                            renderSliderTerpopuler(allArticles); 
+                            updatePage(); 
+                        }
+                    }
+                } else { document.getElementById('empty-state').classList.remove('hidden'); }
+                
+                document.getElementById('hero-loader').style.display = 'none';
+                const urlP = new URLSearchParams(window.location.search);
+                if(!urlP.get('kategori')) document.getElementById('hero-content').classList.remove('hidden');
+                
+            } catch (err) { console.error(err); }
+        }
+
+        // SLIDER TERPOPULER OTOMATIS + TITIK KEDIP
+        function renderSliderTerpopuler(articles) {
+            // Karena gak ada database, kita acak dari artikel yang ada agar simulasi "Populer" terlihat dinamis
+            const shuffled = [...articles].sort(() => 0.5 - Math.random());
+            const populer = shuffled.slice(0, 3); // Ambil 3 artikel untuk slider
+            
+            const sliderContainer = document.getElementById('hero-content');
+            sliderContainer.innerHTML = '';
+
+            populer.forEach((art, index) => {
+                const title = art.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
+                // PENTING: LINK BERSIH TANPA .HTML
+                const cleanUrl = `/artikel/${art.name.replace('.html', '')}`;
+                
+                const slide = document.createElement('div');
+                slide.className = `absolute inset-0 transition-opacity duration-1000 ease-in-out slide-item ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
+                slide.innerHTML = `
+                    <a href="${cleanUrl}" class="block w-full h-full group">
+                        <img src="${art.img}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-40 transition duration-1000">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent"></div>
+                        <div class="absolute bottom-0 p-8 w-full md:w-3/4 z-20">
+                            <span class="bg-red-600 text-white px-3 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest mb-4 inline-flex items-center gap-1.5">
+                                Terpopuler <span class="w-1.5 h-1.5 bg-white rounded-full live-dot"></span>
+                            </span>
+                            <h1 class="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase tracking-tighter group-hover:text-red-500 transition">${title}</h1>
+                        </div>
+                    </a>
+                `;
+                sliderContainer.appendChild(slide);
+            });
+
+            // Logika Auto-Slide
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide-item');
+            if(slides.length > 1) {
+                if(sliderInterval) clearInterval(sliderInterval);
+                sliderInterval = setInterval(() => {
+                    slides[currentSlide].classList.replace('opacity-100', 'opacity-0');
+                    slides[currentSlide].classList.replace('z-10', 'z-0');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.replace('opacity-0', 'opacity-100');
+                    slides[currentSlide].classList.replace('z-0', 'z-10');
+                }, 4000); // Ganti gambar tiap 4 detik
+            }
+        }
+
+        function updatePage() {
+            const grid = document.getElementById('post-grid');
+            grid.innerHTML = '';
+            const start = (currentPage - 1) * postsPerPage;
+            const paginatedItems = allArticles.slice(start, start + postsPerPage);
+            let html = '';
+            for(let item of paginatedItems) {
+                const title = item.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
+                // PENTING: LINK BERSIH TANPA .HTML UNTUK GRID LATEST UPDATES
+                const cleanUrl = `/artikel/${item.name.replace('.html', '')}`;
+                html += `
+                    <article class="group flex flex-col h-full bg-zinc-900 p-3 rounded-[1.5rem] border border-zinc-800 hover:border-zinc-700 hover:shadow-2xl transition-all">
+                        <a href="${cleanUrl}" class="block overflow-hidden rounded-[1rem] aspect-[16/10] bg-zinc-950 relative">
+                            <img src="${item.img}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-700">
+                        </a>
+                        <div class="pt-5 pb-3 px-3 flex-1 flex flex-col">
+                            <h3 class="text-lg font-black uppercase leading-tight tracking-tight text-white group-hover:text-red-500 transition line-clamp-3">${title}</h3>
+                        </div>
+                    </article>`;
+            }
+            grid.innerHTML = html; renderPagination();
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('pagination-container');
+            const totalPages = Math.ceil(allArticles.length / postsPerPage);
+            container.innerHTML = '';
+            if (totalPages <= 1) return;
+            const createBtn = (text, page, disabled, active) => {
+                const btn = document.createElement('button'); btn.innerHTML = text;
+                btn.className = `w-10 h-10 text-[11px] font-black border rounded-xl transition-colors ${active ? 'bg-red-600 text-white border-red-600' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:bg-zinc-800'} ${disabled ? 'opacity-30 cursor-not-allowed' : ''}`;
+                if(!disabled) btn.onclick = () => { currentPage = page; updatePage(); document.getElementById('post-grid').scrollIntoView({behavior: 'smooth'}); };
+                return btn;
+            };
+            container.appendChild(createBtn('&larr;', currentPage - 1, currentPage === 1));
+            for(let i = 1; i <= totalPages; i++) container.appendChild(createBtn(i, i, false, i === currentPage));
+            container.appendChild(createBtn('&rarr;', currentPage + 1, currentPage === totalPages));
+        }
+
+        function handleSearch(inputId, suggestionsId, listId) {
+            const input = document.getElementById(inputId); const suggestions = document.getElementById(suggestionsId); const list = document.getElementById(listId);
+            const query = input.value.toLowerCase().trim(); if (query.length < 2) { suggestions.classList.remove('active'); return; }
+            const filtered = allArticles.filter(art => art.name.replace(/-/g, ' ').toLowerCase().includes(query)).slice(0, 6);
+            if (filtered.length > 0) {
+                list.innerHTML = filtered.map(art => {
+                    const title = art.name.replace(/^[0-9]+-/, '').replace(/-/g, ' ').replace('.html', '');
+                    const highlightedTitle = title.replace(new RegExp(`(${query})`, "gi"), "<span class='text-red-600'>$1</span>");
+                    // PENTING: LINK BERSIH TANPA .HTML UNTUK SEARCH
+                    return `<a href="/artikel/${art.name.replace('.html', '')}" class="block px-5 py-4 hover:bg-zinc-800 border-b border-zinc-800 transition group"><span class="text-sm font-bold text-zinc-300 uppercase tracking-tight block truncate">${highlightedTitle}</span></a>`;
+                }).join(''); suggestions.classList.add('active');
+            } else { list.innerHTML = `<div class="px-5 py-8 text-center text-xs text-zinc-600 font-bold uppercase tracking-widest">Tidak ditemukan</div>`; suggestions.classList.add('active'); }
+        }
+        function closeSearch() { if(document.getElementById('searchSuggestions')) document.getElementById('searchSuggestions').classList.remove('active'); if(document.getElementById('mobileSearchSuggestions')) document.getElementById('mobileSearchSuggestions').classList.remove('active'); }
+
+        window.onload = initPortal;
+    </script>
 </body>
 </html>
